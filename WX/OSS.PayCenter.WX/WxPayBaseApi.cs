@@ -1,0 +1,205 @@
+﻿#region Copyright (C) 2017 Kevin (OSS开源作坊) 公众号：osscoder
+
+/***************************************************************************
+*　　	文件功能描述：微信支付模快 —— 请求基类
+*
+*　　	创建人： Kevin
+*       创建人Email：1985088337@qq.com
+*    	创建日期：2017-2-23
+*       
+*****************************************************************************/
+
+#endregion
+
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using OSS.Common.ComModels.Enums;
+using OSS.Common.Encrypt;
+using OSS.Common.Extention;
+using OSS.Common.Modules;
+using OSS.Common.Modules.LogModule;
+using OSS.Http;
+using OSS.Http.Mos;
+using OSS.PayCenter.WX.SysTools;
+
+namespace OSS.PayCenter.WX
+{
+    public abstract class WxPayBaseApi
+    {
+
+        /// <summary>
+        /// 微信api接口地址
+        /// </summary>
+        protected const string m_ApiUrl = "https://api.weixin.qq.com";
+
+        #region  处理基本配置
+
+        /// <summary>
+        ///   默认配置信息，如果实例中的配置为空会使用当前配置信息
+        /// </summary>
+        public static WxPayCenterConfig DefaultConfig { get; set; }
+
+        private readonly WxPayCenterConfig _config;
+
+        /// <summary>
+        /// 微信接口配置
+        /// </summary>
+        public WxPayCenterConfig ApiConfig
+        {
+            get { return _config ?? DefaultConfig; }
+        }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="config"></param>
+        protected WxPayBaseApi(WxPayCenterConfig config)
+        {
+            if (config == null && DefaultConfig == null)
+                throw new ArgumentNullException("config",
+                    "构造函数中的config 和 全局DefaultConfig 配置信息同时为空，请通过构造函数赋值，或者在程序入口处给 DefaultConfig 赋值！");
+            _config = config;
+        }
+
+        #endregion
+
+        #region  调用基础请求方法
+
+        /// <summary>
+        /// 处理远程请求方法，并返回需要的实体
+        /// </summary>
+        /// <typeparam name="T">需要返回的实体类型</typeparam>
+        /// <param name="request">远程请求组件的request基本信息</param>
+        /// <param name="funcFormat">获取实体格式化方法</param>
+        /// <returns>实体类型</returns>
+        protected static async Task<T> RestCommon<T>(OsHttpRequest request,
+            Func<HttpResponseMessage, Task<T>> funcFormat = null)
+            where T : WxPayBaseResp, new()
+        {
+            T t = default(T);
+            try
+            {
+                var resp = await request.RestSend();
+                if (resp.IsSuccessStatusCode)
+                {
+                    if (funcFormat != null)
+                        t = await funcFormat(resp);
+                    else
+                    {
+                        var contentStr = await resp.Content.ReadAsStringAsync();
+                        t = contentStr.DeserializeXml<T>();
+                    }
+
+                    if (t.return_code.ToUpper() != "SUCCESS")
+                    {
+                        //通信结果处理，这个其实没意义，脱裤子放屁
+                        t.Ret = 0;
+                        t.Message = t.return_msg;
+                    }
+                    else if (!t.IsSuccess)
+                    {
+                        //  请求数据结果处理
+                        t.Message = GetErrMsg(t.err_code?.ToUpper());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                t = new T() {Ret = (int) ResultTypes.InnerError, Message = ex.Message};
+                LogUtil.Error(string.Concat("基类请求出错，错误信息：", ex.Message), "RestCommon", ModuleNames.PayCenter);
+            }
+            return t ?? new T() {Ret = 0};
+        }
+
+
+        /// <summary>
+        ///   post 支付接口相关请求
+        /// </summary>
+        /// <typeparam name="T">返回参数类型</typeparam>
+        /// <param name="addressUrl">接口地址</param>
+        /// <param name="xmlDirs">请求参数的排序字典（不包括：appid,mch_id,nonce_str,sign_type,key,sign。 会自动补充）</param>
+        /// <param name="funcFormat"></param>
+        /// <returns></returns>
+        protected async Task<T> PostPayXml<T>(string addressUrl, SortedDictionary<string, object> xmlDirs,
+            Func<HttpResponseMessage, Task<T>> funcFormat = null) where T : WxPayBaseResp, new()
+        {
+            xmlDirs.Add("appid", ApiConfig.AppId);
+            xmlDirs.Add("mch_id", ApiConfig.MchId);
+
+            string encStr = string.Join("&", xmlDirs.Select(k => string.Concat(k.Key, "=", k.Value)));
+            string sign = Md5.EncryptHexString(string.Concat(encStr, "&key=", ApiConfig.Key)).ToUpper();
+
+            xmlDirs.Add("sign", sign);
+
+            var req = new OsHttpRequest();
+
+            req.HttpMothed = HttpMothed.POST;
+            req.AddressUrl = addressUrl;
+            req.CustomBody = xmlDirs.ProduceXml();
+
+            return await RestCommon<T>(req, funcFormat);
+        }
+
+        #endregion
+
+        #region  全局错误处理
+
+        /// <summary>
+        /// 基本错误信息字典，基类中继续完善
+        /// </summary>
+        protected static ConcurrentDictionary<string, string> m_DicErrMsg = new ConcurrentDictionary<string, string>();
+
+        static WxPayBaseApi()
+        {
+            InitailGlobalErrorCode();
+        }
+
+
+        private static void InitailGlobalErrorCode()
+        {
+            #region 错误基本信息
+
+            m_DicErrMsg.TryAdd("NOAUTH", "商户无此接口权限 ");
+            m_DicErrMsg.TryAdd("NOTENOUGH", "余额不足   ");
+            m_DicErrMsg.TryAdd("ORDERPAID", "商户订单已支付 ");
+            m_DicErrMsg.TryAdd("ORDERCLOSED", "订单已关闭 ");
+            m_DicErrMsg.TryAdd("SYSTEMERROR", "系统错误 ");
+            m_DicErrMsg.TryAdd("APPID_NOT_EXIST", "APPID不存在 ");
+            m_DicErrMsg.TryAdd("MCHID_NOT_EXIST", "MCHID不存在 ");
+            m_DicErrMsg.TryAdd("APPID_MCHID_NOT_MATCH", "appid和mch_id不匹配 ");
+            m_DicErrMsg.TryAdd("LACK_PARAMS", "缺少参数 ");
+            m_DicErrMsg.TryAdd("OUT_TRADE_NO_USED", "商户订单号重复 ");
+            m_DicErrMsg.TryAdd("SIGNERROR", "签名错误 参数签名结果不正确  ");
+            m_DicErrMsg.TryAdd("XML_FORMAT_ERROR", "XML格式错误 ");
+            m_DicErrMsg.TryAdd("REQUIRE_POST_METHOD", "请使用post方法 ");
+            m_DicErrMsg.TryAdd("POST_DATA_EMPTY", "post数据为空 ");
+            m_DicErrMsg.TryAdd("NOT_UTF8", "编码格式错误 ");
+
+            #endregion
+        }
+
+        /// <summary>
+        /// 注册错误码
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="message"></param>
+        protected static void RegisteErrorCode(string code, string message) => m_DicErrMsg.TryAdd(code, message);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="errCode"></param>
+        /// <returns></returns>
+        protected static string GetErrMsg(string errCode)
+            => m_DicErrMsg.ContainsKey(errCode) ? m_DicErrMsg[errCode] : string.Empty;
+
+        #endregion
+
+
+        
+    }
+}

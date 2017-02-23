@@ -11,9 +11,35 @@
 
 #endregion
 
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using OSS.PayCenter.WX.Pay.Mos;
+
 namespace OSS.PayCenter.WX.Pay
 {
-    public class WxPayTradeApi
+    public class WxPayTradeApi : WxPayBaseApi
     {
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="config">配置信息，如果这里为空，请在程序入口处 设置WxPayBaseApi.DefaultConfig的值</param>
+        public WxPayTradeApi(WxPayCenterConfig config = null) : base(config)
+        {
+        }
+
+        public async Task<WxAddPayTradeOrderResp> AddPayTradeOrder(WxAddPayTradeOrderReq order,
+            WxPayTradeDetailMo detail=null)
+        {
+            var dics = order.GetDics();
+       
+            if (detail!=null)
+                dics.Add("detail",JsonConvert.SerializeObject(detail));
+
+            string addressUrl = string.Concat(m_ApiUrl, "/pay/unifiedorder");
+            return await PostPayXml<WxAddPayTradeOrderResp>(addressUrl, dics);
+        }
+        
     }
 }
