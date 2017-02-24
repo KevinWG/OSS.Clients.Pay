@@ -19,7 +19,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using OSS.Common.ComModels.Enums;
 using OSS.Common.Encrypt;
-using OSS.Common.Extention;
 using OSS.Common.Modules;
 using OSS.Common.Modules.LogModule;
 using OSS.Http;
@@ -76,11 +75,12 @@ namespace OSS.PayCenter.WX
         /// <param name="request">远程请求组件的request基本信息</param>
         /// <param name="funcFormat">获取实体格式化方法</param>
         /// <returns>实体类型</returns>
-        protected static async Task<T> RestCommon<T>(OsHttpRequest request,
+        protected async Task<T> RestCommon<T>(OsHttpRequest request,
             Func<HttpResponseMessage, Task<T>> funcFormat = null)
             where T : WxPayBaseResp, new()
         {
             T t = default(T);
+            string errorKey = null;
             try
             {
                 var resp = await request.RestSend();
@@ -91,9 +91,13 @@ namespace OSS.PayCenter.WX
                     else
                     {
                         var contentStr = await resp.Content.ReadAsStringAsync();
-                        t = contentStr.DeserializeXml<T>();
-                    }
+                        var dics = XmlDicHelper.ChangXmlToDir(contentStr);
 
+                        t=new T();
+
+                        t.SetResultDirs(dics);
+                        CheckResultSign(dics, t);
+                    }
                     if (t.return_code.ToUpper() != "SUCCESS")
                     {
                         //通信结果处理，这个其实没意义，脱裤子放屁
@@ -110,9 +114,29 @@ namespace OSS.PayCenter.WX
             catch (Exception ex)
             {
                 t = new T() {Ret = (int) ResultTypes.InnerError, Message = ex.Message};
-                LogUtil.Error(string.Concat("基类请求出错，错误信息：", ex.Message), "RestCommon", ModuleNames.PayCenter);
+                errorKey= LogUtil.Error(string.Concat("基类请求出错，错误信息：", ex.Message), "RestCommon", ModuleNames.PayCenter);
             }
-            return t ?? new T() {Ret = 0};
+            return t ?? new T() {Ret = 0,Message = string.Concat("当前请求出错，错误码：", errorKey) };
+        }
+        /// <summary>
+        ///  检查返回结果的签名sign
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dics"></param>
+        /// <param name="t"></param>
+        protected void CheckResultSign<T>(SortedDictionary<string, string> dics, T t) where T : WxPayBaseResp, new()
+        {
+            var encryptStr = string.Join("&", dics.Select(d =>
+            {
+                if (d.Key != "sign")
+                    return string.Concat(d.Key, "=", d.Value);
+                return string.Empty;
+            }));
+            var signStr = Md5.EncryptHexString(string.Concat(encryptStr, "&key=", ApiConfig.Key)).ToUpper();
+            if (signStr == t.sign) return;
+
+            t.Ret = (int) ResultTypes.ParaNotMeet;
+            t.Message = "返回的结果签名（sign）不匹配";
         }
 
 
@@ -124,8 +148,27 @@ namespace OSS.PayCenter.WX
         /// <param name="xmlDirs">请求参数的排序字典（不包括：appid,mch_id,nonce_str,sign_type,key,sign。 会自动补充）</param>
         /// <param name="funcFormat"></param>
         /// <returns></returns>
-        protected async Task<T> PostPayXml<T>(string addressUrl, SortedDictionary<string, object> xmlDirs,
+        protected async Task<T> PostPaySortDics<T>(string addressUrl, SortedDictionary<string, object> xmlDirs,
             Func<HttpResponseMessage, Task<T>> funcFormat = null) where T : WxPayBaseResp, new()
+        {
+            CompleteDictionarys(xmlDirs);
+
+            var req = new OsHttpRequest();
+
+            req.HttpMothed = HttpMothed.POST;
+            req.AddressUrl = addressUrl;
+            req.CustomBody = xmlDirs.ProduceXml();
+
+            var res= await RestCommon<T>(req, funcFormat);
+
+            return res;
+        }
+
+        /// <summary>
+        ///  补充完善 字典信息 如 ：appid,mch_id ，以及添加签名sign等信息
+        /// </summary>
+        /// <param name="xmlDirs"></param>
+        private void CompleteDictionarys(SortedDictionary<string, object> xmlDirs)
         {
             xmlDirs.Add("appid", ApiConfig.AppId);
             xmlDirs.Add("mch_id", ApiConfig.MchId);
@@ -134,14 +177,6 @@ namespace OSS.PayCenter.WX
             string sign = Md5.EncryptHexString(string.Concat(encStr, "&key=", ApiConfig.Key)).ToUpper();
 
             xmlDirs.Add("sign", sign);
-
-            var req = new OsHttpRequest();
-
-            req.HttpMothed = HttpMothed.POST;
-            req.AddressUrl = addressUrl;
-            req.CustomBody = xmlDirs.ProduceXml();
-
-            return await RestCommon<T>(req, funcFormat);
         }
 
         #endregion

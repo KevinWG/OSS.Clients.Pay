@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OSS.PayCenter.Samples", "Sa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OSS.PayCenter.Tests", "Tests\OSS.PayCenter.Tests\OSS.PayCenter.Tests.csproj", "{87BB35B0-471B-4DAC-9096-EC03FB3F37F8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A13DBF4A-BFDD-4FFA-8164-2DE07E39E7D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,5 +68,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{6153BC7A-4142-4814-8AFB-85C18C8D1770} = {35770F5D-B3B8-4DA5-8F53-138908D2203D}
 		{8DC94933-8C6B-4624-8724-6846E8568E9A} = {39B9C1EB-5ADA-4004-8F41-CAE85296EADA}
+		{87BB35B0-471B-4DAC-9096-EC03FB3F37F8} = {A13DBF4A-BFDD-4FFA-8164-2DE07E39E7D8}
 	EndGlobalSection
 EndGlobal

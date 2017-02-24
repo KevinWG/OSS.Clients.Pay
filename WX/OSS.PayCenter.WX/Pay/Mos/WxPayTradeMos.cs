@@ -5,201 +5,167 @@
 *
 *　　	创建人： Kevin
 *       创建人Email：1985088337@qq.com
-*    	创建日期：2017-2-23
+*    	创建日期：2017-2-24
 *       
 *****************************************************************************/
 
 #endregion
 
-using System.Collections.Generic;
 using System.Xml.Serialization;
+using OSS.Common.Extention;
 
 namespace OSS.PayCenter.WX.Pay.Mos
 {
-
-    #region   支付下单接口
-
-    /// <summary>
-    ///   微信订单支付统一下单请求参数
-    /// </summary>
-    public class WxAddPayTradeOrderReq: WxPayBaseReq
+    #region  查询订单接口
+    public class WxQueryOrderReq : WxPayBaseReq
     {
         /// <summary>   
-        ///    设备号 可空 String(32) 自定义参数，可以为终端设备号(门店号或收银设备ID)，PC网页或公众号内支付可以传"WEB"
+        ///    微信订单号 二选一 String(32) 微信的订单号，建议优先使用
         /// </summary>  
-        public string device_info { get; set; }
+        public string transaction_id { get; set; }
 
         /// <summary>   
-        ///    商品描述 必填 String(128) 商品简单描述，该字段请按照规范传递，具体请见参数规定 https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=4_2
-        /// </summary>  
-        public string body { get; set; }
-
-        /// <summary>   
-        ///    附加数据 可空 String(127) 附加数据，在查询API和支付通知中原样返回，可作为自定义参数使用。
-        /// </summary>  
-        public string attach { get; set; }
-
-        /// <summary>   
-        ///    商户订单号 必填 String(32) 商户系统内部订单号，要求32个字符内、且在同一个商户号下唯一。 详见商户订单号
+        ///    商户订单号 String(32) 20150806125346
         /// </summary>  
         public string out_trade_no { get; set; }
 
-        /// <summary>   
-        ///    标价币种 可空 String(16) 符合ISO 4217标准的三位字母代码，默认人民币：CNY，详细列表请参见货币类型
-        /// </summary>  
-        public string fee_type { get; set; } = "CNY";
-
-        /// <summary>   
-        ///    标价金额 必填 Int 订单总金额，单位为分，详见支付金额
-        /// </summary>  
-        public int total_fee { get; set; }
-
-        /// <summary>   
-        ///    终端IP 必填 String(16) APP和网页支付提交用户端ip，Native支付填调用微信支付API的机器IP。
-        /// </summary>  
-        public string spbill_create_ip { get; set; }
-
-        /// <summary>   
-        ///    交易起始时间 可空 String(14) 订单生成时间，格式为yyyyMMddHHmmss，如2009年12月25日9点10分10秒表示为20091225091010。其他详见时间规则
-        /// </summary>  
-        public string time_start { get; set; }
-
-        /// <summary>   
-        ///    交易结束时间 可空 String(14) 订单失效时间，格式为yyyyMMddHHmmss，如2009年12月27日9点10分10秒表示为20091227091010。其他详见时间规则 注意：最短失效时间间隔必须大于5分钟
-        /// </summary>  
-        public string time_expire { get; set; }
-
-        /// <summary>   
-        ///    商品标记 可空 String(32) 商品标记，使用代金券或立减优惠功能时需要的参数，说明详见代金券或立减优惠
-        /// </summary>  
-        public string goods_tag { get; set; }
-
-        /// <summary>   
-        ///    通知地址 必填 String(256) 异步接收微信支付结果通知的回调地址，通知url必须为外网可访问的url，不能携带参数。
-        /// </summary>  
-        public string notify_url { get; set; }
-
-        /// <summary>   
-        ///    交易类型 必填 String(16) 取值如下：JSAPI，NATIVE，APP等，说明详见参数规定
-        /// </summary>  
-        public string trade_type { get; set; }
-
-        /// <summary>   
-        ///    商品ID 可空 String(32) trade_type=NATIVE时（即扫码支付），此参数必传。此参数为二维码中包含的商品ID，商户自行定义。
-        /// </summary>  
-        public string product_id { get; set; }
-
-        /// <summary>   
-        ///    指定支付方式 可空 String(32) 上传此参数no_credit--可限制用户不能使用信用卡支付
-        /// </summary>  
-        public string limit_pay { get; set; }
-
-        /// <summary>   
-        ///    用户标识 可空 String(128) trade_type=JSAPI时（即公众号支付），此参数必传，此参数为微信用户在商户对应appid下的唯一标识。openid如何获取，可参考【获取openid】。企业号请使用【企业号OAuth2.0接口】获取企业号内成员userid，再调用【企业号userid转openid接口】进行转换
-        /// </summary>
-        public string openid { get; set; }
-
         /// <summary>
-        ///  设置需要需要运算的字典值
+        ///  设置参与加密的字段
         /// </summary>
         protected override void SetSignDics()
         {
-            SetDicItem("device_info", device_info);
-            SetDicItem("body", body);
-            SetDicItem("attach", attach);
+            SetDicItem("transaction_id", transaction_id);
             SetDicItem("out_trade_no", out_trade_no);
-            SetDicItem("fee_type", fee_type);
-
-            SetDicItem("total_fee", total_fee);
-            SetDicItem("spbill_create_ip", spbill_create_ip);
-            SetDicItem("time_start", time_start);
-            SetDicItem("time_expire", time_expire);
-            SetDicItem("goods_tag", goods_tag);
-
-            SetDicItem("notify_url", notify_url);
-            SetDicItem("trade_type", trade_type);
-            SetDicItem("product_id", product_id);
-            SetDicItem("limit_pay", limit_pay);
-            SetDicItem("openid", openid);
         }
     }
 
     /// <summary>
-    /// 支付商品详情实体
+    ///  查询订单响应实体
     /// </summary>
-    public class WxPayTradeDetailMo
-    {
-        /// <summary>
-        ///  订单原价，商户侧一张小票订单可能被分多次支付，订单原价用于记录整张小票的支付金额。当订单原价与支付金额不相等则被判定为拆单，无法享受优惠。
-        /// </summary>
-        public int cost_price { get; set; }
-
-        /// <summary>
-        /// 商家小票ID
-        /// </summary>
-        public string receipt_id { get; set; }
-
-        /// <summary>
-        /// 商品详情
-        /// </summary>
-        public List<WxPayTradeDetailItemMo> detail { get; set; }
-    }
-
-    /// <summary>
-    /// 支付商品详情条目实体
-    /// </summary>
-    public class WxPayTradeDetailItemMo
-    {
-        /// <summary>
-        ///  商品的编号
-        /// </summary>
-        public string goods_id { get; set; }
-
-        /// <summary>
-        /// 微信支付定义的统一商品编号
-        /// </summary>
-        public string wxpay_goods_id { get; set; }
-
-        /// <summary>
-        ///  商品名称 
-        /// </summary>
-        public string goods_name { get; set; }
-
-        /// <summary>
-        ///  商品数量 
-        /// </summary>
-        public int quantity { get; set; }
-
-        /// <summary>
-        ///  商品单价，如果商户有优惠，需传输商户优惠后的单价 注意：单品总金额应小于或等于订单总金额total_fee，否则会无法享受优惠
-        /// </summary>
-        public int price { get; set; }
-    }
-
-    [XmlRoot("xml")]
-    public class WxAddPayTradeOrderResp : WxPayBaseResp
+    [XmlRoot("root")]
+    public class WxQueryOrderResp : WxPayBaseResp
     {
         /// <summary>   
-        ///    设备号 可空 String(32) 自定义参数，可以为请求支付的终端设备号等
+        ///    设备号 可空 String(32) 微信支付分配的终端设备号，
         /// </summary>  
         public string device_info { get; set; }
 
         /// <summary>   
-        ///    交易类型 必填 String(16) 交易类型，取值为：JSAPI，NATIVE，APP等，说明详见参数规定
+        ///    用户标识 必填 String(128) 用户在商户appid下的唯一标识
+        /// </summary>  
+        public string openid { get; set; }
+
+        /// <summary>   
+        ///    是否关注公众账号 可空 String(1) 用户是否关注公众账号，Y-关注，N-未关注，仅在公众账号类型支付有效
+        /// </summary>  
+        public string is_subscribe { get; set; }
+
+        /// <summary>   
+        ///    交易类型 必填 String(16) 调用接口提交的交易类型，取值如下：JSAPI，NATIVE，APP，MICROPAY，详细说明见参数规定
         /// </summary>  
         public string trade_type { get; set; }
 
         /// <summary>   
-        ///    预支付交易会话标识 必填 String(64) 微信生成的预支付回话标识，用于后续接口调用中使用，该值有效期为2小时
+        ///    交易状态 必填 String(32) SUCCESS—支付成功,REFUND—转入退款,NOTPAY—未支付,CLOSED—已关闭,REVOKED—已撤销（刷卡支付）,USERPAYING--用户支付中,PAYERROR--支付失败(其他原因，如银行返回失败)
         /// </summary>  
-        public string prepay_id { get; set; }
+        public string trade_state { get; set; }
 
         /// <summary>   
-        ///    二维码链接 可空 String(64) trade_type为NATIVE时有返回，用于生成二维码，展示给用户进行扫码支付
+        ///    付款银行 必填 String(16) 银行类型，采用字符串类型的银行标识
         /// </summary>  
-        public string code_url { get; set; }
+        public string bank_type { get; set; }
+
+        /// <summary>   
+        ///    标价金额 必填 Int 订单总金额，单位为分
+        /// </summary>  
+        public int total_fee { get; set; }
+
+        /// <summary>   
+        ///    应结订单金额 可空 Int 应结订单金额=订单金额-非充值代金券金额，应结订单金额小于等于订单金额。
+        /// </summary>  
+        public int settlement_total_fee { get; set; }
+
+        /// <summary>   
+        ///    标价币种 可空 String(8) 货币类型，符合ISO 4217标准的三位字母代码，默认人民币：CNY，其他值列表详见货币类型
+        /// </summary>  
+        public string fee_type { get; set; }
+
+        /// <summary>   
+        ///    现金支付金额 必填 Int 现金支付金额订单现金支付金额，详见支付金额
+        /// </summary>  
+        public int cash_fee { get; set; }
+
+        /// <summary>   
+        ///    现金支付币种 可空 String(16) 货币类型，符合ISO 4217标准的三位字母代码，默认人民币：CNY，其他值列表详见货币类型
+        /// </summary>  
+        public string cash_fee_type { get; set; }
+
+        /// <summary>   
+        ///    代金券金额 可空 Int “代金券”金额小于订单金额，订单金额-“代金券”金额=现金支付金额，详见支付金额
+        /// </summary>  
+        public int coupon_fee { get; set; }
+
+        /// <summary>   
+        ///    代金券使用数量 可空 Int 代金券使用数量
+        /// </summary>  
+        public int coupon_count { get; set; }
+
+        /// <summary>   
+        ///    微信支付订单号 必填 String(32) 微信支付订单号
+        /// </summary>  
+        public string transaction_id { get; set; }
+
+        /// <summary>   
+        ///    商户订单号 必填 String(32) 商户系统的订单号，与请求一致。
+        /// </summary>  
+        public string out_trade_no { get; set; }
+
+        /// <summary>   
+        ///    附加数据 可空 String(128) 附加数据，原样返回
+        /// </summary>  
+        public string attach { get; set; }
+
+        /// <summary>   
+        ///    支付完成时间 必填 String(14) 订单支付时间，格式为yyyyMMddHHmmss，如2009年12月25日9点10分10秒表示为20091225091010。其他详见时间规则
+        /// </summary>  
+        public string time_end { get; set; }
+
+        /// <summary>   
+        ///    交易状态描述 必填 String(256) 对当前查询订单状态的描述和下一步操作的指引
+        /// </summary>  
+        public string trade_state_desc { get; set; }
+
+
+        // 注意：这里代金券coupon_count>0 时，类型金额等可以通过 this["coupon_fee_下标"] 获取
+
+
+        /// <summary>
+        /// 格式化自身属性部分
+        /// </summary>
+        protected override void FormatPropertiesFromMsg()
+        {
+            device_info = this["device_info"];
+            openid = this["openid"];
+            is_subscribe = this["is_subscribe"];
+            trade_type = this["trade_type"];
+            trade_state = this["trade_state"];
+
+            bank_type = this["bank_type"];
+            total_fee = this["total_fee"].ToInt32();
+            settlement_total_fee = this["settlement_total_fee"].ToInt32();
+            fee_type = this["fee_type"];
+            cash_fee = this["cash_fee"].ToInt32();
+
+            cash_fee_type = this["cash_fee_type"];
+            coupon_fee = this["coupon_fee"].ToInt32();
+            coupon_count = this["coupon_count"].ToInt32();
+            transaction_id = this["transaction_id"];
+            out_trade_no = this["out_trade_no"];
+
+            attach = this["attach"];
+            time_end = this["time_end"];
+            trade_state_desc = this["trade_state_desc"];
+        }
     }
-
-    #endregion
-
+    #endregion  
 }

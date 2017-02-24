@@ -49,7 +49,6 @@ namespace OSS.PayCenter.WX
             {
                 _dics.Add(key, value);
             }
-          
         }
 
         public SortedDictionary<string, object> GetDics()
@@ -98,7 +97,6 @@ namespace OSS.PayCenter.WX
         public string return_msg { get; set; }
 
         private string _resultCode = string.Empty;
-
         /// <summary>   
         ///    业务结果 必填 String(16) SUCCESS/FAIL
         /// </summary>  
@@ -124,6 +122,51 @@ namespace OSS.PayCenter.WX
         ///    错误代码描述 可空 String(128) 错误信息描述
         /// </summary>  
         public string err_code_des { get; set; }
+
+
+        private  SortedDictionary<string, string> _dics ;
+    
+        /// <summary>
+        ///  把消息对应的xml字典，给属性赋值
+        /// </summary>
+        /// <param name="contentDirs"></param>
+        internal void SetResultDirs(SortedDictionary<string, string> contentDirs)
+        {
+            _dics = contentDirs;
+
+            appid = this["appid"];
+            mch_id = this["mch_id"];
+            nonce_str = this["nonce_str"];
+            sign = this["sign"];
+            result_code = this["result_code"];
+            err_code = this["err_code"];
+            err_code_des = this["err_code_des"];
+
+            FormatPropertiesFromMsg();
+        }
+
+
+        /// <summary>
+        /// 格式化自身属性部分
+        /// </summary>
+        protected virtual void FormatPropertiesFromMsg()
+        {
+        }
+
+        /// <summary>
+        /// 自定义索引，获取指定字段的值
+        /// </summary>
+        /// <param name="key"></param>
+        public string this[string key]
+        {
+            get
+            {
+                string value;
+                _dics.TryGetValue(key, out value);
+                return value ?? string.Empty;
+            }
+        }
+
     }
 
 

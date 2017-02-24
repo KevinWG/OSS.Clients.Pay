@@ -25,7 +25,7 @@ namespace OSS.PayCenter.Tests
         [TestMethod]
         public void TestMethod1()
         {
-            var order = new WxAddPayTradeOrderReq();
+            var order = new WxAddPayUniOrderReq();
 
             order.device_info = "WEB";
             order.body = "测试商品支付";

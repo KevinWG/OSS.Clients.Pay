@@ -14,6 +14,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
 
 namespace OSS.PayCenter.WX.SysTools
 {
@@ -49,6 +50,34 @@ namespace OSS.PayCenter.WX.SysTools
                 }
             }
             return xml.ToString();
+        }
+
+
+        /// <summary>
+        /// 把xml文本转化成字典对象
+        /// </summary>
+        /// <param name="xml"></param>
+        /// <returns></returns>
+        internal static SortedDictionary<string, string> ChangXmlToDir(string xml)
+        {
+            if (string.IsNullOrEmpty(xml))
+            {
+                return null;
+            }
+            var dirs = new SortedDictionary<string, string>();
+
+            var xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(xml);
+            XmlNode xmlNode = xmlDoc.FirstChild;
+            XmlNodeList nodes = xmlNode.ChildNodes;
+
+            foreach (XmlNode xn in nodes)
+            {
+                XmlElement xe = (XmlElement)xn;
+                dirs[xe.Name] = xe.InnerText;
+            }
+
+            return dirs;
         }
     }
 }

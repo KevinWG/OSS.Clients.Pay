@@ -11,10 +11,8 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using OSS.Common.Extention;
 using OSS.PayCenter.WX.Pay.Mos;
 
 namespace OSS.PayCenter.WX.Pay
@@ -29,17 +27,34 @@ namespace OSS.PayCenter.WX.Pay
         {
         }
 
-        public async Task<WxAddPayTradeOrderResp> AddPayTradeOrder(WxAddPayTradeOrderReq order,
-            WxPayTradeDetailMo detail=null)
+
+        /// <summary>
+        ///   统一下单接口
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        public async Task<WxAddPayUniOrderResp> AddPayUniOrder(WxAddPayUniOrderReq order)
         {
             var dics = order.GetDics();
-       
-            if (detail!=null)
-                dics.Add("detail",JsonConvert.SerializeObject(detail));
-
             string addressUrl = string.Concat(m_ApiUrl, "/pay/unifiedorder");
-            return await PostPayXml<WxAddPayTradeOrderResp>(addressUrl, dics);
+
+            return await PostPaySortDics<WxAddPayUniOrderResp>(addressUrl, dics);
         }
-        
+
+        /// <summary>
+        ///  查询订单接口
+        /// </summary>
+        /// <param name="queryReq"></param>
+        /// <returns></returns>
+        public async Task<WxQueryOrderResp> QueryOrder(WxQueryOrderReq queryReq)
+        {
+            var dics = queryReq.GetDics();
+            var addressUrl = string.Concat(m_ApiUrl, "/pay/orderquery");
+
+            return await PostPaySortDics<WxQueryOrderResp>(addressUrl, dics);
+        }
+
+
+
     }
 }
