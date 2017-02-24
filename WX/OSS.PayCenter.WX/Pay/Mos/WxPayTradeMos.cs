@@ -11,7 +11,6 @@
 
 #endregion
 
-using System.Xml.Serialization;
 using OSS.Common.Extention;
 
 namespace OSS.PayCenter.WX.Pay.Mos
@@ -42,7 +41,6 @@ namespace OSS.PayCenter.WX.Pay.Mos
     /// <summary>
     ///  查询订单响应实体
     /// </summary>
-    [XmlRoot("root")]
     public class WxQueryOrderResp : WxPayBaseResp
     {
         /// <summary>   

@@ -13,7 +13,6 @@
 
 using System.Collections.Generic;
 using System.Text;
-using System.Xml.Serialization;
 
 namespace OSS.PayCenter.WX.Pay.Mos
 {
@@ -209,7 +208,6 @@ namespace OSS.PayCenter.WX.Pay.Mos
         public int price { get; set; }
     }
 
-    [XmlRoot("xml")]
     public class WxAddPayUniOrderResp : WxPayBaseResp
     {
         /// <summary>   
