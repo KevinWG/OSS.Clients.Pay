@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OSS.Common.Extention;
 using OSS.PayCenter.WX;
 using OSS.PayCenter.WX.Pay;
@@ -36,7 +35,7 @@ namespace OSS.PayCenter.Tests
             order.trade_type = "JSAPI";
             order.total_fee = 100;
 
-            var res = m_Api.AddPayTradeOrder(order).WaitResult();
+            var res = m_Api.AddPayUniOrder(order).WaitResult();
             Assert.IsTrue(res.IsSuccess);
         }
     }

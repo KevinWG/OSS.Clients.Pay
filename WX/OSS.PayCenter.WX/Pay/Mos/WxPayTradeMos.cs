@@ -165,5 +165,26 @@ namespace OSS.PayCenter.WX.Pay.Mos
             trade_state_desc = this["trade_state_desc"];
         }
     }
-    #endregion  
+    #endregion
+
+
+    #region 关闭订单实体
+
+    public class WxPayCloseOrderReq:WxPayBaseReq
+    {
+        /// <summary>
+        ///    商户订单号 必填 String(32) 商户系统内部的订单号
+        /// </summary>  
+        public string out_trade_no { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected override void SetSignDics()
+        {
+            SetDicItem("out_trade_no", out_trade_no);
+        }
+    }
+
+    #endregion
 }

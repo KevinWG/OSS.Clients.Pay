@@ -12,7 +12,6 @@
 #endregion
 
 using System.Threading.Tasks;
-using OSS.Common.Extention;
 using OSS.PayCenter.WX.Pay.Mos;
 
 namespace OSS.PayCenter.WX.Pay
@@ -54,6 +53,18 @@ namespace OSS.PayCenter.WX.Pay
             return await PostPaySortDics<WxQueryOrderResp>(addressUrl, dics);
         }
 
+        /// <summary>
+        ///  关闭订单
+        /// </summary>
+        /// <param name="closeReq"></param>
+        /// <returns></returns>
+        public async Task<WxPayBaseResp> CloseOrder(WxPayCloseOrderReq closeReq)
+        {
+            var dics = closeReq.GetDics();
+            var addressUrl = string.Concat(m_ApiUrl, "/pay/closeorder");
+
+            return await PostPaySortDics<WxQueryOrderResp>(addressUrl, dics);
+        }
 
 
     }
