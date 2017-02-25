@@ -74,10 +74,10 @@ namespace OSS.PayCenter.WX.Pay.Mos
         /// </summary>  
         public string goods_tag { get; set; }
 
-        /// <summary>   
-        ///    通知地址 必填 String(256) 异步接收微信支付结果通知的回调地址，通知url必须为外网可访问的url，不能携带参数。
-        /// </summary>  
-        public string notify_url { get; set; }
+        ///// <summary>   
+        /////    通知地址 必填 String(256) 异步接收微信支付结果通知的回调地址，通知url必须为外网可访问的url，不能携带参数。
+        ///// </summary>  
+        //public string notify_url { get; set; }
 
         /// <summary>   
         ///    交易类型 必填 String(16) 取值如下：JSAPI，NATIVE，APP等，说明详见参数规定
@@ -120,8 +120,7 @@ namespace OSS.PayCenter.WX.Pay.Mos
             SetDicItem("time_start", time_start);
             SetDicItem("time_expire", time_expire);
             SetDicItem("goods_tag", goods_tag);
-
-            SetDicItem("notify_url", notify_url);
+            
             SetDicItem("trade_type", trade_type);
             SetDicItem("product_id", product_id);
             SetDicItem("limit_pay", limit_pay);

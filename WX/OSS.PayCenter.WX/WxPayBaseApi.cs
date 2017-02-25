@@ -16,6 +16,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using OSS.Common.ComModels.Enums;
 using OSS.Common.Encrypt;
@@ -74,16 +75,17 @@ namespace OSS.PayCenter.WX
         /// <typeparam name="T">需要返回的实体类型</typeparam>
         /// <param name="request">远程请求组件的request基本信息</param>
         /// <param name="funcFormat">获取实体格式化方法</param>
+        /// <param name="client">自定义请求客户端，当前主要是因为标准库没有提供证书设置选项，所以通过上层运行时传入设置委托，在使用证书的子类中构造客户端传入 </param>
         /// <returns>实体类型</returns>
         protected async Task<T> RestCommon<T>(OsHttpRequest request,
-            Func<HttpResponseMessage, Task<T>> funcFormat = null)
+            Func<HttpResponseMessage, Task<T>> funcFormat = null, HttpClient client = null)
             where T : WxPayBaseResp, new()
         {
             T t = default(T);
             string errorKey = null;
             try
             {
-                var resp = await request.RestSend();
+                var resp = await request.RestSend(client);
                 if (resp.IsSuccessStatusCode)
                 {
                     if (funcFormat != null)
@@ -147,9 +149,10 @@ namespace OSS.PayCenter.WX
         /// <param name="addressUrl">接口地址</param>
         /// <param name="xmlDirs">请求参数的排序字典（不包括：appid,mch_id,nonce_str,sign_type,key,sign。 会自动补充）</param>
         /// <param name="funcFormat"></param>
+        /// <param name="client">自定义请求客户端，当前主要是因为标准库没有提供证书设置选项，所以通过上层运行时传入设置委托，在使用证书的子类中构造客户端传入</param>
         /// <returns></returns>
         protected async Task<T> PostPaySortDics<T>(string addressUrl, SortedDictionary<string, object> xmlDirs,
-            Func<HttpResponseMessage, Task<T>> funcFormat = null) where T : WxPayBaseResp, new()
+            Func<HttpResponseMessage, Task<T>> funcFormat = null,HttpClient client=null) where T : WxPayBaseResp, new()
         {
             CompleteDictionarys(xmlDirs);
 
@@ -159,7 +162,7 @@ namespace OSS.PayCenter.WX
             req.AddressUrl = addressUrl;
             req.CustomBody = xmlDirs.ProduceXml();
 
-            var res= await RestCommon<T>(req, funcFormat);
+            var res= await RestCommon<T>(req, funcFormat,client);
 
             return res;
         }
@@ -235,6 +238,21 @@ namespace OSS.PayCenter.WX
         #endregion
 
 
-        
+        private HttpClient _client;
+        /// <summary>
+        ///   获取设置了证书的HttpClient
+        /// </summary>
+        /// <returns></returns>
+        protected internal HttpClient GetCertHttpClient()
+        {
+            if (_client==null)
+            {
+                var reqHandler = new HttpClientHandler();
+                ApiConfig.SetCertificata?.Invoke(reqHandler,new X509Certificate2(ApiConfig.CertPath,ApiConfig.CertPassword));
+                _client = new HttpClient(reqHandler);
+            }
+            return _client;
+        }
+
     }
 }

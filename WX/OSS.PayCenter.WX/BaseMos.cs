@@ -14,6 +14,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
 using OSS.Common.ComModels;
 
 namespace OSS.PayCenter.WX
@@ -23,12 +25,12 @@ namespace OSS.PayCenter.WX
     /// </summary>
     public class WxPayBaseReq
     {
-        private readonly SortedDictionary<string,object> _dics=new SortedDictionary<string, object>();
+        private readonly SortedDictionary<string, object> _dics = new SortedDictionary<string, object>();
 
         public WxPayBaseReq()
         {
-            var nonceStr = Guid.NewGuid().ToString().Replace("-","");
-            _dics.Add("nonce_str", nonceStr);
+            var nonceStr = Guid.NewGuid().ToString().Replace("-", "");
+            _dics["nonce_str"] = nonceStr;
         }
 
         /// <summary>
@@ -43,19 +45,17 @@ namespace OSS.PayCenter.WX
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        protected void SetDicItem(string key,object value)
+        protected void SetDicItem(string key, object value)
         {
             if (!string.IsNullOrEmpty(value?.ToString()))
-            {
-                _dics.Add(key, value);
-            }
+                _dics[key] = value;
         }
 
         public SortedDictionary<string, object> GetDics()
         {
             SetSignDics();
 
-            _dics.Add("sign_type", "MD5");
+            _dics["sign_type"] = "MD5";
             return _dics;
         }
     }
@@ -97,6 +97,7 @@ namespace OSS.PayCenter.WX
         public string return_msg { get; set; }
 
         private string _resultCode = string.Empty;
+
         /// <summary>   
         ///    业务结果 必填 String(16) SUCCESS/FAIL
         /// </summary>  
@@ -124,8 +125,8 @@ namespace OSS.PayCenter.WX
         public string err_code_des { get; set; }
 
 
-        private  SortedDictionary<string, string> _dics ;
-    
+        private SortedDictionary<string, string> _dics;
+
         /// <summary>
         ///  把消息对应的xml字典，给属性赋值
         /// </summary>
@@ -169,9 +170,6 @@ namespace OSS.PayCenter.WX
 
     }
 
-
-
-
     public class WxPayCenterConfig
     {
         /// <summary>
@@ -198,6 +196,33 @@ namespace OSS.PayCenter.WX
         /// 参与加密的key值
         /// </summary>
         public string Key { get; set; }
+
+        /// <summary>
+        ///  回调通知地址
+        /// </summary>
+        public string NotifyUrl { get; set; }
+
+
+        /// <summary>
+        /// 证书路径,  请填写绝对路径，为了安全，请不要将证书放在网站目录下
+        /// </summary>
+        public string CertPath { get; set; }
+
+        /// <summary>
+        ///  证书密码
+        /// </summary>
+        public string CertPassword { get; set; }
+
+        /// <summary>
+        ///  设置请求证书委托（使用证书接口必填-退款，发红包等）
+        ///  当前标准库最高版本1.6中HttpClientHandler还不直接支持证书设置，公开当前属性，方便不同运行时框架设置自己的赋值方式
+        ///  例如：config.SetCertificata = (handler, cert) =>
+        ///    {
+        ///        handler.ServerCertificateCustomValidationCallback = (msg, c, chain, sslErrors) => true;
+        ///        handler.ClientCertificates.Add(cert);
+        ///    };
+        /// </summary>
+        public Action<HttpClientHandler, X509Certificate2> SetCertificata { get; set; }
     }
 
 

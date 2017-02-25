@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace OSS.PayCenter.Samples.Controllers
@@ -16,7 +13,12 @@ namespace OSS.PayCenter.Samples.Controllers
 
         public IActionResult Error()
         {
+            var handler=new HttpClientHandler();
+            handler.ClientCertificates
             return View();
         }
+
+
+
     }
 }

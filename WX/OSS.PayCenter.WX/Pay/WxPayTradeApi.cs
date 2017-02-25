@@ -11,6 +11,7 @@
 
 #endregion
 
+using System.Net.Http;
 using System.Threading.Tasks;
 using OSS.PayCenter.WX.Pay.Mos;
 
@@ -35,6 +36,8 @@ namespace OSS.PayCenter.WX.Pay
         public async Task<WxAddPayUniOrderResp> AddPayUniOrder(WxAddPayUniOrderReq order)
         {
             var dics = order.GetDics();
+            dics["notify_url"] = ApiConfig.NotifyUrl;
+
             string addressUrl = string.Concat(m_ApiUrl, "/pay/unifiedorder");
 
             return await PostPaySortDics<WxAddPayUniOrderResp>(addressUrl, dics);
@@ -66,6 +69,20 @@ namespace OSS.PayCenter.WX.Pay
             return await PostPaySortDics<WxQueryOrderResp>(addressUrl, dics);
         }
 
+
+        /// <summary>
+        ///  退款接口
+        /// </summary>
+        /// <param name="refundReq"></param>
+        /// <returns></returns>
+        public async Task<WxPayRefundResp> RefundOrder(WxPayRefundReq refundReq)
+        {
+            var dics = refundReq.GetDics();
+            var url = string.Concat(m_ApiUrl, "/secapi/pay/refund");
+            var certClient = GetCertHttpClient();
+
+            return await PostPaySortDics<WxPayRefundResp>(url, dics, null, certClient);
+        }
 
     }
 }

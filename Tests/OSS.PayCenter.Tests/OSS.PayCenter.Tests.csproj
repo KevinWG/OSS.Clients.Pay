@@ -68,8 +68,8 @@
     <Reference Include="OSS.Common, Version=1.1.2.8, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\OSS.Common.1.1.2.8\lib\netstandard1.3\OSS.Common.dll</HintPath>
     </Reference>
-    <Reference Include="OSS.Http, Version=2.1.2.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OSS.Http.2.1.2.1\lib\netstandard1.1\OSS.Http.dll</HintPath>
+    <Reference Include="OSS.Http, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OSS.Http.2.2.0\lib\netstandard1.1\OSS.Http.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -136,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="cert\apiclient_cert.p12" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
