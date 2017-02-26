@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Concurrent;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OSS.Common.Extention;
 using OSS.PayCenter.WX;
 using OSS.PayCenter.WX.Pay;
@@ -42,6 +43,16 @@ namespace OSS.PayCenter.Tests
 
             var res = m_Api.AddPayUniOrder(order).WaitResult();
             Assert.IsTrue(res.IsSuccess);
+        }
+
+
+
+
+        [TestMethod]
+        public void DicTest()
+        {
+            ConcurrentDictionary<string,string> dics=new ConcurrentDictionary<string, string>();
+            dics["key"] = "111";
         }
     }
 }

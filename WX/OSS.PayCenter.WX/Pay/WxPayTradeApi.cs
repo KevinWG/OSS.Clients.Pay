@@ -11,7 +11,6 @@
 
 #endregion
 
-using System.Net.Http;
 using System.Threading.Tasks;
 using OSS.PayCenter.WX.Pay.Mos;
 
@@ -19,6 +18,16 @@ namespace OSS.PayCenter.WX.Pay
 {
     public class WxPayTradeApi : WxPayBaseApi
     {
+        #region   全局错误码注册
+
+        static WxPayTradeApi()
+        {
+         
+        }
+
+        #endregion
+
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -70,19 +79,8 @@ namespace OSS.PayCenter.WX.Pay
         }
 
 
-        /// <summary>
-        ///  退款接口
-        /// </summary>
-        /// <param name="refundReq"></param>
-        /// <returns></returns>
-        public async Task<WxPayRefundResp> RefundOrder(WxPayRefundReq refundReq)
-        {
-            var dics = refundReq.GetDics();
-            var url = string.Concat(m_ApiUrl, "/secapi/pay/refund");
-            var certClient = GetCertHttpClient();
 
-            return await PostPaySortDics<WxPayRefundResp>(url, dics, null, certClient);
-        }
+
 
     }
 }

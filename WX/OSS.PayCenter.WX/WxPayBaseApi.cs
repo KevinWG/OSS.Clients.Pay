@@ -202,10 +202,10 @@ namespace OSS.PayCenter.WX
             #region 错误基本信息
 
             m_DicErrMsg.TryAdd("NOAUTH", "商户无此接口权限 ");
-            m_DicErrMsg.TryAdd("NOTENOUGH", "余额不足   ");
+            m_DicErrMsg.TryAdd("NOTENOUGH", "余额不足");
             m_DicErrMsg.TryAdd("ORDERPAID", "商户订单已支付 ");
             m_DicErrMsg.TryAdd("ORDERCLOSED", "订单已关闭 ");
-            m_DicErrMsg.TryAdd("SYSTEMERROR", "系统错误 ");
+            m_DicErrMsg.TryAdd("SYSTEMERROR", "商户系统接口错误");
             m_DicErrMsg.TryAdd("APPID_NOT_EXIST", "APPID不存在 ");
             m_DicErrMsg.TryAdd("MCHID_NOT_EXIST", "MCHID不存在 ");
             m_DicErrMsg.TryAdd("APPID_MCHID_NOT_MATCH", "appid和mch_id不匹配 ");
@@ -216,6 +216,8 @@ namespace OSS.PayCenter.WX
             m_DicErrMsg.TryAdd("REQUIRE_POST_METHOD", "请使用post方法 ");
             m_DicErrMsg.TryAdd("POST_DATA_EMPTY", "post数据为空 ");
             m_DicErrMsg.TryAdd("NOT_UTF8", "编码格式错误 ");
+            RegisteErrorCode("PARAM_ERROR", "参数错误 请求参数未按指引进行填写");
+            RegisteErrorCode("SIGNERROR", "签名错误 ");
 
             #endregion
         }
