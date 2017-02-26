@@ -94,27 +94,6 @@ namespace OSS.PayCenter.WX.Pay
 
 
 
-        #region  关闭统一下单订单  和   撤销扫码订单
-
-        /// <summary> 
-        ///  关闭统一下单订单
-        /// 请不要和扫码撤销订单搞混
-        /// </summary>
-        /// <param name="out_trade_no"></param>
-        /// <returns></returns>
-        public async Task<WxPayBaseResp> CloseUniOrder(string out_trade_no)
-        {
-            var addressUrl = string.Concat(m_ApiUrl, "/pay/closeorder");
-
-            var baseReq = new WxPayBaseReq();
-            var dics = baseReq.GetDics();
-            dics["out_trade_no"] = out_trade_no;
-
-            return await PostPaySortDics<WxPayQueryOrderResp>(addressUrl, dics);
-        }
-
-
-        #endregion
 
         #region  订单结果通知解析 和 生成返回结果xml方法
 

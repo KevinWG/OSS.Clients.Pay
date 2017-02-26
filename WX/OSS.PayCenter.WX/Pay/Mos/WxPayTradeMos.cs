@@ -191,6 +191,8 @@ namespace OSS.PayCenter.WX.Pay.Mos
         public int coupon_fee { get; set; }
     }
 
-    #endregion
+
+
+
 
 }

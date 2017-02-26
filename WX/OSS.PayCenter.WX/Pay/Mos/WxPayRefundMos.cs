@@ -208,10 +208,13 @@ namespace OSS.PayCenter.WX.Pay.Mos
             }
         }
     }
-    
+
     #endregion
 
-
+    #region 查询退款订单相关实体
+    /// <summary>
+    ///  获取退款订单请求
+    /// </summary>
     public class WxPayGetRefundReq : WxPayBaseReq
     {
         /// <summary>   
@@ -428,6 +431,27 @@ namespace OSS.PayCenter.WX.Pay.Mos
         public int coupon_refund_fee { get; set; }
     }
 
+    #endregion
 
+    #region
+
+    /// <summary>
+    ///  撤销订单响应实体
+    /// </summary>
+    public class WxPayResverOrderResp : WxPayBaseResp
+    {
+        /// <summary>   
+        ///    是否重调 必填 String(1) 是否需要继续调用撤销，Y-需要，N-不需要
+        /// </summary>  
+        public string recall { get; set; }
+
+        protected override void FormatPropertiesFromMsg()
+        {
+            base.FormatPropertiesFromMsg();
+            recall = this["recall"];
+        }
+    }
+
+    #endregion
 
 }

@@ -35,7 +35,7 @@ namespace OSS.PayCenter.WX.Pay
 
         #endregion
         /// <summary>
-        ///  退款接口
+        ///  申请退款接口 【需要证书】
         /// </summary>
         /// <param name="refundReq"></param>
         /// <returns></returns>
@@ -61,6 +61,48 @@ namespace OSS.PayCenter.WX.Pay
 
             return await PostPaySortDics<WxPayGetRefundResp>(url, dics);
         }
+
+
+
+
+        #region  关闭统一下单订单  和   撤销扫码订单
+
+        /// <summary> 
+        ///  关闭统一下单订单
+        /// 请不要和扫码撤销订单搞混
+        /// </summary>
+        /// <param name="out_trade_no"></param>
+        /// <returns></returns>
+        public async Task<WxPayBaseResp> CloseUniOrder(string out_trade_no)
+        {
+            var addressUrl = string.Concat(m_ApiUrl, "/pay/closeorder");
+
+            var baseReq = new WxPayBaseReq();
+            var dics = baseReq.GetDics();
+            dics["out_trade_no"] = out_trade_no;
+
+            return await PostPaySortDics<WxPayQueryOrderResp>(addressUrl, dics);
+        }
+
+        /// <summary>
+        ///  撤销订单API，【需要证书】
+        /// </summary>
+        /// <param name="transaction_id">微信订单号 二选一 String(32) 微信的订单号，建议优先使用</param>
+        /// <param name="out_trade_no"> 商户订单号 String(32)</param>
+        /// <returns></returns>
+        public async Task<WxPayResverOrderResp> ReverseMicroOrder(string transaction_id, string out_trade_no)
+        {
+            var addressUrl = string.Concat(m_ApiUrl, "/secapi/pay/reverse");
+
+            var baseReq = new WxPayBaseReq();
+            var dics = baseReq.GetDics();
+            dics["out_trade_no"] = out_trade_no;
+            dics["transaction_id"] = transaction_id;
+
+            return await PostPaySortDics<WxPayResverOrderResp>(addressUrl, dics,null, GetCertHttpClient());
+        }
+
+        #endregion
 
     }
 }
