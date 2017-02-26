@@ -11,8 +11,12 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using OSS.Common.ComModels;
+using OSS.Common.Encrypt;
 using OSS.Common.Extention;
 using OSS.PayCenter.WX.Pay.Mos;
 using OSS.PayCenter.WX.SysTools;
@@ -160,6 +164,33 @@ namespace OSS.PayCenter.WX.Pay
             dics["auth_code"] = auth_code;
 
             return await PostPaySortDics<WxPayAuthCodeOpenIdResp>(url, dics);
+        }
+
+        #endregion
+
+
+        #region   扫码支付模式一
+
+        /// <summary>
+        /// 生成二维码地址(扫码支付模式一)
+        /// </summary>
+        /// <param name="product_id"></param>
+        /// <returns></returns>
+        public string CreateSanCode(string product_id)
+        {
+            var dics = new SortedDictionary<string, string>
+            {
+                ["time_stamp"] = DateTime.Now.ToLocalSeconds().ToString(),
+                ["nonce_str"] = Guid.NewGuid().ToString().Replace("-", ""),
+                ["product_id"] = product_id,
+                ["appid"] = ApiConfig.AppId,
+                ["mch_id"] = ApiConfig.MchId
+            };
+            
+            string encStr = string.Join("&",dics.Select(k => string.Concat(k.Key, "=", k.Value)));
+            var sign= Md5.EncryptHexString(string.Concat(encStr, "&key=", ApiConfig.Key)).ToUpper();
+
+            return string.Concat("weixin://wxpay/bizpayurl?", encStr, "&sign=", sign);
         }
 
         #endregion

@@ -55,7 +55,7 @@ namespace OSS.PayCenter.WX
         {
             SetSignDics();
 
-            _dics["sign_type"] = "MD5";
+            //_dics["sign_type"] = "MD5";
             return _dics;
         }
     }

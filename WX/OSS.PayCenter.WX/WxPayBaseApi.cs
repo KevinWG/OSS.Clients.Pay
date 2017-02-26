@@ -130,7 +130,7 @@ namespace OSS.PayCenter.WX
         {
             var encryptStr = string.Join("&", dics.Select(d =>
             {
-                if (d.Key != "sign")
+                if (d.Key != "sign"&&!string.IsNullOrEmpty(d.Value))
                     return string.Concat(d.Key, "=", d.Value);
                 return string.Empty;
             }));
