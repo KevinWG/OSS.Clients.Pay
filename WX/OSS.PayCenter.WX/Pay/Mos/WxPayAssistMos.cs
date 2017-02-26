@@ -12,6 +12,8 @@
 #endregion
 namespace OSS.PayCenter.WX.Pay.Mos
 {
+
+#region  短链操作实体
     /// <summary>
     ///  获取短链请求实体
     /// </summary>
@@ -48,5 +50,47 @@ namespace OSS.PayCenter.WX.Pay.Mos
         }
     }
 
+    #endregion
 
+
+    #region  授权码查询OPENID实体
+
+    /// <summary>
+    ///  授权码查询OPENID 请求实体
+    /// </summary>
+    public class WxPayAuthCodeOpenIdReq : WxPayBaseReq
+    {
+        /// <summary>   
+        ///    授权码 必填 String(128)
+        /// </summary>  
+        public string auth_code { get; set; }
+
+        protected override void SetSignDics()
+        {
+            base.SetSignDics();
+            SetDicItem("auth_code", auth_code);
+        }
+    }
+    /// <summary>
+    ///  获取短链请求实体
+    /// </summary>
+    public class WxPayAuthCodeOpenIdResp : WxPayBaseResp
+    {
+        /// <summary>   
+        ///    用户标识 必填 String(128)
+        /// </summary>  
+        public string openid { get; set; }
+
+        /// <summary>
+        /// 格式化自身属性部分
+        /// </summary>
+        protected override void FormatPropertiesFromMsg()
+        {
+            base.FormatPropertiesFromMsg();
+            openid = this["openid"];
+        }
+    }
+
+
+    #endregion
 }

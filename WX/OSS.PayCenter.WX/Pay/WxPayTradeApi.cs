@@ -40,6 +40,7 @@ namespace OSS.PayCenter.WX.Pay
         }
 
         #region  下单接口
+
         /// <summary>
         ///   统一下单接口
         /// </summary>
@@ -67,12 +68,11 @@ namespace OSS.PayCenter.WX.Pay
         public async Task<WxPayOrderTradeResp> AddMicroPayOrder(WxAddMicroPayOrderReq order)
         {
             var dics = order.GetDics();
-            dics["notify_url"] = ApiConfig.NotifyUrl;
-
             string addressUrl = string.Concat(m_ApiUrl, "/pay/micropay");
 
             return await PostPaySortDics<WxPayOrderTradeResp>(addressUrl, dics);
         }
+
         #endregion
 
         /// <summary>
@@ -82,10 +82,9 @@ namespace OSS.PayCenter.WX.Pay
         /// <returns></returns>
         public async Task<WxPayQueryOrderResp> QueryOrder(WxPayQueryOrderReq queryReq)
         {
-            var dics = queryReq.GetDics();
             var addressUrl = string.Concat(m_ApiUrl, "/pay/orderquery");
 
-            return await PostPaySortDics<WxPayQueryOrderResp>(addressUrl, dics);
+            return await PostPaySortDics<WxPayQueryOrderResp>(addressUrl, queryReq.GetDics());
         }
 
         /// <summary>
@@ -95,12 +94,12 @@ namespace OSS.PayCenter.WX.Pay
         /// <returns></returns>
         public async Task<WxPayBaseResp> CloseOrder(WxPayCloseOrderReq closeReq)
         {
-            var dics = closeReq.GetDics();
             var addressUrl = string.Concat(m_ApiUrl, "/pay/closeorder");
 
-            return await PostPaySortDics<WxPayQueryOrderResp>(addressUrl, dics);
+            return await PostPaySortDics<WxPayQueryOrderResp>(addressUrl, closeReq.GetDics());
         }
 
+        #region  订单结果通知解析 和 生成返回结果xml方法
         /// <summary>
         ///  订单通知结果解析，并完成验证
         /// </summary>
@@ -116,8 +115,7 @@ namespace OSS.PayCenter.WX.Pay
 
             return res;
         }
-
-
+        
         /// <summary>
         ///   接受微信支付通知后需要返回的信息
         /// </summary>
@@ -128,8 +126,9 @@ namespace OSS.PayCenter.WX.Pay
             return
                 $"<xml><return_code><![CDATA[{(res.IsSuccess ? "Success" : "FAIL")}]]></return_code><return_msg><![CDATA[{res.Message}]]></return_msg></xml>";
         }
+        #endregion
 
-
+        #region  辅助部分方法
 
         /// <summary>
         ///  转换短链api
@@ -141,10 +140,22 @@ namespace OSS.PayCenter.WX.Pay
             var url = string.Concat(m_ApiUrl, "/tools/shorturl");
             var dics = shortReq.GetDics();
 
-            return await PostPaySortDics<WxPayGetShortUrlResp>(url, dics,null,null,d=>d["long_url"]= d["long_url"].UrlEncode());
+            return await PostPaySortDics<WxPayGetShortUrlResp>(url, dics, null, null,
+                d => d["long_url"] = d["long_url"].UrlEncode());
         }
 
+        /// <summary>
+        ///  授权码查询OPENID接口
+        /// </summary>
+        /// <param name="authReq"></param>
+        /// <returns></returns>
+        public async Task<WxPayAuthCodeOpenIdResp> GetShortUrl(WxPayAuthCodeOpenIdReq authReq)
+        {
+            var url = string.Concat(m_ApiUrl, "/tools/authcodetoopenid");
 
+            return await PostPaySortDics<WxPayAuthCodeOpenIdResp>(url, authReq.GetDics());
+        }
+        #endregion
 
     }
 }
