@@ -150,21 +150,20 @@ namespace OSS.PayCenter.WX
         /// <param name="xmlDirs">请求参数的排序字典（不包括：appid,mch_id,nonce_str,sign_type,key,sign。 会自动补充）</param>
         /// <param name="funcFormat"></param>
         /// <param name="client">自定义请求客户端，当前主要是因为标准库没有提供证书设置选项，所以通过上层运行时传入设置委托，在使用证书的子类中构造客户端传入</param>
+        /// <param name="dirformat">生成签名后对字典发送前的操作，例如urlencode操作</param>
         /// <returns></returns>
         protected async Task<T> PostPaySortDics<T>(string addressUrl, SortedDictionary<string, object> xmlDirs,
-            Func<HttpResponseMessage, Task<T>> funcFormat = null,HttpClient client=null) where T : WxPayBaseResp, new()
+            Func<HttpResponseMessage, Task<T>> funcFormat = null,HttpClient client=null,Action<SortedDictionary<string, object>> dirformat=null) where T : WxPayBaseResp, new()
         {
             CompleteDictionarys(xmlDirs);
+            dirformat?.Invoke(xmlDirs);
 
             var req = new OsHttpRequest();
-
             req.HttpMothed = HttpMothed.POST;
             req.AddressUrl = addressUrl;
             req.CustomBody = xmlDirs.ProduceXml();
 
-            var res= await RestCommon<T>(req, funcFormat,client);
-
-            return res;
+            return await RestCommon<T>(req, funcFormat,client);
         }
 
         /// <summary>

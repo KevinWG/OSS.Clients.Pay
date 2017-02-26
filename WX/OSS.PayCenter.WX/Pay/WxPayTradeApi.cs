@@ -13,6 +13,7 @@
 
 using System.Threading.Tasks;
 using OSS.Common.ComModels;
+using OSS.Common.Extention;
 using OSS.PayCenter.WX.Pay.Mos;
 using OSS.PayCenter.WX.SysTools;
 
@@ -127,5 +128,23 @@ namespace OSS.PayCenter.WX.Pay
             return
                 $"<xml><return_code><![CDATA[{(res.IsSuccess ? "Success" : "FAIL")}]]></return_code><return_msg><![CDATA[{res.Message}]]></return_msg></xml>";
         }
+
+
+
+        /// <summary>
+        ///  转换短链api
+        /// </summary>
+        /// <param name="shortReq"></param>
+        /// <returns></returns>
+        public async Task<WxPayGetShortUrlResp> GetShortUrl(WxPayGetShortUrlReq shortReq)
+        {
+            var url = string.Concat(m_ApiUrl, "/tools/shorturl");
+            var dics = shortReq.GetDics();
+
+            return await PostPaySortDics<WxPayGetShortUrlResp>(url, dics,null,null,d=>d["long_url"]= d["long_url"].UrlEncode());
+        }
+
+
+
     }
 }
