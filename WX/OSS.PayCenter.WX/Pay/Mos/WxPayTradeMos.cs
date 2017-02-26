@@ -17,7 +17,7 @@ using OSS.Common.Extention;
 namespace OSS.PayCenter.WX.Pay.Mos
 {
     #region  查询订单接口
-    public class WxQueryOrderReq : WxPayBaseReq
+    public class WxPayQueryOrderReq : WxPayBaseReq
     {
         /// <summary>   
         ///    微信订单号 二选一 String(32) 微信的订单号，建议优先使用
@@ -42,7 +42,32 @@ namespace OSS.PayCenter.WX.Pay.Mos
     /// <summary>
     ///  查询订单响应实体
     /// </summary>
-    public class WxQueryOrderResp : WxPayBaseResp
+    public class WxPayQueryOrderResp : WxPayOrderTradeResp
+    {
+        /// <summary>   
+        ///    交易状态 必填 String(32) SUCCESS—支付成功,REFUND—转入退款,NOTPAY—未支付,CLOSED—已关闭,REVOKED—已撤销（刷卡支付）,USERPAYING--用户支付中,PAYERROR--支付失败(其他原因，如银行返回失败)
+        /// </summary>  
+        public string trade_state { get; set; }
+        /// <summary>   
+        ///    交易状态描述 必填 String(256) 对当前查询订单状态的描述和下一步操作的指引
+        /// </summary>  
+        public string trade_state_desc { get; set; }
+        
+        /// <summary>
+        /// 格式化自身属性部分
+        /// </summary>
+        protected override void FormatPropertiesFromMsg()
+        {
+            base.FormatPropertiesFromMsg();  //  父类包含部分格式化内容
+            trade_state_desc = this["trade_state_desc"];
+            trade_state = this["trade_state"];
+        }
+    }
+
+    /// <summary>
+    ///  支付订单交易响应实体
+    /// </summary>
+    public class WxPayOrderTradeResp : WxPayBaseResp
     {
         /// <summary>   
         ///    设备号 可空 String(32) 微信支付分配的终端设备号，
@@ -64,10 +89,7 @@ namespace OSS.PayCenter.WX.Pay.Mos
         /// </summary>  
         public string trade_type { get; set; }
 
-        /// <summary>   
-        ///    交易状态 必填 String(32) SUCCESS—支付成功,REFUND—转入退款,NOTPAY—未支付,CLOSED—已关闭,REVOKED—已撤销（刷卡支付）,USERPAYING--用户支付中,PAYERROR--支付失败(其他原因，如银行返回失败)
-        /// </summary>  
-        public string trade_state { get; set; }
+
 
         /// <summary>   
         ///    付款银行 必填 String(16) 银行类型，采用字符串类型的银行标识
@@ -128,15 +150,7 @@ namespace OSS.PayCenter.WX.Pay.Mos
         ///    支付完成时间 必填 String(14) 订单支付时间，格式为yyyyMMddHHmmss，如2009年12月25日9点10分10秒表示为20091225091010。其他详见时间规则
         /// </summary>  
         public string time_end { get; set; }
-
-        /// <summary>   
-        ///    交易状态描述 必填 String(256) 对当前查询订单状态的描述和下一步操作的指引
-        /// </summary>  
-        public string trade_state_desc { get; set; }
-
-
-        // 注意：这里代金券coupon_count>0 时，类型金额等可以通过 this["coupon_fee_下标"] 获取
-
+        
         /// <summary>
         ///  订单中使用的优惠券列表
         /// </summary>
@@ -151,7 +165,6 @@ namespace OSS.PayCenter.WX.Pay.Mos
             openid = this["openid"];
             is_subscribe = this["is_subscribe"];
             trade_type = this["trade_type"];
-            trade_state = this["trade_state"];
 
             bank_type = this["bank_type"];
             total_fee = this["total_fee"].ToInt32();
@@ -167,7 +180,6 @@ namespace OSS.PayCenter.WX.Pay.Mos
 
             attach = this["attach"];
             time_end = this["time_end"];
-            trade_state_desc = this["trade_state_desc"];
 
             if (coupon_count > 0)
             {
@@ -205,8 +217,7 @@ namespace OSS.PayCenter.WX.Pay.Mos
     }
 
     #endregion
-
-
+    
     #region 关闭订单实体
 
     public class WxPayCloseOrderReq:WxPayBaseReq
@@ -226,7 +237,4 @@ namespace OSS.PayCenter.WX.Pay.Mos
     }
 
     #endregion
-
-    
-
 }

@@ -12,7 +12,9 @@
 #endregion
 
 using System.Threading.Tasks;
+using OSS.Common.ComModels;
 using OSS.PayCenter.WX.Pay.Mos;
+using OSS.PayCenter.WX.SysTools;
 
 namespace OSS.PayCenter.WX.Pay
 {
@@ -22,7 +24,8 @@ namespace OSS.PayCenter.WX.Pay
 
         static WxPayTradeApi()
         {
-         
+            RegisteErrorCode("ORDERNOTEXIST", "此交易订单号不存在");
+            RegisteErrorCode("SYSTEMERROR", "系统错误");
         }
 
         #endregion
@@ -57,12 +60,12 @@ namespace OSS.PayCenter.WX.Pay
         /// </summary>
         /// <param name="queryReq"></param>
         /// <returns></returns>
-        public async Task<WxQueryOrderResp> QueryOrder(WxQueryOrderReq queryReq)
+        public async Task<WxPayQueryOrderResp> QueryOrder(WxPayQueryOrderReq queryReq)
         {
             var dics = queryReq.GetDics();
             var addressUrl = string.Concat(m_ApiUrl, "/pay/orderquery");
 
-            return await PostPaySortDics<WxQueryOrderResp>(addressUrl, dics);
+            return await PostPaySortDics<WxPayQueryOrderResp>(addressUrl, dics);
         }
 
         /// <summary>
@@ -75,12 +78,34 @@ namespace OSS.PayCenter.WX.Pay
             var dics = closeReq.GetDics();
             var addressUrl = string.Concat(m_ApiUrl, "/pay/closeorder");
 
-            return await PostPaySortDics<WxQueryOrderResp>(addressUrl, dics);
+            return await PostPaySortDics<WxPayQueryOrderResp>(addressUrl, dics);
+        }
+
+        /// <summary>
+        ///  订单通知结果解析，并完成验证
+        /// </summary>
+        /// <returns>如果签名验证不通过，Ret=310</returns>
+        public WxPayOrderTradeResp DecryptTradeResult(string contentXmlStr)
+        {
+            var dics = XmlDicHelper.ChangXmlToDir(contentXmlStr);
+
+            var res = new WxPayOrderTradeResp();
+
+            res.SetResultDirs(dics);
+            CheckResultSign(dics, res);
+
+            return res;
         }
 
 
-
-
-
+        /// <summary>
+        ///   接受微信支付通知后需要返回的信息
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
+        public string GetTradeSendXml(ResultMo res)
+        {
+            return $"<xml><return_code><![CDATA[{( res.IsSuccess?"Success":"FAIL") }]]></return_code><return_msg><![CDATA[{res.Message}]]></return_msg></xml>";
+        }
     }
 }

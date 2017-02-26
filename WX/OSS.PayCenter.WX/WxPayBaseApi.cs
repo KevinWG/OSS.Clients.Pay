@@ -201,23 +201,22 @@ namespace OSS.PayCenter.WX
         {
             #region 错误基本信息
 
-            m_DicErrMsg.TryAdd("NOAUTH", "商户无此接口权限 ");
-            m_DicErrMsg.TryAdd("NOTENOUGH", "余额不足");
-            m_DicErrMsg.TryAdd("ORDERPAID", "商户订单已支付 ");
-            m_DicErrMsg.TryAdd("ORDERCLOSED", "订单已关闭 ");
-            m_DicErrMsg.TryAdd("SYSTEMERROR", "商户系统接口错误");
-            m_DicErrMsg.TryAdd("APPID_NOT_EXIST", "APPID不存在 ");
-            m_DicErrMsg.TryAdd("MCHID_NOT_EXIST", "MCHID不存在 ");
-            m_DicErrMsg.TryAdd("APPID_MCHID_NOT_MATCH", "appid和mch_id不匹配 ");
-            m_DicErrMsg.TryAdd("LACK_PARAMS", "缺少参数 ");
-            m_DicErrMsg.TryAdd("OUT_TRADE_NO_USED", "商户订单号重复 ");
-            m_DicErrMsg.TryAdd("SIGNERROR", "签名错误 参数签名结果不正确  ");
-            m_DicErrMsg.TryAdd("XML_FORMAT_ERROR", "XML格式错误 ");
-            m_DicErrMsg.TryAdd("REQUIRE_POST_METHOD", "请使用post方法 ");
-            m_DicErrMsg.TryAdd("POST_DATA_EMPTY", "post数据为空 ");
-            m_DicErrMsg.TryAdd("NOT_UTF8", "编码格式错误 ");
-            RegisteErrorCode("PARAM_ERROR", "参数错误 请求参数未按指引进行填写");
-            RegisteErrorCode("SIGNERROR", "签名错误 ");
+            m_DicErrMsg.TryAdd("noauth", "商户无此接口权限 ");
+            m_DicErrMsg.TryAdd("notenough", "余额不足");
+            m_DicErrMsg.TryAdd("orderpaid", "商户订单已支付 ");
+            m_DicErrMsg.TryAdd("orderclosed", "订单已关闭 ");
+            m_DicErrMsg.TryAdd("systemerror", "商户系统接口错误");
+            m_DicErrMsg.TryAdd("appid_not_exist", "APPID不存在 ");
+            m_DicErrMsg.TryAdd("mchid_not_exist", "MCHID不存在 ");
+            m_DicErrMsg.TryAdd("appid_mchid_not_match", "appid和mch_id不匹配 ");
+            m_DicErrMsg.TryAdd("lack_params", "缺少参数");
+            m_DicErrMsg.TryAdd("out_trade_no_used", "商户订单号重复 ");
+            m_DicErrMsg.TryAdd("signerror", "签名错误 参数签名结果不正确  ");
+            m_DicErrMsg.TryAdd("xml_format_error", "XML格式错误 ");
+            m_DicErrMsg.TryAdd("require_post_method", "请使用post方法 ");
+            m_DicErrMsg.TryAdd("post_data_empty", "post数据为空 ");
+            m_DicErrMsg.TryAdd("not_utf8", "编码格式错误 ");
+            RegisteErrorCode("param_error", "参数错误 请求参数未按指引进行填写");
 
             #endregion
         }
@@ -235,7 +234,7 @@ namespace OSS.PayCenter.WX
         /// <param name="errCode"></param>
         /// <returns></returns>
         protected static string GetErrMsg(string errCode)
-            => m_DicErrMsg.ContainsKey(errCode) ? m_DicErrMsg[errCode] : string.Empty;
+            => m_DicErrMsg.ContainsKey(errCode) ? m_DicErrMsg[errCode.ToLower()] : string.Empty;
 
         #endregion
 
