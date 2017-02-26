@@ -41,7 +41,7 @@ namespace OSS.PayCenter.Tests
             order.trade_type = "JSAPI";
             order.total_fee = 100;
 
-            var res = m_Api.AddPayUniOrder(order).WaitResult();
+            var res = m_Api.AddUniOrder(order).WaitResult();
             Assert.IsTrue(res.IsSuccess);
         }
 

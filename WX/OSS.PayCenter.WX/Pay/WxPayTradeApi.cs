@@ -111,7 +111,6 @@ namespace OSS.PayCenter.WX.Pay
             var dics = XmlDicHelper.ChangXmlToDir(contentXmlStr);
 
             var res = new WxPayOrderTradeResp();
-
             res.SetResultDirs(dics);
             CheckResultSign(dics, res);
 
@@ -176,7 +175,7 @@ namespace OSS.PayCenter.WX.Pay
         /// </summary>
         /// <param name="product_id"></param>
         /// <returns></returns>
-        public string CreateSanCode(string product_id)
+        public string CreateScanCode(string product_id)
         {
             var dics = new SortedDictionary<string, string>
             {
@@ -192,6 +191,42 @@ namespace OSS.PayCenter.WX.Pay
 
             return string.Concat("weixin://wxpay/bizpayurl?", encStr, "&sign=", sign);
         }
+
+        /// <summary>
+        /// 解析微信扫码回调消息实体（模式一）
+        /// </summary>
+        /// <param name="contentStr">消息实体</param>
+        /// <returns></returns>
+        public WxPayScanCallBackMo DecryptScanCallBackMsg(string contentStr)
+        {
+            var dics = XmlDicHelper.ChangXmlToDir(contentStr);
+
+            var res = new WxPayScanCallBackMo();
+            res.SetResultDirs(dics);
+            CheckResultSign(dics, res);
+
+            return res;
+        }
+        /// <summary>
+        ///  把统一下单结果响应给微信支付系统
+        /// </summary>
+        /// <param name="uniOrder"></param>
+        /// <returns></returns>
+        public string GetScanCallBackResponse(WxAddPayUniOrderResp uniOrder)
+        {
+            var res=new WxPayScanCallBackResMo();
+            res.err_code_des = uniOrder.err_code_des;
+            res.prepay_id = uniOrder.prepay_id;
+            res.result_code = uniOrder.result_code;
+            res.return_code = uniOrder.return_code;
+            res.return_msg = uniOrder.return_msg;
+
+            var dics = res.GetDics();
+            CompleteDictionarys(dics);
+
+            return dics.ProduceXml();
+        }
+
 
         #endregion
 

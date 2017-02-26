@@ -170,7 +170,7 @@ namespace OSS.PayCenter.WX
         ///  补充完善 字典信息 如 ：appid,mch_id ，以及添加签名sign等信息
         /// </summary>
         /// <param name="xmlDirs"></param>
-        private void CompleteDictionarys(SortedDictionary<string, object> xmlDirs)
+        protected internal void CompleteDictionarys(SortedDictionary<string, object> xmlDirs)
         {
             xmlDirs.Add("appid", ApiConfig.AppId);
             xmlDirs.Add("mch_id", ApiConfig.MchId);
