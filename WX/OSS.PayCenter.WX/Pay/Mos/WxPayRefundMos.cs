@@ -436,7 +436,7 @@ namespace OSS.PayCenter.WX.Pay.Mos
     #region
 
     /// <summary>
-    ///  撤销订单响应实体
+    ///  撤销刷卡订单响应实体
     /// </summary>
     public class WxPayResverOrderResp : WxPayBaseResp
     {
@@ -445,6 +445,9 @@ namespace OSS.PayCenter.WX.Pay.Mos
         /// </summary>  
         public string recall { get; set; }
 
+        /// <summary>
+        /// 格式化自身属性部分
+        /// </summary>
         protected override void FormatPropertiesFromMsg()
         {
             base.FormatPropertiesFromMsg();

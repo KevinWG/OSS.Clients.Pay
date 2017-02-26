@@ -65,7 +65,7 @@ namespace OSS.PayCenter.WX.Pay
 
 
 
-        #region  关闭统一下单订单  和   撤销扫码订单
+        #region  关闭统一下单订单  和   撤销刷卡订单
 
         /// <summary> 
         ///  关闭统一下单订单
@@ -85,7 +85,7 @@ namespace OSS.PayCenter.WX.Pay
         }
 
         /// <summary>
-        ///  撤销订单API，【需要证书】
+        ///  撤销刷卡订单API，【需要证书】
         /// </summary>
         /// <param name="transaction_id">微信订单号 二选一 String(32) 微信的订单号，建议优先使用</param>
         /// <param name="out_trade_no"> 商户订单号 String(32)</param>
