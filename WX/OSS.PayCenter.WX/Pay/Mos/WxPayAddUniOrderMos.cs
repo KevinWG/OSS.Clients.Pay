@@ -17,67 +17,22 @@ using System.Text;
 namespace OSS.PayCenter.WX.Pay.Mos
 {
 
-    #region   支付下单接口
+    #region   统一下单接口
 
     /// <summary>
     ///   微信订单支付统一下单请求参数
     /// </summary>
-    public class WxAddPayUniOrderReq: WxPayBaseReq
+    public class WxAddPayUniOrderReq: WxAddPayOrderBaseReq
     {
         /// <summary>   
-        ///    设备号 可空 String(32) 自定义参数，可以为终端设备号(门店号或收银设备ID)，PC网页或公众号内支付可以传"WEB"
-        /// </summary>  
-        public string device_info { get; set; }
-
-        /// <summary>   
-        ///    商品描述 必填 String(128) 商品简单描述，该字段请按照规范传递，具体请见参数规定 https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=4_2
-        /// </summary>  
-        public string body { get; set; }
-
-        /// <summary>   
-        ///    附加数据 可空 String(127) 附加数据，在查询API和支付通知中原样返回，可作为自定义参数使用。
-        /// </summary>  
-        public string attach { get; set; }
-
-        /// <summary>   
-        ///    商户订单号 必填 String(32) 商户系统内部订单号，要求32个字符内、且在同一个商户号下唯一。 详见商户订单号
-        /// </summary>  
-        public string out_trade_no { get; set; }
-
-        /// <summary>   
-        ///    标价币种 可空 String(16) 符合ISO 4217标准的三位字母代码，默认人民币：CNY，详细列表请参见货币类型
-        /// </summary>  
-        public string fee_type { get; set; } = "CNY";
-
-        /// <summary>   
-        ///    标价金额 必填 Int 订单总金额，单位为分，详见支付金额
-        /// </summary>  
-        public int total_fee { get; set; }
-
-        /// <summary>   
-        ///    终端IP 必填 String(16) APP和网页支付提交用户端ip，Native支付填调用微信支付API的机器IP。
-        /// </summary>  
-        public string spbill_create_ip { get; set; }
-
-        /// <summary>   
-        ///    交易起始时间 可空 String(14) 订单生成时间，格式为yyyyMMddHHmmss，如2009年12月25日9点10分10秒表示为20091225091010。其他详见时间规则
+        ///    交易起始时间 可空 String(14) 订单生成时间，格式为yyyyMMddHHmmss，如2009年12月25日9点10分10秒表示为20091225091010。其他详见时间规则===
         /// </summary>  
         public string time_start { get; set; }
 
         /// <summary>   
-        ///    交易结束时间 可空 String(14) 订单失效时间，格式为yyyyMMddHHmmss，如2009年12月27日9点10分10秒表示为20091227091010。其他详见时间规则 注意：最短失效时间间隔必须大于5分钟
+        ///    交易结束时间 可空 String(14) 订单失效时间，格式为yyyyMMddHHmmss，如2009年12月27日9点10分10秒表示为20091227091010。其他详见时间规则 注意：最短失效时间间隔必须大于5分钟===
         /// </summary>  
         public string time_expire { get; set; }
-
-        /// <summary>   
-        ///    商品标记 可空 String(32) 商品标记，使用代金券或立减优惠功能时需要的参数，说明详见代金券或立减优惠
-        /// </summary>  
-        public string goods_tag { get; set; }
-
-        ///// <summary>   
-        /////    通知地址 必填 String(256) 异步接收微信支付结果通知的回调地址，通知url必须为外网可访问的url，不能携带参数。
-        ///// </summary>  
-        //public string notify_url { get; set; }
 
         /// <summary>   
         ///    交易类型 必填 String(16) 取值如下：JSAPI，NATIVE，APP等，说明详见参数规定
@@ -100,57 +55,18 @@ namespace OSS.PayCenter.WX.Pay.Mos
         public string openid { get; set; }
 
         /// <summary>
-        /// 商品条目详情
-        /// </summary>
-        public WxPayOrderDetailMo detail { get; set; }
-
-        /// <summary>
         ///  设置需要需要运算的字典值
         /// </summary>
         protected override void SetSignDics()
         {
-            SetDicItem("device_info", device_info);
-            SetDicItem("body", body);
-            SetDicItem("attach", attach);
-            SetDicItem("out_trade_no", out_trade_no);
-            SetDicItem("fee_type", fee_type);
-
-            SetDicItem("total_fee", total_fee);
-            SetDicItem("spbill_create_ip", spbill_create_ip);
+            base.SetSignDics();
             SetDicItem("time_start", time_start);
             SetDicItem("time_expire", time_expire);
-            SetDicItem("goods_tag", goods_tag);
-            
+
             SetDicItem("trade_type", trade_type);
             SetDicItem("product_id", product_id);
             SetDicItem("limit_pay", limit_pay);
             SetDicItem("openid", openid);
-
-            if (detail!=null)
-            {
-                StringBuilder detailStr=new StringBuilder("{");
-
-                detailStr.Append("\"cost_price\":").Append(detail.cost_price);
-                detailStr.Append(",\"receipt_id\":\"").Append(detail.receipt_id).Append("\"");
-                if (detail.detail != null && detail.detail.Count > 0)
-                {
-                    detailStr.Append(",\"detail\":[");
-                    foreach (var item in detail.detail)
-                    {
-                        detailStr.Append("{");
-                        detailStr.Append("\"goods_id\":\"").Append(item.goods_id).Append("\"");
-                        detailStr.Append(",\"wxpay_goods_id\":\"").Append(item.wxpay_goods_id).Append("\"");
-                        detailStr.Append(",\"goods_name\":\"").Append(item.goods_name).Append("\"");
-                        detailStr.Append(",\"quantity\":").Append(item.quantity);
-                        detailStr.Append(",\"price\":").Append(item.wxpay_goods_id);
-                        detailStr.Append("}");
-                    }
-                    detailStr.Append("]");
-                }
-                detailStr.Append("}");
-
-                SetDicItem("detail", detailStr.ToString());
-            }
         }
         
     }
@@ -239,4 +155,115 @@ namespace OSS.PayCenter.WX.Pay.Mos
     }
     #endregion
 
+
+    #region   扫码下单接口
+    /// <summary>
+    ///  扫码下单请求
+    /// </summary>
+    public class WxAddMicroPayOrderReq : WxAddPayOrderBaseReq
+    {
+        /// <summary>   
+        ///    授权码 必填 String(128) 扫码支付授权码，设备读取用户微信中的条码或者二维码信息
+        /// </summary>  
+        public string auth_code { get; set; }
+
+        protected override void SetSignDics()
+        {
+            base.SetSignDics();
+            SetDicItem("auth_code", auth_code);
+        }
+    }
+
+    #endregion
+
+    /// <summary>
+    ///   下单请求接口基类
+    /// </summary>
+    public class WxAddPayOrderBaseReq:WxPayBaseReq
+    {
+        /// <summary>   
+        ///    设备号 可空 String(32) 自定义参数，可以为终端设备号(门店号或收银设备ID)，PC网页或公众号内支付可以传"WEB"
+        /// </summary>  
+        public string device_info { get; set; }
+
+        /// <summary>   
+        ///    商品描述 必填 String(128) 商品简单描述，该字段请按照规范传递，具体请见参数规定 https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=4_2
+        /// </summary>  
+        public string body { get; set; }
+
+        /// <summary>   
+        ///    附加数据 可空 String(127) 附加数据，在查询API和支付通知中原样返回，可作为自定义参数使用。
+        /// </summary>  
+        public string attach { get; set; }
+
+        /// <summary>   
+        ///    商户订单号 必填 String(32) 商户系统内部订单号，要求32个字符内、且在同一个商户号下唯一。 详见商户订单号
+        /// </summary>  
+        public string out_trade_no { get; set; }
+
+        /// <summary>   
+        ///    标价币种 可空 String(16) 符合ISO 4217标准的三位字母代码，默认人民币：CNY，详细列表请参见货币类型
+        /// </summary>  
+        public string fee_type { get; set; } = "CNY";
+
+        /// <summary>   
+        ///    标价金额 必填 Int 订单总金额，单位为分，详见支付金额
+        /// </summary>  
+        public int total_fee { get; set; }
+
+        /// <summary>   
+        ///    终端IP 必填 String(16) APP和网页支付提交用户端ip，Native支付填调用微信支付API的机器IP。
+        /// </summary>  
+        public string spbill_create_ip { get; set; }
+        
+        /// <summary>   
+        ///    商品标记 可空 String(32) 商品标记，使用代金券或立减优惠功能时需要的参数，说明详见代金券或立减优惠
+        /// </summary>  
+        public string goods_tag { get; set; }
+        
+        /// <summary>
+        /// 商品条目详情
+        /// </summary>
+        public WxPayOrderDetailMo detail { get; set; }
+        /// <summary>
+        ///  设置需要需要运算的字典值
+        /// </summary>
+        protected override void SetSignDics()
+        {
+            SetDicItem("device_info", device_info);
+            SetDicItem("body", body);
+            SetDicItem("attach", attach);
+            SetDicItem("out_trade_no", out_trade_no);
+            SetDicItem("fee_type", fee_type);
+
+            SetDicItem("total_fee", total_fee);
+            SetDicItem("spbill_create_ip", spbill_create_ip);
+            SetDicItem("goods_tag", goods_tag);
+
+            if (detail != null)
+            {
+                StringBuilder detailStr = new StringBuilder("{");
+
+                detailStr.Append("\"cost_price\":").Append(detail.cost_price);
+                detailStr.Append(",\"receipt_id\":\"").Append(detail.receipt_id).Append("\"");
+                if (detail.detail != null && detail.detail.Count > 0)
+                {
+                    detailStr.Append(",\"detail\":[");
+                    foreach (var item in detail.detail)
+                    {
+                        detailStr.Append("{");
+                        detailStr.Append("\"goods_id\":\"").Append(item.goods_id).Append("\"");
+                        detailStr.Append(",\"wxpay_goods_id\":\"").Append(item.wxpay_goods_id).Append("\"");
+                        detailStr.Append(",\"goods_name\":\"").Append(item.goods_name).Append("\"");
+                        detailStr.Append(",\"quantity\":").Append(item.quantity);
+                        detailStr.Append(",\"price\":").Append(item.wxpay_goods_id);
+                        detailStr.Append("}");
+                    }
+                    detailStr.Append("]");
+                }
+                detailStr.Append("}");
+                SetDicItem("detail", detailStr.ToString());
+            }
+        }
+    }
 }

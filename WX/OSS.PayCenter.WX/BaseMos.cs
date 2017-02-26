@@ -198,7 +198,7 @@ namespace OSS.PayCenter.WX
         public string Key { get; set; }
 
         /// <summary>
-        ///  回调通知地址
+        ///  回调通知地址,公号等用到
         /// </summary>
         public string NotifyUrl { get; set; }
 

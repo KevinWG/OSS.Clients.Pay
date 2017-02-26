@@ -88,9 +88,7 @@ namespace OSS.PayCenter.WX.Pay.Mos
         ///    交易类型 必填 String(16) 调用接口提交的交易类型，取值如下：JSAPI，NATIVE，APP，MICROPAY，详细说明见参数规定
         /// </summary>  
         public string trade_type { get; set; }
-
-
-
+        
         /// <summary>   
         ///    付款银行 必填 String(16) 银行类型，采用字符串类型的银行标识
         /// </summary>  
@@ -109,7 +107,7 @@ namespace OSS.PayCenter.WX.Pay.Mos
         /// <summary>   
         ///    标价币种 可空 String(8) 货币类型，符合ISO 4217标准的三位字母代码，默认人民币：CNY，其他值列表详见货币类型
         /// </summary>  
-        public string fee_type { get; set; }
+        public string fee_type { get; set; } = "CNY";
 
         /// <summary>   
         ///    现金支付金额 必填 Int 现金支付金额订单现金支付金额，详见支付金额
