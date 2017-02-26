@@ -16,29 +16,6 @@ using OSS.Common.Extention;
 
 namespace OSS.PayCenter.WX.Pay.Mos
 {
-    #region  查询订单接口
-    public class WxPayQueryOrderReq : WxPayBaseReq
-    {
-        /// <summary>   
-        ///    微信订单号 二选一 String(32) 微信的订单号，建议优先使用
-        /// </summary>  
-        public string transaction_id { get; set; }
-
-        /// <summary>   
-        ///    商户订单号 String(32) 20150806125346
-        /// </summary>  
-        public string out_trade_no { get; set; }
-
-        /// <summary>
-        ///  设置参与加密的字段
-        /// </summary>
-        protected override void SetSignDics()
-        {
-            SetDicItem("transaction_id", transaction_id);
-            SetDicItem("out_trade_no", out_trade_no);
-        }
-    }
-
     /// <summary>
     ///  查询订单响应实体
     /// </summary>
@@ -215,24 +192,5 @@ namespace OSS.PayCenter.WX.Pay.Mos
     }
 
     #endregion
-    
-    #region 关闭订单实体
 
-    public class WxPayCloseOrderReq:WxPayBaseReq
-    {
-        /// <summary>
-        ///    商户订单号 必填 String(32) 商户系统内部的订单号
-        /// </summary>  
-        public string out_trade_no { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        protected override void SetSignDics()
-        {
-            SetDicItem("out_trade_no", out_trade_no);
-        }
-    }
-
-    #endregion
 }

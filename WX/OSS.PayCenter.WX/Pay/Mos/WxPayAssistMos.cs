@@ -14,22 +14,7 @@ namespace OSS.PayCenter.WX.Pay.Mos
 {
 
 #region  短链操作实体
-    /// <summary>
-    ///  获取短链请求实体
-    /// </summary>
-    public class WxPayGetShortUrlReq:WxPayBaseReq
-    {
-        /// <summary>   
-        ///    URL链接 必填 String(512、 需要转换的URL，签名用原串，传输需URLencode
-        /// </summary>  
-        public string long_url { get; set; }
 
-        protected override void SetSignDics()
-        {
-            base.SetSignDics();
-            SetDicItem("long_url", long_url);
-        }
-    }
     /// <summary>
     ///  获取短链请求实体
     /// </summary>
@@ -55,22 +40,6 @@ namespace OSS.PayCenter.WX.Pay.Mos
 
     #region  授权码查询OPENID实体
 
-    /// <summary>
-    ///  授权码查询OPENID 请求实体
-    /// </summary>
-    public class WxPayAuthCodeOpenIdReq : WxPayBaseReq
-    {
-        /// <summary>   
-        ///    授权码 必填 String(128)
-        /// </summary>  
-        public string auth_code { get; set; }
-
-        protected override void SetSignDics()
-        {
-            base.SetSignDics();
-            SetDicItem("auth_code", auth_code);
-        }
-    }
     /// <summary>
     ///  获取短链请求实体
     /// </summary>

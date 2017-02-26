@@ -175,7 +175,15 @@ namespace OSS.PayCenter.WX
             xmlDirs.Add("appid", ApiConfig.AppId);
             xmlDirs.Add("mch_id", ApiConfig.MchId);
 
-            string encStr = string.Join("&", xmlDirs.Select(k => string.Concat(k.Key, "=", k.Value)));
+            string encStr = string.Join("&",
+                xmlDirs.Select(
+                    k =>
+                    {
+                        var str = k.Value?.ToString();
+                        return string.IsNullOrEmpty(str)
+                            ? string.Empty
+                            : string.Concat(k.Key, "=", str);
+                    }));
             string sign = Md5.EncryptHexString(string.Concat(encStr, "&key=", ApiConfig.Key)).ToUpper();
 
             xmlDirs.Add("sign", sign);

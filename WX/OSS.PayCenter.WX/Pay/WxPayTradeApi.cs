@@ -57,7 +57,6 @@ namespace OSS.PayCenter.WX.Pay
         }
 
 
-
         /// <summary>
         ///   扫码下单接口
         /// 提交支付请求后微信会同步返回支付结果。当返回结果为“系统错误（err_code=SYSTEMERROR）”时，商户系统等待5秒后调用【查询订单API】，查询支付实际交易结果；
@@ -78,31 +77,51 @@ namespace OSS.PayCenter.WX.Pay
         /// <summary>
         ///  查询订单接口
         /// </summary>
-        /// <param name="queryReq"></param>
+        /// <param name="transaction_id">微信订单号 二选一 String(32) 微信的订单号，建议优先使用</param>
+        /// <param name="out_trade_no"> 商户订单号 String(32)</param>
         /// <returns></returns>
-        public async Task<WxPayQueryOrderResp> QueryOrder(WxPayQueryOrderReq queryReq)
+        public async Task<WxPayQueryOrderResp> QueryOrder(string transaction_id, string out_trade_no)
         {
             var addressUrl = string.Concat(m_ApiUrl, "/pay/orderquery");
 
-            return await PostPaySortDics<WxPayQueryOrderResp>(addressUrl, queryReq.GetDics());
+            var baseReq = new WxPayBaseReq();
+            var dics = baseReq.GetDics();
+            dics["out_trade_no"] = out_trade_no;
+            dics["transaction_id"] = transaction_id;
+
+            return await PostPaySortDics<WxPayQueryOrderResp>(addressUrl, dics);
         }
 
-        /// <summary>
-        ///  关闭订单
+
+
+        #region  关闭统一下单订单  和   撤销扫码订单
+
+        /// <summary> 
+        ///  关闭统一下单订单
+        /// 请不要和扫码撤销订单搞混
         /// </summary>
-        /// <param name="closeReq"></param>
+        /// <param name="out_trade_no"></param>
         /// <returns></returns>
-        public async Task<WxPayBaseResp> CloseOrder(WxPayCloseOrderReq closeReq)
+        public async Task<WxPayBaseResp> CloseUniOrder(string out_trade_no)
         {
             var addressUrl = string.Concat(m_ApiUrl, "/pay/closeorder");
 
-            return await PostPaySortDics<WxPayQueryOrderResp>(addressUrl, closeReq.GetDics());
+            var baseReq = new WxPayBaseReq();
+            var dics = baseReq.GetDics();
+            dics["out_trade_no"] = out_trade_no;
+
+            return await PostPaySortDics<WxPayQueryOrderResp>(addressUrl, dics);
         }
 
+
+        #endregion
+
         #region  订单结果通知解析 和 生成返回结果xml方法
+
         /// <summary>
         ///  订单通知结果解析，并完成验证
         /// </summary>
+        /// <param name="contentXmlStr">通知结果内容</param>
         /// <returns>如果签名验证不通过，Ret=310</returns>
         public WxPayOrderTradeResp DecryptTradeResult(string contentXmlStr)
         {
@@ -115,7 +134,7 @@ namespace OSS.PayCenter.WX.Pay
 
             return res;
         }
-        
+
         /// <summary>
         ///   接受微信支付通知后需要返回的信息
         /// </summary>
@@ -126,6 +145,7 @@ namespace OSS.PayCenter.WX.Pay
             return
                 $"<xml><return_code><![CDATA[{(res.IsSuccess ? "Success" : "FAIL")}]]></return_code><return_msg><![CDATA[{res.Message}]]></return_msg></xml>";
         }
+
         #endregion
 
         #region  辅助部分方法
@@ -133,12 +153,15 @@ namespace OSS.PayCenter.WX.Pay
         /// <summary>
         ///  转换短链api
         /// </summary>
-        /// <param name="shortReq"></param>
+        /// <param name="long_url"></param>
         /// <returns></returns>
-        public async Task<WxPayGetShortUrlResp> GetShortUrl(WxPayGetShortUrlReq shortReq)
+        public async Task<WxPayGetShortUrlResp> GetShortUrl(string long_url)
         {
             var url = string.Concat(m_ApiUrl, "/tools/shorturl");
-            var dics = shortReq.GetDics();
+
+            var baseReq = new WxPayBaseReq();
+            var dics = baseReq.GetDics();
+            dics["long_url"] = long_url;
 
             return await PostPaySortDics<WxPayGetShortUrlResp>(url, dics, null, null,
                 d => d["long_url"] = d["long_url"].UrlEncode());
@@ -147,14 +170,19 @@ namespace OSS.PayCenter.WX.Pay
         /// <summary>
         ///  授权码查询OPENID接口
         /// </summary>
-        /// <param name="authReq"></param>
+        /// <param name="auth_code"></param>
         /// <returns></returns>
-        public async Task<WxPayAuthCodeOpenIdResp> GetShortUrl(WxPayAuthCodeOpenIdReq authReq)
+        public async Task<WxPayAuthCodeOpenIdResp> GetAuthCodeOpenId(string auth_code)
         {
             var url = string.Concat(m_ApiUrl, "/tools/authcodetoopenid");
 
-            return await PostPaySortDics<WxPayAuthCodeOpenIdResp>(url, authReq.GetDics());
+            var baseReq = new WxPayBaseReq();
+            var dics = baseReq.GetDics();
+            dics["auth_code"] = auth_code;
+
+            return await PostPaySortDics<WxPayAuthCodeOpenIdResp>(url, dics);
         }
+
         #endregion
 
     }
