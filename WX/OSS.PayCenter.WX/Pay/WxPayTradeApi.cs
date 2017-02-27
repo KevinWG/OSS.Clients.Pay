@@ -87,8 +87,8 @@ namespace OSS.PayCenter.WX.Pay
         {
             var addressUrl = string.Concat(m_ApiUrl, "/pay/orderquery");
 
-            var baseReq = new WxPayBaseReq();
-            var dics = baseReq.GetDics();
+            var dics = new SortedDictionary<string, object>();
+            dics["nonce_str"] = Guid.NewGuid().ToString().Replace("-", "");
             dics["out_trade_no"] = out_trade_no;
             dics["transaction_id"] = transaction_id;
 
@@ -140,8 +140,8 @@ namespace OSS.PayCenter.WX.Pay
         {
             var url = string.Concat(m_ApiUrl, "/tools/shorturl");
 
-            var baseReq = new WxPayBaseReq();
-            var dics = baseReq.GetDics();
+            var dics = new SortedDictionary<string, object>();
+            dics["nonce_str"] = Guid.NewGuid().ToString().Replace("-", "");
             dics["long_url"] = long_url;
 
             return await PostPaySortDics<WxPayGetShortUrlResp>(url, dics, null, null,
@@ -157,8 +157,8 @@ namespace OSS.PayCenter.WX.Pay
         {
             var url = string.Concat(m_ApiUrl, "/tools/authcodetoopenid");
 
-            var baseReq = new WxPayBaseReq();
-            var dics = baseReq.GetDics();
+            var dics = new SortedDictionary<string, object>();
+            dics["nonce_str"] = Guid.NewGuid().ToString().Replace("-", "");
             dics["auth_code"] = auth_code;
 
             return await PostPaySortDics<WxPayAuthCodeOpenIdResp>(url, dics);

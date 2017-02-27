@@ -11,6 +11,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using OSS.Http.Mos;
@@ -107,8 +108,8 @@ namespace OSS.PayCenter.WX.Cash
         public async Task<WxPayQueryRedResp> QueryRed(string mch_billno, string bill_type = "MCHT")
         {
             var urlStr = string.Concat(m_ApiUrl, "/mmpaymkttransfers/gethbinfo");
-            var req=new WxPayBaseReq();
-            var dics=req.GetDics();
+            var dics = new SortedDictionary<string, object>();
+            dics["nonce_str"] = Guid.NewGuid().ToString().Replace("-", "");
 
             dics["mch_billno"] = mch_billno;
             dics["bill_type"] = bill_type;
