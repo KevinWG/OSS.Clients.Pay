@@ -46,6 +46,9 @@ namespace OSS.PayCenter.WX.Cash
 
         #endregion
 
+
+        #region  发送红包接口
+
         /// <summary>
         ///  发送普通红包
         /// </summary>
@@ -93,6 +96,24 @@ namespace OSS.PayCenter.WX.Cash
 
             return await RestCommon<T>(req, null, GetCertHttpClient());
         }
+        #endregion
 
+        /// <summary>
+        ///  查询红包
+        /// </summary>
+        /// <param name="mch_billno">商户订单号</param>
+        /// <param name="bill_type">订单类型</param>
+        /// <returns></returns>
+        public async Task<WxPayQueryRedResp> QueryRed(string mch_billno, string bill_type = "MCHT")
+        {
+            var urlStr = string.Concat(m_ApiUrl, "/mmpaymkttransfers/gethbinfo");
+            var req=new WxPayBaseReq();
+            var dics=req.GetDics();
+
+            dics["mch_billno"] = mch_billno;
+            dics["bill_type"] = bill_type;
+
+            return await PostPaySortDics<WxPayQueryRedResp>(urlStr, dics);
+        }
     }
 }
