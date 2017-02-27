@@ -52,7 +52,17 @@ namespace OSS.PayCenter.WX.Coupon
             return await PostPaySortDics<WxPaySendConpouResp>(urlStr, conpouReq.GetDics(), null, GetCertHttpClient());
         }
 
+        /// <summary>
+        ///  查询代金券批次接口
+        /// </summary>
+        /// <param name="stockReq"></param>
+        /// <returns></returns>
+        public async Task<WxPayQueryConpouStockResp> QueryConpouStock(WxPayQueryConpouStockReq stockReq )
+        {
+            var urlStr = string.Concat(m_ApiUrl, "/mmpaymkttransfers/query_coupon_stock");
 
+            return await PostPaySortDics<WxPayQueryConpouStockResp>(urlStr, stockReq.GetDics());
+        }
 
 
     }

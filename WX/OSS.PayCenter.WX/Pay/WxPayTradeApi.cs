@@ -60,7 +60,6 @@ namespace OSS.PayCenter.WX.Pay
             return await PostPaySortDics<WxAddPayUniOrderResp>(addressUrl, dics);
         }
 
-
         /// <summary>
         ///   扫码下单接口
         /// 提交支付请求后微信会同步返回支付结果。当返回结果为“系统错误（err_code=SYSTEMERROR）”时，商户系统等待5秒后调用【查询订单API】，查询支付实际交易结果；

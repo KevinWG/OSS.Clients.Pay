@@ -15,9 +15,10 @@ using OSS.Common.Extention;
 
 namespace OSS.PayCenter.WX.Coupon.Mos
 {
-   /// <summary>
-   ///  发送代金券请求实体
-   /// </summary>
+    #region 发送代金券实体
+    /// <summary>
+    ///  发送代金券请求实体
+    /// </summary>
     public class WxPaySendConpouReq:WxPayBaseReq
     {
         /// <summary>   
@@ -129,4 +130,139 @@ namespace OSS.PayCenter.WX.Coupon.Mos
             ret_msg = this["ret_msg"];
         }
     }
+    #endregion
+
+
+    #region 查询代金券批次实体 
+    /// <summary>
+    ///   查询代金券批次请求实体
+    /// </summary>
+    public class WxPayQueryConpouStockReq : WxPayBaseReq
+    {
+        /// <summary>   
+        ///    代金券批次id 必填 String 代金券批次id
+        /// </summary>  
+        public string coupon_stock_id { get; set; }
+
+        /// <summary>   
+        ///    操作员 可空 String(32) 操作员帐号, 默认为商户号可在商户平台配置操作员对应的api权限
+        /// </summary>  
+        public string op_user_id { get; set; }
+
+        /// <summary>   
+        ///    设备号 可空 String(32) 微信支付分配的终端设备号
+        /// </summary>  
+        public string device_info { get; set; }
+    }
+
+    /// <summary>
+    ///  查询代金券批次响应实体
+    /// </summary>
+    public class WxPayQueryConpouStockResp : WxPayBaseResp
+    {/// <summary>   
+     ///    设备号 可空 String(32) 微信支付分配的终端设备号
+     /// </summary>  
+        public string device_info { get; set; }
+
+        /// <summary>   
+        ///    代金券批次ID 必填 String 代金券批次Id
+        /// </summary>  
+        public string coupon_stock_id { get; set; }
+
+        /// <summary>   
+        ///    代金券名称 可空 String 代金券名称
+        /// </summary>  
+        public string coupon_name { get; set; }
+
+        /// <summary>   
+        ///    代金券面额 必填 Unsinged int 代金券面值,单位是分
+        /// </summary>  
+        public int coupon_value { get; set; }
+
+        /// <summary>   
+        ///    代金券使用最低限额 可空 Unsinged int 代金券使用最低限额,单位是分
+        /// </summary>  
+        public int coupon_mininumn { get; set; }
+
+        /// <summary>   
+        ///    代金券类型 必填 int 代金券类型：1-代金券无门槛，2-代金券有门槛互斥，3-代金券有门槛叠加，
+        /// </summary>  
+        public int coupon_type { get; set; }
+
+        /// <summary>   
+        ///    代金券批次状态 必填 int 批次状态： 1-未激活；2-审批中；4-已激活；8-已作废；16-中止发放；
+        /// </summary>  
+        public int coupon_stock_status { get; set; }
+
+        /// <summary>   
+        ///    代金券数量 必填 Unsigned int 代金券数量
+        /// </summary>  
+        public int coupon_total { get; set; }
+
+        /// <summary>   
+        ///    代金券最大领取数量 可空 Unsigned int 代金券每个人最多能领取的数量, 如果为0，则表示没有限制
+        /// </summary>  
+        public int max_quota { get; set; }
+
+        /// <summary>   
+        ///    代金券锁定数量 可空 Unsigned int 代金券锁定数量
+        /// </summary>  
+        public int locked_num { get; set; }
+
+        /// <summary>   
+        ///    代金券已使用数量 可空 Unsigned int 代金券已使用数量
+        /// </summary>  
+        public int used_num { get; set; }
+
+        /// <summary>   
+        ///    代金券已经发送的数量 可空 Unsigned int 代金券已经发送的数量
+        /// </summary>  
+        public int is_send_num { get; set; }
+
+        /// <summary>   
+        ///    生效开始时间 必填 String 格式为yyyyMMddhhmmss，如2009年12月27日9点10分10秒表示为20091227091010。
+        /// </summary>  
+        public string begin_time { get; set; }
+
+        /// <summary>   
+        ///    生效结束时间 必填 String 格式为yyyyMMddhhmmss，如2009年12月27日9点10分10秒表示为20091227091010。
+        /// </summary>  
+        public string end_time { get; set; }
+
+        /// <summary>   
+        ///    创建时间 必填 String 格式为yyyyMMddhhmmss，如2009年12月27日9点10分10秒表示为20091227091010。
+        /// </summary>  
+        public string create_time { get; set; }
+
+        /// <summary>   
+        ///    代金券预算额度 可空 Unsigned int 代金券预算额度
+        /// </summary>  
+        public int coupon_budget { get; set; }
+
+        protected override void FormatPropertiesFromMsg()
+        {
+            base.FormatPropertiesFromMsg();
+            device_info = this["device_info"];
+            coupon_stock_id = this["device_info"];
+            coupon_name = this["coupon_name"];
+            coupon_value = this["coupon_value"].ToInt32();
+            coupon_mininumn = this["coupon_mininumn"].ToInt32();
+
+            coupon_type = this["coupon_type"].ToInt32();
+            coupon_stock_status = this["coupon_stock_status"].ToInt32();
+            coupon_total = this["coupon_total"].ToInt32();
+            max_quota = this["max_quota"].ToInt32();
+            locked_num = this["locked_num"].ToInt32();
+
+            used_num = this["used_num"].ToInt32();
+            is_send_num = this["is_send_num"].ToInt32();
+            begin_time = this["begin_time"];
+            end_time = this["end_time"];
+            create_time = this["create_time"];
+
+            coupon_budget = this["coupon_budget"].ToInt32();
+        }
+    }
+
+    #endregion
 }
