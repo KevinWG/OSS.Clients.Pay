@@ -265,4 +265,205 @@ namespace OSS.PayCenter.WX.Coupon.Mos
     }
 
     #endregion
+
+
+    #region 查询代金券实体
+    /// <summary>
+    /// 查询代金券请求实体
+    /// </summary>
+    public class WxPayQueryConpouReq : WxPayBaseReq
+    {
+        /// <summary>   
+        ///    代金券id 必填 String 代金券id
+        /// </summary>  
+        public string coupon_id { get; set; }
+
+        /// <summary>   
+        ///    用户标识 必填 String 用户在商户appid下的唯一标识
+        /// </summary>  
+        public string openid { get; set; }
+
+        /// <summary>   
+        ///    批次号 必填 String(32) 代金劵对应的批次号
+        /// </summary>  
+        public string stock_id { get; set; }
+
+        /// <summary>   
+        ///    操作员 可空 String(32) 操作员帐号, 默认为商户号 可在商户平台配置操作员对应的api权限
+        /// </summary>  
+        public string op_user_id { get; set; }
+
+        /// <summary>   
+        ///    设备号 可空 String(32) 微信支付分配的终端设备号
+        /// </summary>  
+        public string device_info { get; set; }
+
+        protected override void SetSignDics()
+        {
+            base.SetSignDics();
+            SetDicItem("device_info", device_info);
+            SetDicItem("coupon_id", coupon_id);
+            SetDicItem("openid", openid);
+            SetDicItem("stock_id", stock_id);
+            SetDicItem("op_user_id", op_user_id);
+        }
+    }
+
+    /// <summary>
+    ///  查询代金券响应实体
+    /// </summary>
+    public class WxPayQueryConpouResp : WxPayBaseResp
+    {
+        /// <summary>   
+        ///    子商户号 可空 String(32) 微信支付分配的子商户号，受理模式下必填
+        /// </summary>  
+        public string sub_mch_id { get; set; }
+
+        /// <summary>   
+        ///    设备号 可空 String(32) 微信支付分配的终端设备号
+        /// </summary>  
+        public string device_info { get; set; }
+
+        /// <summary>   
+        ///    批次ID 必填 String 代金券批次Id
+        /// </summary>  
+        public string coupon_stock_id { get; set; }
+
+        /// <summary>   
+        ///    批次类型 必填 int 批次类型；1-批量型，2-触发型
+        /// </summary>  
+        public int coupon_stock_type { get; set; }
+
+        /// <summary>   
+        ///    代金券id 必填 String 代金券id
+        /// </summary>  
+        public string coupon_id { get; set; }
+
+        /// <summary>   
+        ///    代金券面额 必填 Unsinged int 代金券面值,单位是分
+        /// </summary>  
+        public int coupon_value { get; set; }
+
+        /// <summary>   
+        ///    代金券使用门槛 必填 Unsinged int 代金券使用最低限额,单位是分
+        /// </summary>  
+        public int coupon_mininum { get; set; }
+
+        /// <summary>   
+        ///    代金券名称 必填 String 代金券名称
+        /// </summary>  
+        public string coupon_name { get; set; }
+
+        /// <summary>   
+        ///    代金券状态 必填 int 代金券状态：2-已激活，4-已锁定，8-已实扣
+        /// </summary>  
+        public int coupon_state { get; set; }
+
+        /// <summary>   
+        ///    代金券类型 必填 int 代金券类型：1-代金券无门槛，2-代金券有门槛互斥，3-代金券有门槛叠加，
+        /// </summary>  
+        public int coupon_type { get; set; }
+
+        /// <summary>   
+        ///    代金券描述 必填 String 代金券描述
+        /// </summary>  
+        public string coupon_desc { get; set; }
+
+        /// <summary>   
+        ///    实际优惠金额 必填 Unsinged int 代金券实际使用金额
+        /// </summary>  
+        public int coupon_use_value { get; set; }
+
+        /// <summary>   
+        ///    优惠剩余可用额 必填 Unsinged int 代金券剩余金额：部分使用情况下，可能会存在券剩余金额
+        /// </summary>  
+        public int coupon_remain_value { get; set; }
+
+        /// <summary>   
+        ///    生效开始时间 必填 String 格式为yyyyMMddhhmmss，如2009年12月27日9点10分10秒表示为20091227091010。
+        /// </summary>  
+        public string begin_time { get; set; }
+
+        /// <summary>   
+        ///    生效结束时间 必填 String 格式为yyyyMMddhhmmss，如2009年12月27日9点10分10秒表示为20091227091010。
+        /// </summary>  
+        public string end_time { get; set; }
+
+        /// <summary>   
+        ///    发放时间 必填 String 格式为yyyyMMddhhmmss，如2009年12月27日9点10分10秒表示为20091227091010。
+        /// </summary>  
+        public string send_time { get; set; }
+
+        /// <summary>   
+        ///    使用时间 可空 String 格式为yyyyMMddhhmmss，如2009年12月27日9点10分10秒表示为20091227091010。
+        /// </summary>  
+        public string use_time { get; set; }
+
+        /// <summary>   
+        ///    使用单号 可空 String 代金券使用后，关联的大单收单单号
+        /// </summary>  
+        public string trade_no { get; set; }
+
+        /// <summary>   
+        ///    消耗方商户id 可空 String 代金券使用后，消耗方商户id
+        /// </summary>  
+        public string consumer_mch_id { get; set; }
+
+        /// <summary>   
+        ///    消耗方商户名称 可空 String 代金券使用后，消耗方商户名称
+        /// </summary>  
+        public string consumer_mch_name { get; set; }
+
+        /// <summary>   
+        ///    消耗方商户appid 可空 String 代金券使用后，消耗方商户appid
+        /// </summary>  
+        public string consumer_mch_appid { get; set; }
+
+        /// <summary>   
+        ///    发放来源 必填 String 代金券发放来源:JIFA-即发即用 NORMAL-普通发劵 FULL_SEND-满送活动送劵 SCAN_CODE-扫码领劵 OZ-刮奖领劵 AJUST-对账调账
+        /// </summary>  
+        public string send_source { get; set; }
+
+        /// <summary>   
+        ///    是否允许部分使用 可空 String 该代金券是否允许部分使用标识：1-表示支持部分使用
+        /// </summary>  
+        public string is_partial_use { get; set; }
+
+        /// <summary>
+        /// 格式化自身属性部分
+        /// </summary>
+        protected override void FormatPropertiesFromMsg()
+        {
+            base.FormatPropertiesFromMsg();
+            sub_mch_id = this["sub_mch_id"];
+            device_info = this["device_info"];
+            coupon_stock_id = this["coupon_stock_id"];
+            coupon_stock_type = this["coupon_stock_type"].ToInt32();
+            coupon_id = this["coupon_id"];
+
+            coupon_value = this["coupon_value"].ToInt32();
+            coupon_mininum = this["coupon_mininum"].ToInt32();
+            coupon_name = this["coupon_name"];
+            coupon_state = this["coupon_state"].ToInt32();
+            coupon_type = this["coupon_type"].ToInt32();
+
+            coupon_desc = this["coupon_desc"];
+            coupon_use_value = this["coupon_use_value"].ToInt32();
+            coupon_remain_value = this["coupon_remain_value"].ToInt32();
+            begin_time = this["begin_time"];
+            end_time = this["end_time"];
+
+            send_time = this["send_time"];
+            use_time = this["use_time"];
+            trade_no = this["trade_no"];
+            consumer_mch_id = this["consumer_mch_id"];
+            consumer_mch_name = this["consumer_mch_name"];
+
+            consumer_mch_appid = this["consumer_mch_appid"];
+            send_source = this["send_source"];
+            is_partial_use = this["is_partial_use"];
+        }
+    }
+
+    #endregion
 }

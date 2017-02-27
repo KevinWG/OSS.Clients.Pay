@@ -221,8 +221,10 @@ namespace OSS.PayCenter.WX.Pay
             res.return_msg = uniOrder.return_msg;
 
             var dics = res.GetDics();
-            CompleteDictionarys(dics);
+            dics.Add("appid", ApiConfig.AppId);
+            dics.Add("mch_id", ApiConfig.MchId);
 
+            CompleteDicSign(dics);
             return dics.ProduceXml();
         }
 
