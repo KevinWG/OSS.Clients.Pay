@@ -11,12 +11,14 @@
 
 #endregion
 
+using OSS.Common.Extention;
+
 namespace OSS.PayCenter.WX.Cash.Mos
 {
     /// <summary>
     ///  企业付款请求实体
     /// </summary>
-    public class WxPayQCashReq : WxPayBaseReq
+    public class WxPayTransferCashReq : WxPayBaseReq
     {
         /// <summary>   
         ///    设备号 可空 String(32) 微信支付分配的终端设备号
@@ -76,7 +78,7 @@ namespace OSS.PayCenter.WX.Cash.Mos
     /// <summary>
     ///  企业付款响应实体
     /// </summary>
-    public class WxPayQCashResp : WxPayBaseResp
+    public class WxPayTransferCashResp : WxPayBaseResp
     {
         /// <summary>   
         ///    商户订单号 必填 String(32) 商户订单号，需保持唯一性
@@ -104,6 +106,70 @@ namespace OSS.PayCenter.WX.Cash.Mos
             payment_time = this["payment_time"];
         }
     }
+
+
+    public class WxPayGetTransferCashResp : WxPayBaseResp
+    {/// <summary>   
+     ///    商户单号 必填 String(28) 商户使用查询API填写的单号的原路返回.
+     /// </summary>  
+        public string partner_trade_no { get; set; }
+
+        /// <summary>   
+        ///    付款单号 必填 String(32) 调用企业付款API时，微信系统内部产生的单号
+        /// </summary>  
+        public string detail_id { get; set; }
+
+        /// <summary>   
+        ///    转账状态 必填 string(16) SUCCESS:转账成功FAILED:转账失败PROCESSING:处理中
+        /// </summary>  
+        public string status { get; set; }
+
+        /// <summary>   
+        ///    失败原因 可空 String 如果失败则有失败原因
+        /// </summary>  
+        public string reason { get; set; }
+
+        /// <summary>   
+        ///    收款用户openid 必填 转账的openid
+        /// </summary>  
+        public string openid { get; set; }
+
+        /// <summary>   
+        ///    收款用户姓名 可空 String 收款用户姓名
+        /// </summary>  
+        public string transfer_name { get; set; }
+
+        /// <summary>   
+        ///    付款金额 必填 int 付款金额单位分）
+        /// </summary>  
+        public int payment_amount { get; set; }
+
+        /// <summary>   
+        ///    转账时间 必填 20:00:00 String 发起转账的时间
+        /// </summary>  
+        public string transfer_time { get; set; }
+
+        /// <summary>   
+        ///    付款描述 必填 String 付款时候的描述
+        /// </summary>  
+        public string desc { get; set; }
+
+        protected override void FormatPropertiesFromMsg()
+        {
+            base.FormatPropertiesFromMsg();
+            partner_trade_no = this["partner_trade_no"];
+            detail_id = this["detail_id"];
+            status = this["status"];
+            reason = this["reason"];
+            openid = this["openid"];
+
+            transfer_name = this["transfer_name"];
+            payment_amount = this["payment_amount"].ToInt32();
+            transfer_time = this["transfer_time"];
+            desc = this["desc"];
+        }
+    }
+
 
 
 }

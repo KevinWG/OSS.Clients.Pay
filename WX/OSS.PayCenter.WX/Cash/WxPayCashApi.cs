@@ -11,6 +11,8 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using OSS.Http.Mos;
 using OSS.PayCenter.WX.Cash.Mos;
@@ -29,7 +31,7 @@ namespace OSS.PayCenter.WX.Cash
         /// </summary>
         /// <param name="cashReq"></param>
         /// <returns></returns>
-        public async Task<WxPayQCashResp> TransferCash(WxPayQCashReq cashReq)
+        public async Task<WxPayTransferCashResp> TransferCash(WxPayTransferCashReq cashReq)
         {
             var addressUrl = string.Concat(m_ApiUrl, "/mmpaymkttransfers/promotion/transfers");
             var dics = cashReq.GetDics();
@@ -44,7 +46,24 @@ namespace OSS.PayCenter.WX.Cash
             req.AddressUrl = addressUrl;
             req.CustomBody = dics.ProduceXml();
 
-            return await RestCommon<WxPayQCashResp>(req, null, GetCertHttpClient());
+            return await RestCommon<WxPayTransferCashResp>(req, null, GetCertHttpClient());
+        }
+
+
+        /// <summary>
+        /// 获取企业付款信息
+        /// </summary>
+        /// <param name="partner_trade_no"></param>
+        /// <returns></returns>
+        public async Task<WxPayGetTransferCashResp> GetTransferCash(string partner_trade_no)
+        {
+            var urlStr = string.Concat(m_ApiUrl, "/mmpaymkttransfers/gettransferinfo");
+
+            var dics = new SortedDictionary<string,object>();
+            dics["nonce_str"] = Guid.NewGuid().ToString().Replace("-", "");
+            dics["partner_trade_no"] = partner_trade_no;
+
+            return await PostPaySortDics<WxPayGetTransferCashResp>(urlStr, dics,null,GetCertHttpClient());
         }
     }
 }
