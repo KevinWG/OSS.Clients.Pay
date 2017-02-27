@@ -34,12 +34,12 @@ namespace OSS.PayCenter.WX
         /// <summary>
         /// 微信api接口地址
         /// </summary>
-        protected const string m_ApiUrl = "https://api.weixin.qq.com";
+        protected const string m_ApiUrl = "https://api.mch.weixin.qq.com";
 
         #region  处理基本配置
 
         /// <summary>
-        ///   默认配置信息，如果实例中的配置为空会使用当前配置信息
+        ///   默认配置信息，如果实例中的构造函数配置为空可以使用当前全局配置信息
         /// </summary>
         public static WxPayCenterConfig DefaultConfig { get; set; }
 
@@ -134,11 +134,21 @@ namespace OSS.PayCenter.WX
                     return string.Concat(d.Key, "=", d.Value);
                 return string.Empty;
             }));
-            var signStr = Md5.EncryptHexString(string.Concat(encryptStr, "&key=", ApiConfig.Key)).ToUpper();
+            var signStr = GetSign(encryptStr);
             if (signStr == t.sign) return;
 
             t.Ret = (int) ResultTypes.ParaNotMeet;
             t.Message = "返回的结果签名（sign）不匹配";
+        }
+
+        /// <summary>
+        /// 生成签名,统一方法
+        /// </summary>
+        /// <param name="encryptStr">不含key的参与签名串</param>
+        /// <returns></returns>
+        protected string GetSign(string encryptStr) 
+        {
+            return Md5.EncryptHexString(string.Concat(encryptStr, "&key=", ApiConfig.Key)).ToUpper();
         }
 
 
@@ -184,7 +194,7 @@ namespace OSS.PayCenter.WX
                             ? string.Empty
                             : string.Concat(k.Key, "=", str);
                     }));
-            string sign = Md5.EncryptHexString(string.Concat(encStr, "&key=", ApiConfig.Key)).ToUpper();
+            string sign = GetSign(encStr);// Md5.EncryptHexString(string.Concat(encStr, "&key=", ApiConfig.Key)).ToUpper();
             xmlDirs.Add("sign", sign);
         }
 

@@ -186,7 +186,7 @@ namespace OSS.PayCenter.WX.Pay
             };
             
             string encStr = string.Join("&",dics.Select(k => string.Concat(k.Key, "=", k.Value)));
-            var sign= Md5.EncryptHexString(string.Concat(encStr, "&key=", ApiConfig.Key)).ToUpper();
+            var sign= GetSign(encStr);
 
             return string.Concat("weixin://wxpay/bizpayurl?", encStr, "&sign=", sign);
         }
