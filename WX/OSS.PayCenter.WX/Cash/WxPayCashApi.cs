@@ -11,9 +11,40 @@
 
 #endregion
 
+using System.Threading.Tasks;
+using OSS.Http.Mos;
+using OSS.PayCenter.WX.Cash.Mos;
+using OSS.PayCenter.WX.SysTools;
+
 namespace OSS.PayCenter.WX.Cash
 {
-    public class WxPayCashApi
+    public class WxPayCashApi:WxPayBaseApi
     {
+        public WxPayCashApi(WxPayCenterConfig config) : base(config)
+        {
+        }
+
+        /// <summary>
+        ///  企业付款接口
+        /// </summary>
+        /// <param name="cashReq"></param>
+        /// <returns></returns>
+        public async Task<WxPayQCashResp> TransferCash(WxPayQCashReq cashReq)
+        {
+            var addressUrl = string.Concat(m_ApiUrl, "/mmpaymkttransfers/promotion/transfers");
+            var dics = cashReq.GetDics();
+
+            dics.Add("mch_appid", ApiConfig.AppId);
+            dics.Add("mch_id", ApiConfig.MchId);
+
+            CompleteDicSign(dics);
+
+            var req = new OsHttpRequest();
+            req.HttpMothed = HttpMothed.POST;
+            req.AddressUrl = addressUrl;
+            req.CustomBody = dics.ProduceXml();
+
+            return await RestCommon<WxPayQCashResp>(req, null, GetCertHttpClient());
+        }
     }
 }
