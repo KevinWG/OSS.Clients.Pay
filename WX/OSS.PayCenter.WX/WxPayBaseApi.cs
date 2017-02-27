@@ -131,18 +131,21 @@ namespace OSS.PayCenter.WX
             T t = new T {RespXml = resultXml};
             t.FromResContent(dics);
 
-            var encryptStr = string.Join("&", dics.Select(d =>
+            if (dics.ContainsKey("sign"))
             {
-                if (d.Key != "sign" && !string.IsNullOrEmpty(d.Value))
-                    return string.Concat(d.Key, "=", d.Value);
-                return string.Empty;
-            }));
-            var signStr = GetSign(encryptStr);
+                var encryptStr = string.Join("&", dics.Select(d =>
+                {
+                    if (d.Key != "sign" && !string.IsNullOrEmpty(d.Value))
+                        return string.Concat(d.Key, "=", d.Value);
+                    return string.Empty;
+                }));
+                var signStr = GetSign(encryptStr);
 
-            if (signStr != t.sign)
-            {
-                t.Ret = (int) ResultTypes.ParaNotMeet;
-                t.Message = "返回的结果签名（sign）不匹配";
+                if (signStr != t.sign)
+                {
+                    t.Ret = (int)ResultTypes.ParaNotMeet;
+                    t.Message = "返回的结果签名（sign）不匹配";
+                }
             }
             return t;
         }
