@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
+using System.Xml;
 using OSS.Common.ComModels;
 
 namespace OSS.PayCenter.WX
@@ -125,6 +126,13 @@ namespace OSS.PayCenter.WX
         public string err_code_des { get; set; }
 
 
+        /// <summary>
+        ///   响应对象的xml实体
+        /// </summary>
+        public XmlDocument RespXml { get; set; }
+
+        #region  处理结果字典赋值
+
         private SortedDictionary<string, string> _dics;
 
         /// <summary>
@@ -135,9 +143,12 @@ namespace OSS.PayCenter.WX
         {
             _dics = contentDirs;
 
+            return_code = this["return_code"];
+            return_msg = this["return_msg"];
             appid = this["appid"];
             mch_id = this["mch_id"];
             nonce_str = this["nonce_str"];
+
             sign = this["sign"];
             result_code = this["result_code"];
             err_code = this["err_code"];
@@ -167,7 +178,7 @@ namespace OSS.PayCenter.WX
                 return value ?? string.Empty;
             }
         }
-
+        #endregion
     }
 
     public class WxPayCenterConfig

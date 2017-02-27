@@ -107,13 +107,7 @@ namespace OSS.PayCenter.WX.Pay
         /// <returns>如果签名验证不通过，Ret=310</returns>
         public WxPayOrderTradeResp DecryptTradeResult(string contentXmlStr)
         {
-            var dics = XmlDicHelper.ChangXmlToDir(contentXmlStr);
-
-            var res = new WxPayOrderTradeResp();
-            res.SetResultDirs(dics);
-            CheckResultSign(dics, res);
-
-            return res;
+            return GetRespResult<WxPayOrderTradeResp>(contentXmlStr);
         }
 
         /// <summary>
@@ -198,13 +192,7 @@ namespace OSS.PayCenter.WX.Pay
         /// <returns></returns>
         public WxPayScanCallBackMo DecryptScanCallBackMsg(string contentStr)
         {
-            var dics = XmlDicHelper.ChangXmlToDir(contentStr);
-
-            var res = new WxPayScanCallBackMo();
-            res.SetResultDirs(dics);
-            CheckResultSign(dics, res);
-
-            return res;
+            return GetRespResult<WxPayScanCallBackMo>(contentStr);
         }
         /// <summary>
         ///  把统一下单结果响应给微信支付系统

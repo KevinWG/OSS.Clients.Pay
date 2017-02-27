@@ -56,18 +56,19 @@ namespace OSS.PayCenter.WX.SysTools
         /// <summary>
         /// 把xml文本转化成字典对象
         /// </summary>
-        /// <param name="xml"></param>
+        /// <param name="xmlStr"></param>
+        /// <param name="xmlDoc">通过字符串转化后的xml对象</param>
         /// <returns></returns>
-        internal static SortedDictionary<string, string> ChangXmlToDir(string xml)
+        internal static SortedDictionary<string, string> ChangXmlToDir(string xmlStr,ref XmlDocument xmlDoc)
         {
-            if (string.IsNullOrEmpty(xml))
+            if (string.IsNullOrEmpty(xmlStr))
             {
                 return null;
             }
             var dirs = new SortedDictionary<string, string>();
 
-            var xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(xml);
+            xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(xmlStr);
             XmlNode xmlNode = xmlDoc.FirstChild;
             XmlNodeList nodes = xmlNode.ChildNodes;
 

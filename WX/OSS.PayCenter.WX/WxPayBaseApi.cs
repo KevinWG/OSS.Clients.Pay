@@ -18,6 +18,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using System.Xml;
 using OSS.Common.ComModels.Enums;
 using OSS.Common.Encrypt;
 using OSS.Common.Modules;
@@ -93,12 +94,7 @@ namespace OSS.PayCenter.WX
                     else
                     {
                         var contentStr = await resp.Content.ReadAsStringAsync();
-                        var dics = XmlDicHelper.ChangXmlToDir(contentStr);
-
-                        t=new T();
-
-                        t.SetResultDirs(dics);
-                        CheckResultSign(dics, t);
+                        t = GetRespResult<T>(contentStr);
                     }
                     if (t.return_code.ToUpper() != "SUCCESS")
                     {
@@ -120,37 +116,36 @@ namespace OSS.PayCenter.WX
             }
             return t ?? new T() {Ret = 0,Message = string.Concat("当前请求出错，错误码：", errorKey) };
         }
+
         /// <summary>
-        ///  检查返回结果的签名sign
+        /// 获取响应结果
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="dics"></param>
-        /// <param name="t"></param>
-        protected void CheckResultSign<T>(SortedDictionary<string, string> dics, T t) where T : WxPayBaseResp, new()
+        /// <param name="contentStr"></param>
+        /// <returns></returns>
+        protected T GetRespResult<T>(string contentStr) where T : WxPayBaseResp, new()
         {
+            XmlDocument resultXml = null;
+            var dics = XmlDicHelper.ChangXmlToDir(contentStr, ref resultXml);
+
+            T t = new T {RespXml = resultXml};
+            t.SetResultDirs(dics);
+
             var encryptStr = string.Join("&", dics.Select(d =>
             {
-                if (d.Key != "sign"&&!string.IsNullOrEmpty(d.Value))
+                if (d.Key != "sign" && !string.IsNullOrEmpty(d.Value))
                     return string.Concat(d.Key, "=", d.Value);
                 return string.Empty;
             }));
             var signStr = GetSign(encryptStr);
-            if (signStr == t.sign) return;
 
-            t.Ret = (int) ResultTypes.ParaNotMeet;
-            t.Message = "返回的结果签名（sign）不匹配";
+            if (signStr != t.sign)
+            {
+                t.Ret = (int) ResultTypes.ParaNotMeet;
+                t.Message = "返回的结果签名（sign）不匹配";
+            }
+            return t;
         }
-
-        /// <summary>
-        /// 生成签名,统一方法
-        /// </summary>
-        /// <param name="encryptStr">不含key的参与签名串</param>
-        /// <returns></returns>
-        protected string GetSign(string encryptStr) 
-        {
-            return Md5.EncryptHexString(string.Concat(encryptStr, "&key=", ApiConfig.Key)).ToUpper();
-        }
-
 
         /// <summary>
         ///   post 支付接口相关请求
@@ -198,6 +193,15 @@ namespace OSS.PayCenter.WX
             xmlDirs.Add("sign", sign);
         }
 
+        /// <summary>
+        /// 生成签名,统一方法
+        /// </summary>
+        /// <param name="encryptStr">不含key的参与签名串</param>
+        /// <returns></returns>
+        protected string GetSign(string encryptStr)
+        {
+            return Md5.EncryptHexString(string.Concat(encryptStr, "&key=", ApiConfig.Key)).ToUpper();
+        }
         #endregion
 
         #region  全局错误处理
@@ -246,12 +250,7 @@ namespace OSS.PayCenter.WX
             RegisteErrorCode("NETWORKERROR", "网络环境不佳,请重试");
             #endregion
         }
-        // 
-        // 
-        // 
-        // 
-        // 
-        // 
+
         /// <summary>
         /// 注册错误码
         /// </summary>
