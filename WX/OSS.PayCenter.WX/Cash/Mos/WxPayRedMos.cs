@@ -12,6 +12,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Xml;
 using OSS.Common.Extention;
 
 namespace OSS.PayCenter.WX.Cash.Mos
@@ -286,9 +287,7 @@ namespace OSS.PayCenter.WX.Cash.Mos
         /// </summary>  
         public List<WxPayRedItemMo> hblist { get; set; }
 
-
-
-
+        
         /// <summary>
         /// 格式化自身属性部分
         /// </summary>
@@ -312,10 +311,23 @@ namespace OSS.PayCenter.WX.Cash.Mos
             remark = this["remark"];
             act_name = this["act_name"];
             
+            if (!string.IsNullOrEmpty(this["hblist"]))
+            {
+                var redNodes = RespXml.FirstChild["hblist"].ChildNodes;
+                var list = new List<WxPayRedItemMo>(redNodes.Count);
+                foreach (XmlNode node in redNodes)
+                {
+                    if (!node.HasChildNodes)
+                        break;
+                    var item = new WxPayRedItemMo();
 
-            //  todo  红包列表
-
-
+                    item.amount = (node["amount"]?.InnerText??string.Empty).ToInt32();
+                    item.openid = node["openid"]?.InnerText;
+                    item.rcv_time = node["rcv_time"]?.InnerText;
+                    list.Add(item);
+                }
+                hblist = list;
+            }
         }
     }
 
@@ -332,7 +344,7 @@ namespace OSS.PayCenter.WX.Cash.Mos
         /// <summary>   
         ///    金额 必填 int 领取金额
         /// </summary>  
-        public string amount { get; set; }
+        public int amount { get; set; }
 
         /// <summary>   
         ///    接收时间 必填 20:00:00 String(32) 领取红包的时间

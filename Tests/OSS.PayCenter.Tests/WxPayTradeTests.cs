@@ -91,12 +91,18 @@ namespace OSS.PayCenter.Tests
 <amount>100</amount>
 <rcv_time><![CDATA[2016-08-08 21:49:46]]></rcv_time>
 </hbinfo>
+<hbinfo>
+<openid><![CDATA[oHkLxtzmyHXX6FW_cAWo_orTSRXs]]></openid>
+<amount>100</amount>
+<rcv_time><![CDATA[2016-08-08 21:49:46]]></rcv_time>
+</hbinfo>
 </hblist>
 </xml>";
             //XmlDocument resultXml = null;
             //var dics = XmlDicHelper.ChangXmlToDir(res, ref resultXml);
 
             //WxPayQueryRedResp t = new WxPayQueryRedResp();
+            //t.RespXml = resultXml;
             //t.FromResContent(dics);
         }
 
