@@ -1,9 +1,12 @@
 ﻿using System.Collections.Concurrent;
+using System.Xml;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OSS.Common.Extention;
 using OSS.PayCenter.WX;
+using OSS.PayCenter.WX.Cash.Mos;
 using OSS.PayCenter.WX.Pay;
 using OSS.PayCenter.WX.Pay.Mos;
+using OSS.PayCenter.WX.SysTools;
 
 namespace OSS.PayCenter.Tests
 {
@@ -11,6 +14,7 @@ namespace OSS.PayCenter.Tests
     public class WxPayTradeTests
     {
         private WxPayTradeApi m_Api=new WxPayTradeApi();
+        
 
         static WxPayTradeTests()
         {
@@ -61,5 +65,41 @@ namespace OSS.PayCenter.Tests
             ConcurrentDictionary<string,string> dics=new ConcurrentDictionary<string, string>();
             dics["key"] = "111";
         }
+
+
+        [TestMethod]
+        public void RedListTest()
+        {
+            string res = @"<xml>
+<return_code><![CDATA[SUCCESS]]></return_code>
+<return_msg><![CDATA[OK]]></return_msg>
+<result_code><![CDATA[SUCCESS]]></result_code>
+<err_code><![CDATA[SUCCESS]]></err_code>
+<err_code_des><![CDATA[OK]]></err_code_des>
+<mch_billno><![CDATA[9010080799701411170000046603]]></mch_billno>
+<mch_id><![CDATA[11475856]]></mch_id>
+<detail_id><![CDATA[10000417012016080830956240040]]></detail_id>
+<status><![CDATA[RECEIVED]]></status>
+<send_type><![CDATA[ACTIVITY]]></send_type>
+<hb_type><![CDATA[NORMAL]]></hb_type>
+<total_num>1</total_num>
+<total_amount>100</total_amount>
+<send_time><![CDATA[2016-08-08 21:49:22]]></send_time>
+<hblist>
+<hbinfo>
+<openid><![CDATA[oHkLxtzmyHXX6FW_cAWo_orTSRXs]]></openid>
+<amount>100</amount>
+<rcv_time><![CDATA[2016-08-08 21:49:46]]></rcv_time>
+</hbinfo>
+</hblist>
+</xml>";
+            //XmlDocument resultXml = null;
+            //var dics = XmlDicHelper.ChangXmlToDir(res, ref resultXml);
+
+            //WxPayQueryRedResp t = new WxPayQueryRedResp();
+            //t.FromResContent(dics);
+        }
+
+
     }
 }

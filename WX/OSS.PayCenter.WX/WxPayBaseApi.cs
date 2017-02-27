@@ -129,7 +129,7 @@ namespace OSS.PayCenter.WX
             var dics = XmlDicHelper.ChangXmlToDir(contentStr, ref resultXml);
 
             T t = new T {RespXml = resultXml};
-            t.SetResultDirs(dics);
+            t.FromResContent(dics);
 
             var encryptStr = string.Join("&", dics.Select(d =>
             {

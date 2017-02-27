@@ -11,6 +11,7 @@
 
 #endregion
 
+using System.Collections.Generic;
 using OSS.Common.Extention;
 
 namespace OSS.PayCenter.WX.Cash.Mos
@@ -283,24 +284,14 @@ namespace OSS.PayCenter.WX.Cash.Mos
         /// <summary>   
         ///    裂变红包领取列表 可空 裂变红包的领取列表
         /// </summary>  
-        public string hblist { get; set; }
-
-        /// <summary>   
-        ///    领取红包的Openid 必填 String(32) 领取红包的openid
-        /// </summary>  
-        public string openid { get; set; }
-
-        /// <summary>   
-        ///    金额 必填 int 领取金额
-        /// </summary>  
-        public string amount { get; set; }
-
-        /// <summary>   
-        ///    接收时间 必填 20:00:00 String(32) 领取红包的时间
-        /// </summary>  
-        public string rcv_time { get; set; }
+        public List<WxPayRedItemMo> hblist { get; set; }
 
 
+
+
+        /// <summary>
+        /// 格式化自身属性部分
+        /// </summary>
         protected override void FormatPropertiesFromMsg()
         {
             base.FormatPropertiesFromMsg();
@@ -320,11 +311,33 @@ namespace OSS.PayCenter.WX.Cash.Mos
             wishing = this["wishing"];
             remark = this["remark"];
             act_name = this["act_name"];
-            hblist = this["hblist"];
+            
 
             //  todo  红包列表
 
+
         }
+    }
+
+    /// <summary>
+    ///  红包条目实体对象
+    /// </summary>
+    public class WxPayRedItemMo
+    {
+        /// <summary>   
+        ///    领取红包的Openid 必填 String(32) 领取红包的openid
+        /// </summary>  
+        public string openid { get; set; }
+
+        /// <summary>   
+        ///    金额 必填 int 领取金额
+        /// </summary>  
+        public string amount { get; set; }
+
+        /// <summary>   
+        ///    接收时间 必填 20:00:00 String(32) 领取红包的时间
+        /// </summary>  
+        public string rcv_time { get; set; }
     }
 
     #endregion

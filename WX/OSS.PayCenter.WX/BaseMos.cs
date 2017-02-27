@@ -139,7 +139,7 @@ namespace OSS.PayCenter.WX
         ///  把消息对应的xml字典，给属性赋值
         /// </summary>
         /// <param name="contentDirs"></param>
-        internal void SetResultDirs(SortedDictionary<string, string> contentDirs)
+        internal void FromResContent(SortedDictionary<string, string> contentDirs)
         {
             _dics = contentDirs;
 

@@ -25,7 +25,7 @@ namespace OSS.PayCenter.WX.SysTools
         /// </summary>
         /// <param name="dics"></param>
         /// <returns></returns>
-       internal static string ProduceXml(this SortedDictionary<string,object> dics )
+       public static string ProduceXml(this SortedDictionary<string,object> dics )
         {
             StringBuilder xml = new StringBuilder();
 
@@ -59,7 +59,7 @@ namespace OSS.PayCenter.WX.SysTools
         /// <param name="xmlStr"></param>
         /// <param name="xmlDoc">通过字符串转化后的xml对象</param>
         /// <returns></returns>
-        internal static SortedDictionary<string, string> ChangXmlToDir(string xmlStr,ref XmlDocument xmlDoc)
+        public static SortedDictionary<string, string> ChangXmlToDir(string xmlStr,ref XmlDocument xmlDoc)
         {
             if (string.IsNullOrEmpty(xmlStr))
             {
