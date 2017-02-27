@@ -26,10 +26,10 @@ namespace OSS.PayCenter.WX.Pay
         static WxPayRefundApi()
         {
             #region  申请退款全局错误码
-            RegisteErrorCode("error", "业务错误");
-            RegisteErrorCode("user_account_abnormal", "退款请求失败用户帐号注销 此状态代表退款申请失败，商户可自行处理退款。");
-            RegisteErrorCode("notenough", "余额不足");
-            RegisteErrorCode("invalid_transactionid", "无效transaction_id");
+            RegisteErrorCode("ERROR", "业务错误");
+            RegisteErrorCode("USER_ACCOUNT_ABNORMAL", "退款请求失败用户帐号注销 此状态代表退款申请失败，商户可自行处理退款。");
+            RegisteErrorCode("NOTENOUGH", "余额不足");
+            RegisteErrorCode("INVALID_TRANSACTIONID", "无效transaction_id");
             #endregion
         }
 

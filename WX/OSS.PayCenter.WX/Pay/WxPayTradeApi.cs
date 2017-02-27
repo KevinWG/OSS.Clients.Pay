@@ -29,7 +29,7 @@ namespace OSS.PayCenter.WX.Pay
 
         static WxPayTradeApi()
         {
-            RegisteErrorCode("ordernotexist", "此交易订单号不存在");
+            RegisteErrorCode("ORDERNOTEXIST", "此交易订单号不存在");
         }
 
         #endregion
