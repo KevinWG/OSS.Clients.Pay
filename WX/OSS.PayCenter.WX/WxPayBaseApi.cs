@@ -96,17 +96,6 @@ namespace OSS.PayCenter.WX
                         var contentStr = await resp.Content.ReadAsStringAsync();
                         t = GetRespResult<T>(contentStr);
                     }
-                    if (t.return_code.ToUpper() != "SUCCESS")
-                    {
-                        //通信结果处理，这个其实没意义，脱裤子放屁
-                        t.Ret = 0;
-                        t.Message = t.return_msg;
-                    }
-                    else if (!t.IsSuccess)
-                    {
-                        //  请求数据结果处理
-                        t.Message = GetErrMsg(t.err_code?.ToUpper());
-                    }
                 }
             }
             catch (Exception ex)
@@ -147,6 +136,19 @@ namespace OSS.PayCenter.WX
                     t.Message = "返回的结果签名（sign）不匹配";
                 }
             }
+
+            if (t.return_code.ToUpper() != "SUCCESS")
+            {
+                //通信结果处理，这个其实没意义，脱裤子放屁
+                t.Ret = 0;
+                t.Message = t.return_msg;
+            }
+            else if (!t.IsSuccess)
+            {
+                //  请求数据结果处理
+                t.Message = GetErrMsg(t.err_code?.ToUpper());
+            }
+
             return t;
         }
 

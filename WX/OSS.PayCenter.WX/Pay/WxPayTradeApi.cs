@@ -16,8 +16,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using OSS.Common.ComModels;
+using OSS.Common.ComModels.Enums;
 using OSS.Common.Encrypt;
 using OSS.Common.Extention;
+using OSS.Http;
+using OSS.Http.Mos;
 using OSS.PayCenter.WX.Pay.Mos;
 using OSS.PayCenter.WX.SysTools;
 
@@ -161,6 +164,9 @@ namespace OSS.PayCenter.WX.Pay
         #endregion
 
 
+
+
+
         #region   扫码支付模式一
 
         /// <summary>
@@ -178,9 +184,9 @@ namespace OSS.PayCenter.WX.Pay
                 ["appid"] = ApiConfig.AppId,
                 ["mch_id"] = ApiConfig.MchId
             };
-            
-            string encStr = string.Join("&",dics.Select(k => string.Concat(k.Key, "=", k.Value)));
-            var sign= GetSign(encStr);
+
+            string encStr = string.Join("&", dics.Select(k => string.Concat(k.Key, "=", k.Value)));
+            var sign = GetSign(encStr);
 
             return string.Concat("weixin://wxpay/bizpayurl?", encStr, "&sign=", sign);
         }
@@ -194,6 +200,7 @@ namespace OSS.PayCenter.WX.Pay
         {
             return GetRespResult<WxPayScanCallBackMo>(contentStr);
         }
+
         /// <summary>
         ///  把统一下单结果响应给微信支付系统
         /// </summary>
@@ -201,7 +208,7 @@ namespace OSS.PayCenter.WX.Pay
         /// <returns></returns>
         public string GetScanCallBackResponse(WxAddPayUniOrderResp uniOrder)
         {
-            var res=new WxPayScanCallBackResMo();
+            var res = new WxPayScanCallBackResMo();
             res.err_code_des = uniOrder.err_code_des;
             res.prepay_id = uniOrder.prepay_id;
             res.result_code = uniOrder.result_code;
@@ -216,6 +223,42 @@ namespace OSS.PayCenter.WX.Pay
             return dics.ProduceXml();
         }
 
+
+        #endregion
+
+
+
+        #region  下载对账单
+
+        /// <summary>
+        /// 下载对账单
+        /// </summary>
+        /// <param name="billReq"></param>
+        /// <returns></returns>
+        public async Task<ResultMo<string>> DownloadBill(WxPayDownloadBillReq billReq)
+        {
+            var dics = billReq.GetDics();
+
+            dics.Add("appid", ApiConfig.AppId);
+            dics.Add("mch_id", ApiConfig.MchId);
+            CompleteDicSign(dics);
+
+            var req = new OsHttpRequest();
+            req.HttpMothed = HttpMothed.POST;
+            req.AddressUrl = string.Concat(m_ApiUrl, "/pay/downloadbill");
+            req.CustomBody = dics.ProduceXml();
+
+            var response = await req.RestSend();
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                if (content.StartsWith("<xml>"))
+                    return new ResultMo<string>(content);
+
+                return new ResultMo<string>(ResultTypes.ObjectStateError, content);
+            }
+            return new ResultMo<string>() {Ret = 0, Message = "当前请求出错！"};
+        }
 
         #endregion
 

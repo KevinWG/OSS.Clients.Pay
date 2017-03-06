@@ -194,5 +194,25 @@ namespace OSS.PayCenter.WX.Pay.Mos
 
 
 
+    /// <summary>
+    /// 下载对账单请求
+    /// </summary>
+    public class WxPayDownloadBillReq : WxPayBaseReq
+    {
+        /// <summary>   
+        ///    对账单日期 必填 20140603 下载对账单的日期，格式：20140603
+        /// </summary>  
+        public string bill_date { get; set; }
+
+        /// <summary>   
+        ///    账单类型 必填 ALL ALL，返回当日所有订单信息，默认值,SUCCESS，返回当日成功支付的订单，REFUND，返回当日退款订单，RECHARGE_REFUND，返回当日充值退款订单（相比其他对账单多一栏“返还手续费”）
+        /// </summary>  
+        public string bill_type { get; set; }
+
+        /// <summary>   
+        ///    设备号 可空 013467007045764 微信支付分配的终端设备号
+        /// </summary>  
+        public string device_info { get; set; }
+    }
 
 }
