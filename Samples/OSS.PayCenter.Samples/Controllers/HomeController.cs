@@ -14,7 +14,6 @@ namespace OSS.PayCenter.Samples.Controllers
         public IActionResult Error()
         {
             var handler=new HttpClientHandler();
-            handler.ClientCertificates
             return View();
         }
 
