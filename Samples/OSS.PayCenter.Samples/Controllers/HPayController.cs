@@ -8,7 +8,7 @@ using OSS.PayCenter.WX;
 
 namespace OSS.PayCenter.Samples.Controllers
 {
-    public class WxPayController : Controller
+    public class HPayController : Controller
     {
         // GET: /<controller>/
         public IActionResult Index()
