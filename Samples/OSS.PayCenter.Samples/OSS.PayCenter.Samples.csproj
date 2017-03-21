@@ -12,13 +12,10 @@
     <Content Include="wwwroot\css\site.css" />
     <Content Include="wwwroot\css\site.min.css" />
     <Content Include="wwwroot\favicon.ico" />
-    <Content Include="wwwroot\images\banner1.svg" />
-    <Content Include="wwwroot\images\banner2.svg" />
-    <Content Include="wwwroot\images\banner3.svg" />
-    <Content Include="wwwroot\images\banner4.svg" />
     <Content Include="wwwroot\images\beijing.jpg" />
-    <Content Include="wwwroot\images\logo.jpg" />
+    <Content Include="wwwroot\images\logo.png" />
     <Content Include="wwwroot\images\wx_qr_code.jpg" />
+    <Content Include="wwwroot\images\二维码.jpg" />
     <Content Include="wwwroot\js\site.js" />
     <Content Include="wwwroot\js\site.min.js" />
     <Content Include="wwwroot\lib\bootstrap\.bower.json" />

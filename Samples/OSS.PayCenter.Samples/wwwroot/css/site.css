@@ -4,8 +4,10 @@
 body {
     padding-top: 50px;
     padding-bottom: 20px;
-    font-family: -apple-system, 微软雅黑,Tahoma, "Segoe UI", 'Droid Sans',sans-serif;
+    font-family: -apple-system,'微软雅黑','Tahoma', "Segoe UI", 'Droid Sans',sans-serif;
     font-size: 1rem;
+    color: #777;
+    background-color: #ebeced;
     /*background-color:ghostwhite;*/
 }
 /* Set widths on the form inputs since otherwise they're 100% wide */
@@ -14,23 +16,29 @@ select,
 textarea {
     max-width: 280px;
 }
-
+a {
+    color: #777;
+}
+a,a:hover, a:active, a:focus, a img {
+    outline: none;
+}
 .container.content{
     background-color: white;
     padding: 0 25px;
+    border-radius: 10px;
 }
 
 /***** Top menu *****/
 .navbar {
-    margin-bottom: 0;
     border: 0;
     -moz-border-radius: 0;
     -webkit-border-radius: 0;
     border-radius: 0;
+    background: #000000;
+    filter: alpha(opacity=70);
+    background: rgba(0,0,0,0.7);
 }
-.navbar-default {
-    background-color: white;
-}
+
 
 ul.navbar-nav {
     color: #888;
@@ -52,7 +60,7 @@ ul.navbar-nav {
         }
 
 .navbar-brand {
-    background: url(../images/logo.jpg) left center no-repeat;
+    background: url(../images/logo.png) left center no-repeat;
     background-size: 40px 40px;
     text-indent: -99999px;
     border-radius: 25px 25px;
@@ -63,21 +71,21 @@ ul.navbar-nav {
 }
 .jumbotron {
     background: url('../images/beijing.jpg') no-repeat fixed top;
-    background-size: 100% 100%;
+    background-size: auto ;
     color: white;
     margin-bottom: 15px;
+    margin-top: -50px;
+    padding-top: 70px;
+    min-height: 380px;
 }
-
+@media screen and (min-width: 1200px) {
+    .jumbotron {
+        background-size: 100% auto;
+    }
+}
 /*  中间二维码部分  */
 .wx-qr-container {
-    margin: auto;
-    border: 1px solid transparent;
-    background: #000000;
-    background: rgba(0,0,0,0.5);
-    width: 250px;
-    height: auto;
-    border-radius: 3px 3px;
-    padding: 20px 0;
+    margin: auto; border: 1px solid transparent; background: #000000; background: rgba(0,0,0,0.5); width: 250px; height: auto; border-radius: 3px 3px; padding: 20px 0; color: #ffffff;
 }
 .wx-qr-container img {
     width: 180px;

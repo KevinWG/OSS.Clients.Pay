@@ -31,12 +31,11 @@ namespace OSS.PayCenter.WX
 {
     public abstract class WxPayBaseApi
     {
-
         /// <summary>
         /// 微信api接口地址
         /// </summary>
         protected const string m_ApiUrl = "https://api.mch.weixin.qq.com";
-
+     
         #region  处理基本配置
 
         /// <summary>

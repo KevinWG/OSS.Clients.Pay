@@ -16,8 +16,6 @@ using OSS.PayCenter.WX.Coupon.Mos;
 
 namespace OSS.PayCenter.WX.Coupon
 {
-
-
     public class WxPayCouponApi : WxPayBaseApi
     {
         #region  初始化构造函数，全局错误处理
