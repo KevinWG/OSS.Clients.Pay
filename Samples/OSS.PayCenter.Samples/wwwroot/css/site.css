@@ -1,8 +1,9 @@
 ﻿html {
     font-size: 16px;
 }
+
 body {
-    padding-top: 50px;
+    padding-top: 65px;
     padding-bottom: 20px;
     font-family: -apple-system,'微软雅黑','Tahoma', "Segoe UI", 'Droid Sans',sans-serif;
     font-size: 1rem;
@@ -16,13 +17,12 @@ select,
 textarea {
     max-width: 280px;
 }
-a {
-    color: #777;
-}
-a,a:hover, a:active, a:focus, a img {
+
+a, a:hover, a:active, a:focus, a img {
     outline: none;
 }
-.container.content{
+
+.container.content {
     background-color: white;
     padding: 0 25px;
     border-radius: 10px;
@@ -35,8 +35,8 @@ a,a:hover, a:active, a:focus, a img {
     -webkit-border-radius: 0;
     border-radius: 0;
     background: #000000;
-    filter: alpha(opacity=70);
-    background: rgba(0,0,0,0.7);
+    filter: alpha(opacity=80);
+    background: rgba(0,0,0,0.8);
 }
 
 
@@ -44,15 +44,18 @@ ul.navbar-nav {
     color: #888;
     text-transform: uppercase;
 }
+
     ul.navbar-nav li a {
         padding-top: 1rem;
         padding-bottom: 1rem;
         color: #fff;
     }
+
         ul.navbar-nav li a:hover {
             background: none;
             color: #2ba560;
         }
+
         ul.navbar-nav li a:focus {
             background: none;
             color: #2ba560;
@@ -69,31 +72,43 @@ ul.navbar-nav {
     margin: 0;
     padding: 5px;
 }
+
 .jumbotron {
-    background: url('../images/beijing.jpg') no-repeat fixed top;
-    background-size: auto ;
+    background: url('../images/beijing.jpg') no-repeat;
+    background-size: auto;
     color: white;
     margin-bottom: 15px;
-    margin-top: -50px;
+    margin-top: -65px;
     padding-top: 70px;
-    min-height: 380px;
+    height: 380px;
 }
-@media screen and (min-width: 1200px) {
+
+@media screen and (min-width: 1100px) {
     .jumbotron {
-        background-size: 100% auto;
+        background-size: 100% 100%;
     }
 }
 /*  中间二维码部分  */
 .wx-qr-container {
-    margin: auto; border: 1px solid transparent; background: #000000; background: rgba(0,0,0,0.5); width: 250px; height: auto; border-radius: 3px 3px; padding: 20px 0; color: #ffffff;
+    margin: auto;
+    border: 1px solid transparent;
+    background: #000000;
+    background: rgba(0,0,0,0.5);
+    width: 250px;
+    height: auto;
+    border-radius: 3px 3px;
+    padding: 20px 0;
+    color: #ffffff;
+    margin-bottom: 20px;
 }
-.wx-qr-container img {
-    width: 180px;
-}
+
+    .wx-qr-container img {
+        width: 180px;
+    }
+
 .wx-qr-desp {
     font-size: 0.7rem;
     margin-top: 10px;
-
 }
 /* 页面内容部分 */
 .page-header {
@@ -104,5 +119,6 @@ ul.navbar-nav {
 
 /* 页尾 */
 footer {
+    /*border-top: #808080 1px solid;*/
     font-size: 0.8rem;
 }
