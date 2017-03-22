@@ -1,13 +1,11 @@
-﻿using System.Net;
-using System.Net.Http;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.AspNetCore.Mvc;
-using OSS.PayCenter.WX;
+﻿using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace OSS.PayCenter.Samples.Controllers
 {
+
+
     public class HPayController : Controller
     {
         // GET: /<controller>/

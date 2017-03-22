@@ -20,5 +20,16 @@
     },
     // Optionally generate .map file
     "sourceMap": false
+  },
+
+  {
+    "outputFileName": "wwwroot/js/pages/hpay.min.js",
+    "inputFiles": [
+      "wwwroot/js/pages/hpay.js"
+    ],
+    "minify": {
+      "enabled": true
+    },
+    "sourceMap": false
   }
 ]

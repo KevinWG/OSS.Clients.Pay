@@ -1,12 +1,9 @@
 ﻿using System.Collections.Concurrent;
-using System.Xml;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OSS.Common.Extention;
 using OSS.PayCenter.WX;
-using OSS.PayCenter.WX.Cash.Mos;
 using OSS.PayCenter.WX.Pay;
 using OSS.PayCenter.WX.Pay.Mos;
-using OSS.PayCenter.WX.SysTools;
 
 namespace OSS.PayCenter.Tests
 {

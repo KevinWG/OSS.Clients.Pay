@@ -2,10 +2,11 @@
     ViewBag.Title = "公众号支付测试  "; 
 }
 
-
 <div class="container content">
     <div class="page-header">公众号支付页</div>
-    <p class="bg-success" style="padding: 15px; border-radius: 15px; margin-bottom: 20px;">请在Controller设置配置信息，并在微信手机端访问当前页面 ！</p>
+    <p class="well">
+        请在Controller设置配置信息，并在微信手机端访问当前页面 ！
+    </p>
 
     <form class="form-horizontal">
         <div class="form-group">
@@ -28,12 +29,7 @@
                 <label class="radio-inline">
                     <input type="radio" name="pay_" id="inlineRadio1" checked="checked" value="option1"> 微信支付
                 </label>
-                @*<label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 2
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> 3
-                </label>*@
+            
             </div>
         </div>
       
@@ -44,3 +40,13 @@
         </div>
     </form>
 </div>
+@section Scripts{
+    <environment names="Development">
+        <script src="~/lib/vue/dist/vue.min.js" asp-append-version="true"></script>
+        <script src="~/js/pages/hpay.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="@ViewBag.CssStaticPath/lib/vue/dist/vue.min.js"  asp-append-version="true"></script>
+        <script src="@ViewBag.CssStaticPath/js/pages/hpay.min.js" asp-append-version="true"></script>
+    </environment>
+}
