@@ -28,7 +28,8 @@
       "wwwroot/js/pages/hpay.js"
     ],
     "minify": {
-      "enabled": true
+      "enabled": true,
+      "renameLocals": true
     },
     "sourceMap": false
   }

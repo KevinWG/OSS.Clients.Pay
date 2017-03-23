@@ -36,7 +36,7 @@ namespace OSS.PayCenter.Samples
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
+                //app.UseBrowserLink();
             }
             else
             {

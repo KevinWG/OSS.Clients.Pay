@@ -1,9 +1,9 @@
-﻿{
+{
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:59363/",
+      "applicationUrl": "http://test.pay.osscoder.com:59363/",
       "sslPort": 0
     }
   },

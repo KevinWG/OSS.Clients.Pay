@@ -6,7 +6,7 @@ namespace OSS.PayCenter.Samples.Controllers
 {
 
 
-    public class HPayController : Controller
+    public class HPayController : BaseController
     {
         // GET: /<controller>/
         public IActionResult Index()
@@ -19,5 +19,20 @@ namespace OSS.PayCenter.Samples.Controllers
             //};
             return View();
         }
+
+        [HttpPost]
+        public IActionResult wx_pay(HPayMo order)
+        {
+            return Content("ceshi");
+        }
+    }
+
+
+    public class HPayMo
+    {
+        public string openid { get; set; }
+        public string order_name { get; set; }
+        public decimal order_price { get; set; }
+        public int pay_channel { get; set; }
     }
 }

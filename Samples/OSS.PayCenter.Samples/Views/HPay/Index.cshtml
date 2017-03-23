@@ -8,45 +8,84 @@
         请在Controller设置配置信息，并在微信手机端访问当前页面 ！
     </p>
 
-    <form class="form-horizontal">
+    <form class="form-horizontal" id="pay-form">
+        
+        <div class="form-group">
+            <label for="order_name" class="col-sm-2 control-label">openid：</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="openid" v-model="order.openid" placeholder="openid">
+            </div>
+        </div>
+
         <div class="form-group">
             <label for="order_name" class="col-sm-2 control-label">订单名称：</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="order_name" placeholder="订单名称">
+                <input type="text" class="form-control" id="order_name" v-model="order.order_name" placeholder="订单名称">
             </div>
         </div>
 
         <div class="form-group">
             <label for="order_price" class="col-sm-2 control-label">订单金额：</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="order_price" placeholder="订单金额">
+                <input type="text" class="form-control" id="order_price" v-model="order.order_price" placeholder="订单金额">
             </div>
         </div>
-   
+
         <div class="form-group">
-            <label class="col-sm-2 control-label">支付方式：</label>
+            <label class="col-sm-2 control-label">支付渠道：</label>
             <div class="col-sm-10">
                 <label class="radio-inline">
-                    <input type="radio" name="pay_" id="inlineRadio1" checked="checked" value="option1"> 微信支付
+                    <input type="radio" name="pay_channel" id="inlineRadio1" checked="checked" v-model="order.pay_channel" value="10"> 微信支付
                 </label>
-            
             </div>
         </div>
-      
+
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="button" class="btn btn-default">支付</button>
+                <button type="button" @@click="PostPayInfo($event)" class="btn btn-default" v-bind:disabled="is_submit?true:false" v-text='is_submit?"支付中":"支付"'>
+                    支付
+                </button>
             </div>
         </div>
     </form>
 </div>
 @section Scripts{
     <environment names="Development">
-        <script src="~/lib/vue/dist/vue.min.js" asp-append-version="true"></script>
+        <script src="~/lib/vue/dist/vue.js" asp-append-version="true"></script>
         <script src="~/js/pages/hpay.js" asp-append-version="true"></script>
     </environment>
     <environment names="Staging,Production">
-        <script src="@ViewBag.CssStaticPath/lib/vue/dist/vue.min.js"  asp-append-version="true"></script>
+        <script src="@ViewBag.CssStaticPath/lib/vue/dist/vue.min.js" asp-append-version="true"></script>
         <script src="@ViewBag.CssStaticPath/js/pages/hpay.min.js" asp-append-version="true"></script>
     </environment>
+    <script>
+
+        var payVue = new Vue({
+            el: "#pay-form",
+            data: {
+                order: {
+                    openid:"",
+                    order_name: "",
+                    order_price: 0,
+                    pay_channel: "10"
+                },
+                is_submit: false
+            },
+            methods: {
+                PostPayInfo: function(event) {
+                    var self = this;
+                    this.is_submit = true;
+                    console.info(self.order);
+                    //var 
+                    $.post("/hpay/wx_pay",
+                        self.order,
+                        function(result) {
+                            alert(result);
+                            self.is_submit = false;
+                        });
+                }
+            }
+        });
+
+    </script>
 }
