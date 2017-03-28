@@ -131,18 +131,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="WxPayTradeTests.cs" />
+    <Compile Include="WX\WxPayTradeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ZFB\ZPayBaseTests.cs" />
+    <Compile Include="ZFB\ZPayTradeTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="cert\apiclient_cert.p12" />
+    <None Include="WX\cert\apiclient_cert.p12" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\WX\OSS.PayCenter.WX\OSS.PayCenter.WX.csproj">
       <Project>{6153bc7a-4142-4814-8afb-85c18c8d1770}</Project>
       <Name>OSS.PayCenter.WX</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ZFB\OSS.PayCenter.ZFB\OSS.PayCenter.ZFB.csproj">
+      <Project>{8ccd5aaf-86ce-421c-ba56-5dff8eee2fa2}</Project>
+      <Name>OSS.PayCenter.ZFB</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
