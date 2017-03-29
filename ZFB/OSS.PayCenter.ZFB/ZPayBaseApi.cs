@@ -103,7 +103,7 @@ namespace OSS.PayCenter.ZFB
                         if (t.IsSuccess)
                         {
                             var sign = resJsonObj["sign"].ToString();
-                            var signContent = GetCehckSignContent<T>(respColumnName, contentStr);
+                            var signContent = GetCehckSignContent(respColumnName, contentStr);
 
                             CheckSign(signContent, sign, t);
                         }
