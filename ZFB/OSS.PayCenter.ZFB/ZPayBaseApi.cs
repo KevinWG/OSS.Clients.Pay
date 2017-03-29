@@ -46,11 +46,8 @@ namespace OSS.PayCenter.ZFB
         /// <summary>
         /// 支付宝接口配置
         /// </summary>
-        public ZPayCenterConfig ApiConfig
-        {
-            get { return _config ?? DefaultConfig; }
-        }
-        
+        public ZPayCenterConfig ApiConfig => _config ?? DefaultConfig;
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -85,11 +82,9 @@ namespace OSS.PayCenter.ZFB
             var t = default(T);
             try
             {
-                request.AddressUrl =string.Concat(m_ApiUrl,"?charset=",ApiConfig.Charset) ;
-                var contentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded")
-                {
-                    CharSet = ApiConfig.Charset
-                };
+                request.AddressUrl = string.Concat(m_ApiUrl, "?charset=", ApiConfig.Charset);
+
+                var contentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded"){ CharSet = ApiConfig.Charset };
                 request.RequestSet = message => message.Content.Headers.ContentType = contentType;
 
                 var resp = await request.RestSend();
@@ -103,20 +98,14 @@ namespace OSS.PayCenter.ZFB
                         var resJsonObj = JObject.Parse(contentStr);
                         if (resJsonObj == null)
                             return new T(){ Ret = (int) ResultTypes.ObjectStateError,Message = "基础请求响应不正确，请检查地址或者网络是否正常！"};
-
-                        var contentObj = resJsonObj[respColumnName];
-                        t = contentObj.ToObject<T>();
+                        
+                        t = resJsonObj[respColumnName].ToObject<T>();
                         if (t.IsSuccess)
                         {
                             var sign = resJsonObj["sign"].ToString();
-                            var signContent = contentObj.ToString();
-                            var checkSignRes = ZPaySignature.RSACheckContent(signContent, sign, ApiConfig.AppPublicKey,
-                                ApiConfig.Charset, ApiConfig.SignType);
-                            if (!checkSignRes)
-                            {
-                                t.Ret = (int) ResultTypes.UnAuthorize;
-                                t.Message = "当前签名非法！";
-                            }
+                            var signContent = GetCehckSignContent<T>(respColumnName, contentStr);
+
+                            CheckSign(signContent, sign, t);
                         }
                         else
                             t.Message = string.Concat(t.msg, "-", t.sub_msg);
@@ -136,7 +125,49 @@ namespace OSS.PayCenter.ZFB
             return t;
         }
 
+        /// <summary>
+        ///  返回结果验签
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="signContent"></param>
+        /// <param name="sign"></param>
+        /// <param name="t"></param>
+        private void CheckSign<T>(string signContent, string sign, T t) where T : ZPayBaseResp, new()
+        {
+            var checkSignRes = ZPaySignature.RSACheckContent(signContent, sign, ApiConfig.AppPublicKey,
+                ApiConfig.Charset, ApiConfig.SignType);
+            if (!checkSignRes)
+            {
+                if (!string.IsNullOrEmpty(signContent) &&
+                    signContent.Contains("\\/"))
+                {
+                    signContent = signContent.Replace("\\/", "/");
+                    // 如果验签不通过，转义字符后再次验签
+                    checkSignRes = ZPaySignature.RSACheckContent(signContent, sign,
+                        ApiConfig.AppPublicKey, ApiConfig.Charset, ApiConfig.SignType);
+                    if (!checkSignRes)
+                    {
+                        t.Ret = (int) ResultTypes.UnAuthorize;
+                        t.Message = "当前签名非法！";
+                    }
+                }
+            }
+        }
 
+
+        /// <summary>
+        ///  获取需要验签的内容部分
+        /// </summary>
+        /// <param name="respColumnName"></param>
+        /// <param name="contentStr"></param>
+        /// <returns></returns>
+        private static string GetCehckSignContent(string respColumnName, string contentStr)
+        {
+            int startIndex = contentStr.IndexOf(respColumnName, StringComparison.Ordinal) + respColumnName.Length + 2;
+            int endIndex = contentStr.LastIndexOf(',');
+            var signContent = contentStr.Substring(startIndex, endIndex - startIndex);
+            return signContent;
+        }
 
         #region 补充相关属性并签名
 

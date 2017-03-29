@@ -25,39 +25,30 @@ namespace OSS.PayCenter.ZFB.SysTools
         public static bool RSACheckContent(string signContent, string sign, string publicKeyPem, string charset,
             string signType)
         {
+            var sPublicKeyPEM = "-----BEGIN PUBLIC KEY-----\r\n";
+            sPublicKeyPEM += publicKeyPem;
+            sPublicKeyPEM += "-----END PUBLIC KEY-----\r\n\r\n";
 
-            try
+            if ("RSA2".Equals(signType))
             {
-                var sPublicKeyPEM = "-----BEGIN PUBLIC KEY-----\r\n";
-                sPublicKeyPEM += publicKeyPem;
-                sPublicKeyPEM += "-----END PUBLIC KEY-----\r\n\r\n";
-                
-                if ("RSA2".Equals(signType))
-                {
-                    RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
-                    rsa.PersistKeyInCsp = false;
-                    RSACryptoServiceProviderExtension.LoadPublicKeyPEM(rsa, sPublicKeyPEM);
+                RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+                rsa.PersistKeyInCsp = false;
+                RSACryptoServiceProviderExtension.LoadPublicKeyPEM(rsa, sPublicKeyPEM);
 
-                    bool bVerifyResultOriginal = rsa.VerifyData(Encoding.GetEncoding(charset).GetBytes(signContent),
-                        "SHA256", Convert.FromBase64String(sign));
-                    return bVerifyResultOriginal;
-                }
-                else
-                {
-                    RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
-                    rsa.PersistKeyInCsp = false;
-                    RSACryptoServiceProviderExtension.LoadPublicKeyPEM(rsa, sPublicKeyPEM);
-
-                    bool bVerifyResultOriginal = rsa.VerifyData(Encoding.GetEncoding(charset).GetBytes(signContent),
-                        "SHA1", Convert.FromBase64String(sign));
-                    return bVerifyResultOriginal;
-                }
+                bool bVerifyResultOriginal = rsa.VerifyData(Encoding.GetEncoding(charset).GetBytes(signContent),
+                    "SHA256", Convert.FromBase64String(sign));
+                return bVerifyResultOriginal;
             }
-            catch(Exception ex)
+            else
             {
-                return false;
-            }
+                RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+                rsa.PersistKeyInCsp = false;
+                RSACryptoServiceProviderExtension.LoadPublicKeyPEM(rsa, sPublicKeyPEM);
 
+                bool bVerifyResultOriginal = rsa.VerifyData(Encoding.GetEncoding(charset).GetBytes(signContent),
+                    "SHA1", Convert.FromBase64String(sign));
+                return bVerifyResultOriginal;
+            }
         }
 
         public static string RSASignCharSet(string data, string privateKeyPem, string charset, string signType)
