@@ -22,175 +22,86 @@ namespace OSS.PayCenter.ZFB.SysTools
 {
     public class ZPaySignature
     {
-        public static string RSASignCharSet(string data, string privateKeyPem, string charset, string signType)
+        public static bool RSACheckContent(string signContent, string sign, string publicKeyPem, string charset,
+            string signType)
         {
-            RSACryptoServiceProvider rsaCsp = LoadCertificateFile(privateKeyPem, signType);
 
-            byte[] dataBytes = null;
-            dataBytes = string.IsNullOrEmpty(charset)
-                ? Encoding.UTF8.GetBytes(data)
-                : Encoding.GetEncoding(charset).GetBytes(data);
-
-            byte[] signatureBytes = rsaCsp.SignData(dataBytes, "RSA2".Equals(signType) ? "SHA256" : "SHA1");
-
-            return Convert.ToBase64String(signatureBytes);
-        }
-
-        public static bool RSACheckContent(string signContent, string sign, string publicKeyPem, string charset, string signType)
-        {
             try
             {
+                var sPublicKeyPEM = "-----BEGIN PUBLIC KEY-----\r\n";
+                sPublicKeyPEM += publicKeyPem;
+                sPublicKeyPEM += "-----END PUBLIC KEY-----\r\n\r\n";
+                
                 if ("RSA2".Equals(signType))
                 {
-                    string sPublicKeyPEM = File.ReadAllText(publicKeyPem);
-
                     RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
                     rsa.PersistKeyInCsp = false;
-                   
                     RSACryptoServiceProviderExtension.LoadPublicKeyPEM(rsa, sPublicKeyPEM);
-                   
-                    bool bVerifyResultOriginal = rsa.VerifyData(Encoding.GetEncoding(charset).GetBytes(signContent), "SHA256", Convert.FromBase64String(sign));
-                    return bVerifyResultOriginal;
 
+                    bool bVerifyResultOriginal = rsa.VerifyData(Encoding.GetEncoding(charset).GetBytes(signContent),
+                        "SHA256", Convert.FromBase64String(sign));
+                    return bVerifyResultOriginal;
                 }
                 else
                 {
-                    string sPublicKeyPEM = File.ReadAllText(publicKeyPem);
                     RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
                     rsa.PersistKeyInCsp = false;
                     RSACryptoServiceProviderExtension.LoadPublicKeyPEM(rsa, sPublicKeyPEM);
 
-                    //SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider();
-                    bool bVerifyResultOriginal = rsa.VerifyData(Encoding.GetEncoding(charset).GetBytes(signContent),"SHA1", Convert.FromBase64String(sign));
+                    bool bVerifyResultOriginal = rsa.VerifyData(Encoding.GetEncoding(charset).GetBytes(signContent),
+                        "SHA1", Convert.FromBase64String(sign));
                     return bVerifyResultOriginal;
                 }
             }
-            catch
+            catch(Exception ex)
             {
                 return false;
             }
 
         }
-      
 
-        //public static string encryptAndSign(string bizContent, string alipayPublicKey,
-        //                                string cusPrivateKey, string charset, bool isEncrypt,
-        //                                bool isSign, string signType)
-        //{
-        //    StringBuilder sb = new StringBuilder();
-       
-        //    sb.Append("<?xml version=\"1.0\" encoding=\"" + charset + "\"?>");
-        //    if (isEncrypt)
-        //    {// 加密
-        //        sb.Append("<alipay>");
-        //        String encrypted = RSAEncrypt(bizContent, alipayPublicKey, charset,false);
-        //        sb.Append("<response>" + encrypted + "</response>");
-        //        sb.Append("<encryption_type>" + signType + "</encryption_type>");
-        //        if (isSign)
-        //        {
-        //            String sign = RSASignCharSet(encrypted, cusPrivateKey, charset, signType);
-        //            sb.Append("<sign>" + sign + "</sign>");
-        //            sb.Append("<sign_type>" + signType + "</sign_type>");
-        //        }
-        //        sb.Append("</alipay>");
-        //    }
-        //    else if (isSign)
-        //    {// 不加密，但需要签名
-        //        sb.Append("<alipay>");
-        //        sb.Append("<response>" + bizContent + "</response>");
-        //        String sign = RSASignCharSet(bizContent, cusPrivateKey, charset, signType);
-        //        sb.Append("<sign>" + sign + "</sign>");
-        //        sb.Append("<sign_type>" + signType + "</sign_type>");
-        //        sb.Append("</alipay>");
-        //    }
-        //    else
-        //    {// 不加密，不加签
-        //        sb.Append(bizContent);
-        //    }
-        //    return sb.ToString();
-        //}
-        
-        //public static string RSAEncrypt(string content, string publicKeyPem, string charset, bool keyFromFile)
-        //{
-        //    try
-        //    {
-        //        string sPublicKeyPEM;
-        //        if (keyFromFile)
-        //        {
-        //            sPublicKeyPEM = File.ReadAllText(publicKeyPem);
-        //        }
-        //        else
-        //        {
-        //            sPublicKeyPEM = "-----BEGIN PUBLIC KEY-----\r\n";
-        //            sPublicKeyPEM += publicKeyPem;
-        //            sPublicKeyPEM += "-----END PUBLIC KEY-----\r\n\r\n";
-        //        }
-        //        RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
-        //        rsa.PersistKeyInCsp = false;
-        //        RSACryptoServiceProviderExtension.LoadPublicKeyPEM(rsa, sPublicKeyPEM);
-            
-        //        byte[] data = Encoding.GetEncoding(charset).GetBytes(content);
-        //        int maxBlockSize = rsa.KeySize / 8 - 11; //加密块最大长度限制
-        //        if (data.Length <= maxBlockSize)
-        //        {
-        //            byte[] cipherbytes = rsa.Encrypt(data, false);
-        //            return Convert.ToBase64String(cipherbytes);
-        //        }
-        //        MemoryStream plaiStream = new MemoryStream(data);
-        //        MemoryStream crypStream = new MemoryStream();
-        //        Byte[] buffer = new Byte[maxBlockSize];
-        //        int blockSize = plaiStream.Read(buffer, 0, maxBlockSize);
-        //        while (blockSize > 0)
-        //        {
-        //            Byte[] toEncrypt = new Byte[blockSize];
-        //            Array.Copy(buffer, 0, toEncrypt, 0, blockSize);
-        //            Byte[] cryptograph = rsa.Encrypt(toEncrypt, false);
-        //            crypStream.Write(cryptograph, 0, cryptograph.Length);
-        //            blockSize = plaiStream.Read(buffer, 0, maxBlockSize);
-        //        }
-
-        //        return Convert.ToBase64String(crypStream.ToArray());
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception("EncryptContent = " + content + ",charset = " + charset, ex);
-        //    }
-        //}
-        
-        private static byte[] GetPem(string type, byte[] data)
+        public static string RSASignCharSet(string data, string privateKeyPem, string charset, string signType)
         {
-            string pem = Encoding.UTF8.GetString(data);
 
-            string header = String.Format("-----BEGIN {0}-----\\n", type);
-            string footer = String.Format("-----END {0}-----", type);
-            int start = pem.IndexOf(header) + header.Length;
-            int end = pem.IndexOf(footer, start);
-            string base64 = pem.Substring(start, (end - start));
+            byte[] signatureBytes = null;
+            try
+            {
+                RSACryptoServiceProvider rsaCsp = LoadCertificateString(privateKeyPem, signType);
+                
+                byte[] dataBytes = string.IsNullOrEmpty(charset)
+                    ? Encoding.UTF8.GetBytes(data)
+                    : Encoding.GetEncoding(charset).GetBytes(data);
 
-            return Convert.FromBase64String(base64);
+                if (null == rsaCsp)
+                {
+                    throw new Exception("您使用的私钥格式错误，请检查RSA私钥配置" + ",charset = " + charset);
+                }
+                signatureBytes = rsaCsp.SignData(dataBytes, "RSA2".Equals(signType) ? "SHA256" : "SHA1");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("您使用的私钥格式错误，请检查RSA私钥配置" + ",charset = " + charset);
+            }
+            return Convert.ToBase64String(signatureBytes);
         }
 
-        private static RSACryptoServiceProvider LoadCertificateFile(string filename, string signType)
+        private static RSACryptoServiceProvider LoadCertificateString(string strKey, string signType)
         {
-            using (System.IO.FileStream fs = System.IO.File.OpenRead(filename))
+            byte[] data = null;
+            //读取带
+            //ata = Encoding.Default.GetBytes(strKey);
+            data = Convert.FromBase64String(strKey);
+            //data = GetPem("RSA PRIVATE KEY", data);
+            try
             {
-                byte[] data = new byte[fs.Length];
-                byte[] res = null;
-                fs.Read(data, 0, data.Length);
-                if (data[0] != 0x30)
-                {
-                    res = GetPem("RSA PRIVATE KEY", data);
-                }
-                try
-                {
-                    RSACryptoServiceProvider rsa = DecodeRSAPrivateKey(res, signType);
-                    return rsa;
-                }
-                catch (Exception ex)
-                {
-                }
-                return null;
+                RSACryptoServiceProvider rsa = DecodeRSAPrivateKey(data, signType);
+                return rsa;
             }
+            catch (Exception ex)
+            {
+                //    throw new AopException("EncryptContent = woshihaoren,zheshiyigeceshi,wanerde", ex);
+            }
+            return null;
         }
 
         private static RSACryptoServiceProvider DecodeRSAPrivateKey(byte[] privkey, string signType)
@@ -279,7 +190,6 @@ namespace OSS.PayCenter.ZFB.SysTools
                 binr.Dispose();
             }
         }
-
         private static int GetIntegerSize(BinaryReader binr)
         {
             byte bt = 0;
@@ -293,8 +203,7 @@ namespace OSS.PayCenter.ZFB.SysTools
 
             if (bt == 0x81)
                 count = binr.ReadByte();	// data size in next byte
-            else
-                if (bt == 0x82)
+            else  if (bt == 0x82)
             {
                 highbyte = binr.ReadByte(); // data size in next 2 bytes
                 lowbyte = binr.ReadByte();

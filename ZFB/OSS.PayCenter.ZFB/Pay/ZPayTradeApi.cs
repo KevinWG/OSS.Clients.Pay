@@ -23,8 +23,7 @@ namespace OSS.PayCenter.ZFB.Pay
         public ZPayTradeApi(ZPayCenterConfig config=null) : base(config)
         {
         }
-
-
+        
         /// <summary>
         /// 统一预下单（收单）
         /// </summary>
@@ -33,8 +32,8 @@ namespace OSS.PayCenter.ZFB.Pay
         {
             const string respColumnName = "alipay_trade_precreate_response";
             const string apiMethod = "alipay.trade.precreate";
-            
-            var body = GetReqBody(apiMethod,payReq);
+
+            var body = ConvertDicToString(GetReqBodyDics(apiMethod, payReq));
 
             var req = new OsHttpRequest();
 

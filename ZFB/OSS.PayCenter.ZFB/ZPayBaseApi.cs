@@ -23,6 +23,7 @@ using Newtonsoft.Json.Linq;
 using OSS.Http.Mos;
 using OSS.Http;
 using OSS.Common.ComModels.Enums;
+using OSS.Common.Extention;
 using OSS.Common.Modules.LogModule;
 using OSS.Common.Modules;
 using OSS.PayCenter.ZFB.SysTools;
@@ -67,7 +68,7 @@ namespace OSS.PayCenter.ZFB
         /// <summary>
         /// 支付宝api接口地址
         /// </summary>
-        protected const string m_ApiUrl = "https://openapi.alipay.com/gateway.do";
+        protected const string m_ApiUrl = "https://openapi.alipaydev.com/gateway.do";
 
         /// <summary>
         /// 处理远程请求方法，并返回需要的实体
@@ -84,11 +85,12 @@ namespace OSS.PayCenter.ZFB
             var t = default(T);
             try
             {
-                request.AddressUrl = string.Concat(m_ApiUrl, "?charset=", ApiConfig.Charset);
-                request.RequestSet =
-                    message => message.Content.Headers.ContentType =
-                        new MediaTypeHeaderValue(string.Concat("application/x-www-form-urlencoded;charset=",
-                            ApiConfig.Charset));
+                request.AddressUrl =string.Concat(m_ApiUrl,"?charset=",ApiConfig.Charset) ;
+                var contentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded")
+                {
+                    CharSet = ApiConfig.Charset
+                };
+                request.RequestSet = message => message.Content.Headers.ContentType = contentType;
 
                 var resp = await request.RestSend();
                 if (resp.IsSuccessStatusCode)
@@ -99,24 +101,25 @@ namespace OSS.PayCenter.ZFB
                     {
                         var contentStr = await resp.Content.ReadAsStringAsync();
                         var resJsonObj = JObject.Parse(contentStr);
-                        if (resJsonObj != null)
-                        {
-                            var contentObj = resJsonObj[respColumnName];
-                            t = contentObj.ToObject<T>();
-                            if (!t.IsSuccess)
-                                t.Message = string.Concat(t.msg, "-", t.sub_msg);
+                        if (resJsonObj == null)
+                            return new T(){ Ret = (int) ResultTypes.ObjectStateError,Message = "基础请求响应不正确，请检查地址或者网络是否正常！"};
 
+                        var contentObj = resJsonObj[respColumnName];
+                        t = contentObj.ToObject<T>();
+                        if (t.IsSuccess)
+                        {
                             var sign = resJsonObj["sign"].ToString();
                             var signContent = contentObj.ToString();
                             var checkSignRes = ZPaySignature.RSACheckContent(signContent, sign, ApiConfig.AppPublicKey,
-                                ApiConfig.Charset,
-                                ApiConfig.SignType);
+                                ApiConfig.Charset, ApiConfig.SignType);
                             if (!checkSignRes)
                             {
                                 t.Ret = (int) ResultTypes.UnAuthorize;
                                 t.Message = "当前签名非法！";
                             }
                         }
+                        else
+                            t.Message = string.Concat(t.msg, "-", t.sub_msg);
                     }
                 }
             }
@@ -130,7 +133,7 @@ namespace OSS.PayCenter.ZFB
                     Message = string.Concat("基类请求出错，请检查网络是否正常，错误码：", logCode)
                 };
             }
-            return t ?? new T() {Ret = (int) ResultTypes.ObjectStateError, Message = "基础请求响应不正确，请检查地址或者网络是否正常！"};
+            return t;
         }
 
 
@@ -143,7 +146,7 @@ namespace OSS.PayCenter.ZFB
         /// <param name="method">接口方法名</param>
         /// <param name="req">请求实体</param>
         /// <returns>返回最终的内容</returns>
-        protected internal string GetReqBody<T>(string method,T req)
+        protected internal IDictionary<string,string> GetReqBodyDics<T>(string method,T req)
             where T:ZPayBaseReq
         {
             SortedDictionary<string, string> dirs = new SortedDictionary<string, string>();
@@ -162,19 +165,21 @@ namespace OSS.PayCenter.ZFB
             SetDefaultPropertyFormat(dirs, "biz_content",
                 JsonConvert.SerializeObject(req, Formatting.Indented, new JsonSerializerSettings()
                 {
-                    NullValueHandling = NullValueHandling.Ignore
+                    NullValueHandling = NullValueHandling.Ignore,
+                    DefaultValueHandling = DefaultValueHandling.Ignore,
+
                 }));
 
             if (req.auth_token!=null)
                 SetDefaultPropertyFormat(dirs, "app_auth_token", req.auth_token.app_auth_token);
             
-
             //  签名
             string signContent = string.Join("&", dirs.Select(d => string.Concat(d.Key, "=", d.Value)));
             string sign = ZPaySignature.RSASignCharSet(signContent, ApiConfig.AppPrivateKey, ApiConfig.Charset,
                 ApiConfig.SignType);
+            dirs.Add("sign", sign);
 
-            return string.Concat(signContent, "&sign=", sign);
+            return dirs;
         }
 
         private void SetDefaultPropertyFormat(SortedDictionary<string, string> dirs, string key, string value)
@@ -182,6 +187,11 @@ namespace OSS.PayCenter.ZFB
             if (!dirs.ContainsKey(key)
                 && !string.IsNullOrEmpty(value))
                 dirs.Add(key, value);
+        }
+
+        protected static string ConvertDicToString(IDictionary<string,string> dics )
+        {
+            return string.Join("&", dics.Select(d => string.Concat(d.Key, "=",d.Value.UrlEncode())));
         }
 
         #endregion

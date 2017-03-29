@@ -19,13 +19,13 @@ namespace OSS.PayCenter.ZFB.Pay.Mos
     /// <summary>
     ///   统一下单交易支付接口实体
     /// </summary>
-    public class ZPayTradeReq : ZPayTradeBaseReq
+    public class ZAddPayTradeReq : ZAddTradeBaseReq
     {
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="notifyUrl">通知回调地址</param>
-        public ZPayTradeReq(string notifyUrl) : base(notifyUrl)
+        public ZAddPayTradeReq(string notifyUrl) : base(notifyUrl)
         {
         }
 
@@ -124,13 +124,13 @@ namespace OSS.PayCenter.ZFB.Pay.Mos
     /// <summary>
     ///  下单基类部分
     /// </summary>
-    public class ZPayTradeBaseReq : ZPayBaseReq
+    public class ZAddTradeBaseReq : ZPayBaseReq
     {
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="notifyUrl">通知回调地址</param>
-        public ZPayTradeBaseReq(string notifyUrl)
+        public ZAddTradeBaseReq(string notifyUrl)
         {
             notify_url = notifyUrl;
         }
@@ -147,7 +147,7 @@ namespace OSS.PayCenter.ZFB.Pay.Mos
         public string seller_id { get; set; }
 
         /// <summary>   
-        ///    Price 可选 长度(11)  订单总金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000]。 如果同时传入了【可打折金额】，【不可打折金额】，【订单总金额】三者，则必须满足如下条件：【订单总金额】=【可打折金额】+【不可打折金额】 88.88
+        ///    Price 必须 长度(11)  订单总金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000]。 如果同时传入了【可打折金额】，【不可打折金额】，【订单总金额】三者，则必须满足如下条件：【订单总金额】=【可打折金额】+【不可打折金额】 88.88
         /// </summary>  
         public decimal total_amount { get; set; }
 

@@ -122,12 +122,12 @@ namespace OSS.PayCenter.ZFB
         /// <summary>
         ///  格式化类型  只有json
         /// </summary>
-        public string Format { get; set; } = "json";
+        public string Format { get; set; } = "JSON";
 
         /// <summary>
         /// 请求和签名使用的字符编码格式，支持GBK和UTF-8（默认） 
         /// </summary>
-        public string Charset { get; set; } = "utf-8";
+        public string Charset { get; set; } = "UTF-8";
 
         /// <summary>
         ///   商户生成签名字符串所使用的签名算法类型，目前支持RSA2和RSA，推荐使用RSA2

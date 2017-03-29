@@ -18,7 +18,7 @@ namespace OSS.PayCenter.ZFB.Pay.Mos
     /// <summary>
     ///   统一收单线下交易预创建
     /// </summary>
-    public class ZAddPreTradeReq : ZPayTradeBaseReq
+    public class ZAddPreTradeReq : ZAddTradeBaseReq
     {
         public ZAddPreTradeReq(string notifyUrl) : base(notifyUrl)
         {
