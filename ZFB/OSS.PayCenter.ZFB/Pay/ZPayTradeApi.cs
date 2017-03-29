@@ -33,12 +33,10 @@ namespace OSS.PayCenter.ZFB.Pay
             const string respColumnName = "alipay_trade_precreate_response";
             const string apiMethod = "alipay.trade.precreate";
 
-            var body = ConvertDicToString(GetReqBodyDics(apiMethod, payReq));
-
             var req = new OsHttpRequest();
 
             req.HttpMothed = HttpMothed.POST;
-            req.CustomBody = body;
+            req.CustomBody = ConvertDicToString(GetReqBodyDics(apiMethod, payReq)); 
             
             return await RestCommon<ZAddPreTradeResp>(req, respColumnName);
         }
