@@ -154,12 +154,13 @@ namespace OSS.PayCenter.ZFB
                         checkSignRes = ZPaySignature.RSACheckContent(signContent, sign,
                             ApiConfig.AppPublicKey, ApiConfig.Charset, signType);
                     }
-                }
-                if (!checkSignRes)
-                {
-                    t.Ret = (int)ResultTypes.UnAuthorize;
+
+                    if (checkSignRes) return;
+
+                    t.Ret = (int) ResultTypes.UnAuthorize;
                     t.Message = "当前签名非法！";
                 }
+
             }
             catch (Exception e)
             {

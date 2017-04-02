@@ -18,20 +18,18 @@ namespace OSS.PayCenter.Samples.Controllers
             return View();
         }
 
-
-
-
         [HttpPost]
         public IActionResult ZPay(PayOrderMo order)
         {
             string orderNum = DateTime.Now.ToString("yyyyMMddHHmmss");
 
-            var payReq=new ZAddPreTradeReq("http://pay.sample.osscoder.com/base/ZCallBack");
-            
+            var payReq = new ZAddPreTradeReq("http://pay.sample.osscoder.com/base/ZCallBack");
+
             payReq.body = order.order_name;
             payReq.out_trade_no = orderNum;
             payReq.total_amount = order.order_price;
-        
+            payReq.subject = order.order_name;
+
             var res = zPayApi.AddPreTrade(payReq).WaitResult();
             return Json(res);
         }
