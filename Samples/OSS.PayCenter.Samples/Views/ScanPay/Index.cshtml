@@ -15,14 +15,7 @@
     <span>{{total}}</span>
     <script type="x-template" id="pay-form">
         <form class="form-horizontal">
-            <div class="form-group">
-                <label for="order_name" class="col-sm-2 control-label">openid：</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="openid" v-model="order.openid" placeholder="openid">
-                </div>
-            </div>
-
-            <div class="form-group">
+                    <div class="form-group">
                 <label for="order_name" class="col-sm-2 control-label">订单名称：</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="order_name" v-model="order.order_name" placeholder="订单名称">
@@ -61,10 +54,9 @@
     </script>
 
     <!-- Modal -->
-    <script type="x-template" id="pay-qr-modal">        
-        <span>{{pay_code}}</span>
-
-        @*<div class="modal" id="pay-qr" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <script type="x-template" id="pay-qr-template">        
+   
+        <div class="modal" id="pay-qr-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -72,15 +64,15 @@
                         <h4 class="modal-title" id="myModalLabel">Modal title</h4>
                     </div>
                     <div class="modal-body">
+                        <span id="qr-code-contanier"></span>
                         {{pay_code}}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
             </div>
-        </div>*@
+        </div>
     
     </script>
 </div>
@@ -88,9 +80,11 @@
 @section Scripts{
     <environment names="Development">
         <script src="~/lib/vue/dist/vue.js" asp-append-version="true"></script>
+        <script src="~/lib/qrcode/qrcode.js"></script>
     </environment>
     <environment names="Staging,Production">
         <script src="@ViewBag.CssStaticPath/lib/vue/dist/vue.min.js" asp-append-version="true"></script>
+        <script src="@ViewBag.CssStaticPath/lib/qrcode/qrcode.js" asp-append-version="true"></script>
     </environment>
     <script>
         Vue.component("pay-form",
@@ -99,7 +93,6 @@
             data: function() {
                 return {
                     order: {
-                        openid: "",
                         order_name: "",
                         order_price: 0,
                         pay_channel: "10"
@@ -120,27 +113,31 @@
                             self.is_submit = false;
                             self.$emit('postpayinfo', self.order.pay_channel, result);
                         });
-                },
-                incrementTest: function () {
-                    this.counter += 1;
-                    this.$emit('increment-test', this.counter);
                 }
             }
         });
 
         Vue.component("pay-qr-modal",
         {
-            template: "#pay-qr-modal",
+            template: "#pay-qr-template",
             props: ["pay_code"]
         });
         var payVue = new Vue({
             el: "#hpay",
             data: {
-                pay_code: "1111", total: 0
+                pay_code: ""
             },
             methods: {
-                CallPayCode: function(channel,res) {
+                CallPayCode: function (channel, res) {
+                    $("#pay-qr-modal").modal();
                     this.pay_code = res.qr_code;
+
+                    var typeNumber = 4;
+                    var errorCorrectionLevel = 'L';
+                    var qr = qrcode(typeNumber, errorCorrectionLevel);
+                    qr.addData(res.qr_code);
+                    qr.make();
+                    document.getElementById('qr-code-contanier').innerHTML = qr.createImgTag();
                 }
             }
         });
