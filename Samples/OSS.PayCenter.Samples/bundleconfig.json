@@ -32,5 +32,16 @@
       "renameLocals": true
     },
     "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/lib/qrcode/qrcode.min.js",
+    "inputFiles": [
+      "wwwroot/lib/qrcode/qrcode.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
   }
 ]

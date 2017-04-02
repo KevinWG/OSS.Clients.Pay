@@ -12,7 +12,10 @@
 
 #endregion
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using OSS.Common.ComModels;
 using OSS.Http.Mos;
 using OSS.PayCenter.ZFB.Pay.Mos;
 
@@ -39,6 +42,27 @@ namespace OSS.PayCenter.ZFB.Pay
             req.CustomBody = ConvertDicToString(GetReqBodyDics(apiMethod, payReq)); 
             
             return await RestCommon<ZAddPreTradeResp>(req, respColumnName);
+        }
+
+        /// <summary>
+        ///  验证回调接口签名
+        /// </summary>
+        /// <param name="formDics">表单的字典值</param>
+        /// <returns></returns>
+        public ResultMo CheckCallBackSign(IDictionary<string, string> formDics)
+        {
+            var sign = formDics["sign"];
+            var signType = formDics["sign_type"];
+
+            formDics.Remove("sign");
+            formDics.Remove("sign_type");
+
+            var sortDics=new SortedDictionary<string,string>(formDics);
+            var checkContent = string.Join("&", sortDics.Select(d => string.Concat(d.Key, "=", d.Value)));
+
+            var  result=new ResultMo();
+            CheckSign(checkContent, sign, result, signType);
+            return result;
         }
     }
 }

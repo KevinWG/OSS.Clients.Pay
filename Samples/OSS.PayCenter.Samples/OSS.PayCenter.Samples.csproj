@@ -50,6 +50,8 @@
     <Content Include="wwwroot\lib\jquery\dist\jquery.min.js" />
     <Content Include="wwwroot\lib\jquery\dist\jquery.min.map" />
     <Content Include="wwwroot\lib\jquery\LICENSE.txt" />
+    <Content Include="wwwroot\lib\qrcode\qrcode.js" />
+    <Content Include="wwwroot\lib\qrcode\qrcoder.js" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="2.4.337" />
@@ -69,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\WX\OSS.PayCenter.WX\OSS.PayCenter.WX.csproj" />
+    <ProjectReference Include="..\..\ZFB\OSS.PayCenter.ZFB\OSS.PayCenter.ZFB.csproj" />
   </ItemGroup>
 
 </Project>

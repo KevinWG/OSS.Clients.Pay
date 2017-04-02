@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OSS.PayCenter.Samples.Models;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace OSS.PayCenter.Samples.Controllers
 {
-
-
     public class HPayController : BaseController
     {
         // GET: /<controller>/
@@ -21,18 +20,10 @@ namespace OSS.PayCenter.Samples.Controllers
         }
 
         [HttpPost]
-        public IActionResult wx_pay(HPayMo order)
+        public IActionResult wx_pay(PayOrderMo order)
         {
             return Content("ceshi");
         }
     }
 
-
-    public class HPayMo
-    {
-        public string openid { get; set; }
-        public string order_name { get; set; }
-        public decimal order_price { get; set; }
-        public int pay_channel { get; set; }
-    }
 }

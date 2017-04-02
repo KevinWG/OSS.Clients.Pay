@@ -20,6 +20,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using OSS.Common.ComModels;
 using OSS.Http.Mos;
 using OSS.Http;
 using OSS.Common.ComModels.Enums;
@@ -132,25 +133,43 @@ namespace OSS.PayCenter.ZFB
         /// <param name="signContent"></param>
         /// <param name="sign"></param>
         /// <param name="t"></param>
-        private void CheckSign<T>(string signContent, string sign, T t) where T : ZPayBaseResp, new()
+        /// <param name="signType"></param>
+        protected void CheckSign<T>(string signContent, string sign, T t, string signType = null)
+            where T : ResultMo, new()
         {
-            var checkSignRes = ZPaySignature.RSACheckContent(signContent, sign, ApiConfig.AppPublicKey,
-                ApiConfig.Charset, ApiConfig.SignType);
-            if (!checkSignRes)
+            try
             {
-                if (!string.IsNullOrEmpty(signContent) &&
-                    signContent.Contains("\\/"))
+                if (string.IsNullOrEmpty(signType))
+                    signType = ApiConfig.SignType;
+
+                var checkSignRes = ZPaySignature.RSACheckContent(signContent, sign, ApiConfig.AppPublicKey,
+                    ApiConfig.Charset, ApiConfig.SignType);
+                if (!checkSignRes)
                 {
-                    signContent = signContent.Replace("\\/", "/");
-                    // 如果验签不通过，转义字符后再次验签
-                    checkSignRes = ZPaySignature.RSACheckContent(signContent, sign,
-                        ApiConfig.AppPublicKey, ApiConfig.Charset, ApiConfig.SignType);
-                    if (!checkSignRes)
+                    if (!string.IsNullOrEmpty(signContent) &&
+                        signContent.Contains("\\/"))
                     {
-                        t.Ret = (int) ResultTypes.UnAuthorize;
-                        t.Message = "当前签名非法！";
+                        signContent = signContent.Replace("\\/", "/");
+                        // 如果验签不通过，转义字符后再次验签
+                        checkSignRes = ZPaySignature.RSACheckContent(signContent, sign,
+                            ApiConfig.AppPublicKey, ApiConfig.Charset, signType);
                     }
                 }
+                if (!checkSignRes)
+                {
+                    t.Ret = (int)ResultTypes.UnAuthorize;
+                    t.Message = "当前签名非法！";
+                }
+            }
+            catch (Exception e)
+            {
+                t.Ret = (int) ResultTypes.InnerError;
+                t.Message = "解密签名过程中出错，详情请查看日志";
+                LogUtil.Info($"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign}, 签名类型：{signType},  错误信息：{e.Message}",
+                    "CheckSign", ModuleNames.PayCenter);
+#if DEBUG
+                throw e;
+#endif
             }
         }
 
@@ -169,7 +188,7 @@ namespace OSS.PayCenter.ZFB
             return signContent;
         }
 
-        #region 补充相关属性并签名
+#region 补充相关属性并签名
 
         /// <summary>
         /// 补充默认属性并返回请求内容
@@ -225,7 +244,7 @@ namespace OSS.PayCenter.ZFB
             return string.Join("&", dics.Select(d => string.Concat(d.Key, "=",d.Value.UrlEncode())));
         }
 
-        #endregion
+#endregion
 
     }
 
