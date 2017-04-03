@@ -54,8 +54,7 @@ namespace OSS.PayCenter.Samples.Controllers
             var dics = Request.Form.ToDictionary(f => f.Key, f => f.Value.ToString());
 
             var res = zPayApi.CheckCallBackSign(dics);
-            if (res.IsSuccess)
-                LogUtil.Info($"支付成功，订单号：{resp.out_trade_no}");
+            LogUtil.Info($"支付状态：{res.Ret}, 消息：{res.Message}");
             
             return Content("success");
         }

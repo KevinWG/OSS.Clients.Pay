@@ -6,6 +6,7 @@
 
   <PropertyGroup>
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
+    <UserSecretsId>798ad871-df33-46ef-a6a7-66b75b949f8e</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -51,7 +52,6 @@
     <Content Include="wwwroot\lib\jquery\dist\jquery.min.map" />
     <Content Include="wwwroot\lib\jquery\LICENSE.txt" />
     <Content Include="wwwroot\lib\qrcode\qrcode.js" />
-    <Content Include="wwwroot\lib\qrcode\qrcoder.js" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="2.4.337" />

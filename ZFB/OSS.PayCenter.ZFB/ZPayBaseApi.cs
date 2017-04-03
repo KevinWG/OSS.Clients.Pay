@@ -153,7 +153,7 @@ namespace OSS.PayCenter.ZFB
                         // 如果验签不通过，转义字符后再次验签
                         checkSignRes = ZPaySignature.RSACheckContent(signContent, sign,
                             ApiConfig.AppPublicKey, ApiConfig.Charset, signType);
-                    }
+                    } 
 
                     if (checkSignRes) return;
 
