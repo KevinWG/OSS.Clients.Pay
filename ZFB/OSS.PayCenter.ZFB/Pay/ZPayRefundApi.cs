@@ -12,7 +12,6 @@
 #endregion
 
 using System.Threading.Tasks;
-using OSS.Http.Mos;
 using OSS.PayCenter.ZFB.Pay.Mos;
 
 namespace OSS.PayCenter.ZFB.Pay
@@ -39,12 +38,7 @@ namespace OSS.PayCenter.ZFB.Pay
             const string respColumnName = "alipay_trade_refund_response";
             const string apiMethod = "alipay.trade.refund";
 
-            var req = new OsHttpRequest();
-
-            req.HttpMothed = HttpMothed.POST;
-            req.CustomBody = ConvertDicToString(GetReqBodyDics(apiMethod, refundReq));
-
-            return await RestCommon<ZPayRefundResp>(req, respColumnName);
+            return await PostApi<ZPayRefundReq, ZPayRefundResp>(apiMethod, respColumnName, refundReq);
         }
 
     }

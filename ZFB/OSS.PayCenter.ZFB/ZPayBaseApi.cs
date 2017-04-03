@@ -37,6 +37,7 @@ namespace OSS.PayCenter.ZFB
     public abstract class ZPayBaseApi
     {
         #region  配置信息部分
+
         /// <summary>
         ///   默认配置信息，如果实例中的配置为空会使用当前配置信息
         /// </summary>
@@ -85,7 +86,10 @@ namespace OSS.PayCenter.ZFB
             {
                 request.AddressUrl = string.Concat(m_ApiUrl, "?charset=", ApiConfig.Charset);
 
-                var contentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded"){ CharSet = ApiConfig.Charset };
+                var contentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded")
+                {
+                    CharSet = ApiConfig.Charset
+                };
                 request.RequestSet = message => message.Content.Headers.ContentType = contentType;
 
                 var resp = await request.RestSend();
@@ -98,8 +102,12 @@ namespace OSS.PayCenter.ZFB
                         var contentStr = await resp.Content.ReadAsStringAsync();
                         var resJsonObj = JObject.Parse(contentStr);
                         if (resJsonObj == null)
-                            return new T(){ Ret = (int) ResultTypes.ObjectStateError,Message = "基础请求响应不正确，请检查地址或者网络是否正常！"};
-                        
+                            return new T()
+                            {
+                                Ret = (int) ResultTypes.ObjectStateError,
+                                Message = "基础请求响应不正确，请检查地址或者网络是否正常！"
+                            };
+
                         t = resJsonObj[respColumnName].ToObject<T>();
                         if (t.IsSuccess)
                         {
@@ -127,13 +135,36 @@ namespace OSS.PayCenter.ZFB
         }
 
         /// <summary>
-        ///  返回结果验签
+        ///   发起post请求
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="signContent"></param>
-        /// <param name="sign"></param>
-        /// <param name="t"></param>
-        /// <param name="signType"></param>
+        /// <typeparam name="TReq"></typeparam>
+        /// <typeparam name="TResp"></typeparam>
+        /// <param name="apiMethod"></param>
+        /// <param name="respColumnName"></param>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        public async Task<TResp> PostApi<TReq, TResp>(string apiMethod, string respColumnName, TReq req)
+            where TResp : ZPayBaseResp, new()
+            where TReq : ZPayBaseReq
+        {
+            var reqHttp = new OsHttpRequest();
+
+            reqHttp.HttpMothed = HttpMothed.POST;
+            reqHttp.CustomBody = ConvertDicToString(GetReqBodyDics(apiMethod, req));
+
+            return await RestCommon<TResp>(reqHttp, respColumnName);
+        }
+
+
+        #region 验证返回签名部分
+            /// <summary>
+            ///  返回结果验签
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
+            /// <param name="signContent"></param>
+            /// <param name="sign"></param>
+            /// <param name="t"></param>
+            /// <param name="signType"></param>
         protected void CheckSign<T>(string signContent, string sign, T t, string signType = null)
             where T : ResultMo, new()
         {
@@ -153,7 +184,7 @@ namespace OSS.PayCenter.ZFB
                         // 如果验签不通过，转义字符后再次验签
                         checkSignRes = ZPaySignature.RSACheckContent(signContent, sign,
                             ApiConfig.AppPublicKey, ApiConfig.Charset, signType);
-                    } 
+                    }
 
                     if (checkSignRes) return;
 
@@ -173,8 +204,7 @@ namespace OSS.PayCenter.ZFB
 #endif
             }
         }
-
-
+        
         /// <summary>
         ///  获取需要验签的内容部分
         /// </summary>
@@ -188,8 +218,9 @@ namespace OSS.PayCenter.ZFB
             var signContent = contentStr.Substring(startIndex, endIndex - startIndex);
             return signContent;
         }
+#endregion
 
-#region 补充相关属性并签名
+        #region 补充相关属性并签名
 
         /// <summary>
         /// 补充默认属性并返回请求内容
@@ -197,8 +228,8 @@ namespace OSS.PayCenter.ZFB
         /// <param name="method">接口方法名</param>
         /// <param name="req">请求实体</param>
         /// <returns>返回最终的内容</returns>
-        protected internal IDictionary<string,string> GetReqBodyDics<T>(string method,T req)
-            where T:ZPayBaseReq
+        protected internal IDictionary<string, string> GetReqBodyDics<T>(string method, T req)
+            where T : ZPayBaseReq
         {
             SortedDictionary<string, string> dirs = new SortedDictionary<string, string>();
 
@@ -221,9 +252,9 @@ namespace OSS.PayCenter.ZFB
 
                 }));
 
-            if (req.auth_token!=null)
+            if (req.auth_token != null)
                 SetDefaultPropertyFormat(dirs, "app_auth_token", req.auth_token.app_auth_token);
-            
+
             //  签名
             string signContent = string.Join("&", dirs.Select(d => string.Concat(d.Key, "=", d.Value)));
             string sign = ZPaySignature.RSASignCharSet(signContent, ApiConfig.AppPrivateKey, ApiConfig.Charset,
@@ -240,12 +271,12 @@ namespace OSS.PayCenter.ZFB
                 dirs.Add(key, value);
         }
 
-        protected static string ConvertDicToString(IDictionary<string,string> dics )
+        protected static string ConvertDicToString(IDictionary<string, string> dics)
         {
-            return string.Join("&", dics.Select(d => string.Concat(d.Key, "=",d.Value.UrlEncode())));
+            return string.Join("&", dics.Select(d => string.Concat(d.Key, "=", d.Value.UrlEncode())));
         }
 
-#endregion
+        #endregion
 
     }
 
