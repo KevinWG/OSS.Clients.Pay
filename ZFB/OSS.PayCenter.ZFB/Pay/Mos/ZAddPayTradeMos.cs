@@ -122,7 +122,25 @@ namespace OSS.PayCenter.ZFB.Pay.Mos
     /// <summary>
     ///   条码支付响应实体
     /// </summary>
-    public class ZAddPayTradeResp:ZPayBaseResp
+    public class ZAddPayTradeResp: ZTradeInfoBaseResp
+    {
+    
+        /// <summary>   
+        ///    Date 必填 长度(32)  交易支付时间 15:45:57
+        /// </summary>  
+        public string gmt_payment { get; set; }
+        
+        /// <summary>   
+        ///    Price 选填 长度(11)  支付宝卡余额
+        /// </summary>  
+        public decimal card_balance { get; set; }
+    }
+
+
+    /// <summary>
+    ///   返回的交易信息基础类
+    /// </summary>
+    public class ZTradeInfoBaseResp : ZPayBaseResp
     {
         /// <summary>   
         ///    String 必填 长度(64)  支付宝交易号
@@ -134,6 +152,7 @@ namespace OSS.PayCenter.ZFB.Pay.Mos
         /// </summary>  
         public string out_trade_no { get; set; }
 
+
         /// <summary>   
         ///    String 必填 长度(100)  买家支付宝账号
         /// </summary>  
@@ -143,6 +162,7 @@ namespace OSS.PayCenter.ZFB.Pay.Mos
         ///    Price 必填 长度(11)  交易金额
         /// </summary>  
         public decimal total_amount { get; set; }
+
 
         /// <summary>   
         ///    String 必填 长度(11)  实收金额
@@ -165,20 +185,9 @@ namespace OSS.PayCenter.ZFB.Pay.Mos
         public decimal invoice_amount { get; set; }
 
         /// <summary>   
-        ///    Date 必填 长度(32)  交易支付时间 15:45:57
-        /// </summary>  
-        public string gmt_payment { get; set; }
-
-        /// <summary>   
         ///    TradeFundBill[] 必填 长度(-)  交易支付使用的资金渠道
         /// </summary>  
         public List<ZTradeFundBillMo> fund_bill_list { get; set; }
-
-        /// <summary>   
-        ///    Price 选填 长度(11)  支付宝卡余额
-        /// </summary>  
-        public decimal card_balance { get; set; }
-
         /// <summary>   
         ///    String 选填 长度(512)  发生支付交易的商户门店名称
         /// </summary>  
@@ -194,7 +203,6 @@ namespace OSS.PayCenter.ZFB.Pay.Mos
         /// </summary>  
         public string discount_goods_detail { get; set; }
     }
-
 
     /// <summary>
     /// 交易支付使用的资金渠道

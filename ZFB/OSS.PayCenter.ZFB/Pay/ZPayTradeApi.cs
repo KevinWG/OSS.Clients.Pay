@@ -65,6 +65,29 @@ namespace OSS.PayCenter.ZFB.Pay
 
 
         #endregion
+
+        #region  订单查询
+
+        /// <summary>
+        ///   统一收单线下交易查询
+        /// </summary>
+        /// <param name="queryReq"></param>
+        public async Task<ZQueryTradeResp> QueryTrade(ZQueryTradeReq queryReq)
+        {
+            const string respColumnName = "alipay_trade_query_response";
+            const string apiMethod = "alipay.trade.query";
+
+            var req = new OsHttpRequest();
+
+            req.HttpMothed = HttpMothed.POST;
+            req.CustomBody = ConvertDicToString(GetReqBodyDics(apiMethod, queryReq));
+
+            return await RestCommon<ZQueryTradeResp>(req, respColumnName);
+        }
+        #endregion
+
+
+
         /// <summary>
         ///  验证回调接口签名
         /// </summary>
