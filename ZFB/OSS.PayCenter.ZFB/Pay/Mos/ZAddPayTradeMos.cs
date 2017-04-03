@@ -18,7 +18,7 @@ using System.Reflection;
 namespace OSS.PayCenter.ZFB.Pay.Mos
 {
     /// <summary>
-    ///   统一下单交易支付接口实体
+    ///   统一下单交易支付接口实体（条码支付- 商家扫用户二维码、读取声波发起支付）
     /// </summary>
     public class ZAddPayTradeReq : ZAddTradeBaseReq
     {
@@ -64,7 +64,6 @@ namespace OSS.PayCenter.ZFB.Pay.Mos
         ///    ExtUserInfo 可选 长度(-)  外部指定买家
         /// </summary>  
         public ZTradeExtUserMo ext_user_info { get; set; }
-
     }
 
     /// <summary>
@@ -119,6 +118,104 @@ namespace OSS.PayCenter.ZFB.Pay.Mos
         public string cert_no { get; set; }
     }
 
+
+    /// <summary>
+    ///   条码支付响应实体
+    /// </summary>
+    public class ZAddPayTradeResp:ZPayBaseResp
+    {
+        /// <summary>   
+        ///    String 必填 长度(64)  支付宝交易号
+        /// </summary>  
+        public string trade_no { get; set; }
+
+        /// <summary>   
+        ///    String 必填 长度(64)  商户订单号
+        /// </summary>  
+        public string out_trade_no { get; set; }
+
+        /// <summary>   
+        ///    String 必填 长度(100)  买家支付宝账号
+        /// </summary>  
+        public string buyer_logon_id { get; set; }
+
+        /// <summary>   
+        ///    Price 必填 长度(11)  交易金额
+        /// </summary>  
+        public decimal total_amount { get; set; }
+
+        /// <summary>   
+        ///    String 必填 长度(11)  实收金额
+        /// </summary>  
+        public string receipt_amount { get; set; }
+
+        /// <summary>   
+        ///    Price 选填 长度(11)  买家付款的金额
+        /// </summary>  
+        public decimal buyer_pay_amount { get; set; }
+
+        /// <summary>   
+        ///    Price 选填 长度(11)  使用积分宝付款的金额
+        /// </summary>  
+        public decimal point_amount { get; set; }
+
+        /// <summary>   
+        ///    Price 选填 长度(11)  交易中可给用户开具发票的金额
+        /// </summary>  
+        public decimal invoice_amount { get; set; }
+
+        /// <summary>   
+        ///    Date 必填 长度(32)  交易支付时间 15:45:57
+        /// </summary>  
+        public string gmt_payment { get; set; }
+
+        /// <summary>   
+        ///    TradeFundBill[] 必填 长度(-)  交易支付使用的资金渠道
+        /// </summary>  
+        public List<ZTradeFundBillMo> fund_bill_list { get; set; }
+
+        /// <summary>   
+        ///    Price 选填 长度(11)  支付宝卡余额
+        /// </summary>  
+        public decimal card_balance { get; set; }
+
+        /// <summary>   
+        ///    String 选填 长度(512)  发生支付交易的商户门店名称
+        /// </summary>  
+        public string store_name { get; set; }
+
+        /// <summary>   
+        ///    String 必填 长度(28)  买家在支付宝的用户id
+        /// </summary>  
+        public string buyer_user_id { get; set; }
+
+        /// <summary>   
+        ///    String 必填 长度(-)  本次交易支付所使用的单品券优惠的商品优惠信息
+        /// </summary>  
+        public string discount_goods_detail { get; set; }
+    }
+
+
+    /// <summary>
+    /// 交易支付使用的资金渠道
+    /// </summary>
+    public class ZTradeFundBillMo
+    {
+        /// <summary>   
+        ///    String 必填 长度(32)  交易使用的资金渠道，详见 ALIPAYACCOUNT
+        /// </summary>  
+        public string fund_channel { get; set; }
+
+        /// <summary>   
+        ///    Price 选填 长度(-)  该支付工具类型所使用的金额
+        /// </summary>  
+        public string amount { get; set; }
+
+        /// <summary>   
+        ///    Price 选填 长度(11)  渠道实际付款金额
+        /// </summary>  
+        public string real_amount { get; set; }
+    }
 
     #region  基类部分
 

@@ -16,7 +16,7 @@
 namespace OSS.PayCenter.ZFB.Pay.Mos
 {
     /// <summary>
-    ///   统一收单线下交易预创建
+    ///   统一收单线下交易预创建（扫码支付   -  用户扫商家二维码）
     /// </summary>
     public class ZAddPreTradeReq : ZAddTradeBaseReq
     {

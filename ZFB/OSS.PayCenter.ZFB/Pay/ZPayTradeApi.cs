@@ -2,7 +2,7 @@
 #region Copyright (C) 2017 Kevin (OSS开源作坊) 公众号：osscoder
 
 /***************************************************************************
-*　　	文件功能描述：支付宝支付模快 —— 支付相关接口
+*　　	文件功能描述：支付宝支付模快 —— 支付接口
 *
 *　　	创建人： Kevin
 *       创建人Email：1985088337@qq.com
@@ -26,9 +26,11 @@ namespace OSS.PayCenter.ZFB.Pay
         public ZPayTradeApi(ZPayCenterConfig config=null) : base(config)
         {
         }
-        
+
+
+#region 线下收款
         /// <summary>
-        /// 统一预下单（收单）
+        /// 统一预下单（收单）（扫码支付   -  用户扫商家二维码）
         /// </summary>
         /// <param name="payReq"></param>
         public async Task<ZAddPreTradeResp> AddPreTrade(ZAddPreTradeReq payReq)
@@ -44,6 +46,25 @@ namespace OSS.PayCenter.ZFB.Pay
             return await RestCommon<ZAddPreTradeResp>(req, respColumnName);
         }
 
+        /// <summary>
+        ///   统一预下单（条码支付- 商家扫用户二维码、读取声波发起支付）
+        /// </summary>
+        /// <param name="payReq"></param>
+        public async Task<ZAddPayTradeResp> AddPayTrade(ZAddPayTradeReq payReq)
+        {
+            const string respColumnName = "alipay_trade_pay_response";
+            const string apiMethod = "alipay.trade.pay";
+
+            var req = new OsHttpRequest();
+
+            req.HttpMothed = HttpMothed.POST;
+            req.CustomBody = ConvertDicToString(GetReqBodyDics(apiMethod, payReq));
+
+            return await RestCommon<ZAddPayTradeResp>(req, respColumnName);
+        }
+
+
+        #endregion
         /// <summary>
         ///  验证回调接口签名
         /// </summary>
