@@ -27,7 +27,13 @@ namespace OSS.PayCenter.ZFB
         {
             return notify_url;
         }
-        
+
+        protected internal string return_url;
+        internal string GetReturnUrl()
+        {
+            return return_url;
+        }
+
         /// <summary>
         ///   商户授权信息
         /// </summary>

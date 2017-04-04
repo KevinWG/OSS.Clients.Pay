@@ -123,7 +123,7 @@ namespace OSS.PayCenter.ZFB
             }
             catch (Exception ex)
             {
-                var logCode = LogUtil.Error(string.Concat("基类请求出错，错误信息：", ex.Message), "RestCommon",
+                var logCode = LogUtil.Error(string.Concat("基类请求出错，错误信息：", ex.Message), "Z_RestCommon",
                     ModuleNames.SocialCenter);
                 t = new T()
                 {
@@ -147,10 +147,14 @@ namespace OSS.PayCenter.ZFB
             where TResp : ZPayBaseResp, new()
             where TReq : ZPayBaseReq
         {
+           var contentDirs=GetReqBodyDics(apiMethod, req);
+            if (!contentDirs.IsSuccess)
+                return contentDirs.ConvertToResult<TResp>();
+
             var reqHttp = new OsHttpRequest();
 
             reqHttp.HttpMothed = HttpMothed.POST;
-            reqHttp.CustomBody = ConvertDicToString(GetReqBodyDics(apiMethod, req));
+            reqHttp.CustomBody = ConvertDicToEncodeReqBody(contentDirs.Data);
 
             return await RestCommon<TResp>(reqHttp, respColumnName);
         }
@@ -228,40 +232,46 @@ namespace OSS.PayCenter.ZFB
         /// <param name="method">接口方法名</param>
         /// <param name="req">请求实体</param>
         /// <returns>返回最终的内容</returns>
-        protected internal IDictionary<string, string> GetReqBodyDics<T>(string method, T req)
+        protected internal ResultMo<IDictionary<string, string>> GetReqBodyDics<T>(string method, T req)
             where T : ZPayBaseReq
         {
             SortedDictionary<string, string> dirs = new SortedDictionary<string, string>();
+            try
+            {
+                SetDefaultPropertyFormat(dirs, "app_id", ApiConfig.AppId);
+                SetDefaultPropertyFormat(dirs, "charset", ApiConfig.Charset);
+                SetDefaultPropertyFormat(dirs, "method", method);
+                SetDefaultPropertyFormat(dirs, "notify_url", req.GetNotifyUrl());
+                SetDefaultPropertyFormat(dirs, "return_url", req.GetReturnUrl());
 
-            SetDefaultPropertyFormat(dirs, "app_id", ApiConfig.AppId);
-            SetDefaultPropertyFormat(dirs, "charset", ApiConfig.Charset);
-            SetDefaultPropertyFormat(dirs, "method", method);
-            SetDefaultPropertyFormat(dirs, "notify_url", req.GetNotifyUrl());
-            SetDefaultPropertyFormat(dirs, "sign_type", ApiConfig.SignType);
+                SetDefaultPropertyFormat(dirs, "sign_type", ApiConfig.SignType);
+                dirs.Add("timestamp", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                SetDefaultPropertyFormat(dirs, "format", ApiConfig.Format);
+                SetDefaultPropertyFormat(dirs, "version", ApiConfig.Version);
 
-            var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            dirs.Add("timestamp", timestamp);
-            SetDefaultPropertyFormat(dirs, "format", ApiConfig.Format);
-            SetDefaultPropertyFormat(dirs, "version", ApiConfig.Version);
+                SetDefaultPropertyFormat(dirs, "biz_content",
+                    JsonConvert.SerializeObject(req, Formatting.Indented, new JsonSerializerSettings()
+                    {
+                        NullValueHandling = NullValueHandling.Ignore,
+                        DefaultValueHandling = DefaultValueHandling.Ignore,
 
-            SetDefaultPropertyFormat(dirs, "biz_content",
-                JsonConvert.SerializeObject(req, Formatting.Indented, new JsonSerializerSettings()
-                {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    DefaultValueHandling = DefaultValueHandling.Ignore,
+                    }));
 
-                }));
+                if (req.auth_token != null)
+                    SetDefaultPropertyFormat(dirs, "app_auth_token", req.auth_token.app_auth_token);
 
-            if (req.auth_token != null)
-                SetDefaultPropertyFormat(dirs, "app_auth_token", req.auth_token.app_auth_token);
-
-            //  签名
-            string signContent = string.Join("&", dirs.Select(d => string.Concat(d.Key, "=", d.Value)));
-            string sign = ZPaySignature.RSASignCharSet(signContent, ApiConfig.AppPrivateKey, ApiConfig.Charset,
-                ApiConfig.SignType);
-            dirs.Add("sign", sign);
-
-            return dirs;
+                //  签名
+                string signContent = string.Join("&", dirs.Select(d => string.Concat(d.Key, "=", d.Value)));
+                string sign = ZPaySignature.RSASignCharSet(signContent, ApiConfig.AppPrivateKey, ApiConfig.Charset,
+                    ApiConfig.SignType);
+                dirs.Add("sign", sign);
+            }
+            catch (Exception e)
+            {
+                LogUtil.Error(string.Concat("处理签名字典出错，详细信息：",e.Message), "Z_GetReqBodyDics",ModuleNames.PayCenter);
+                return new ResultMo<IDictionary<string, string>>((int)ResultTypes.InnerError,"处理签名字典出错，详细信息请查看日志");
+            }
+            return new ResultMo<IDictionary<string, string>>(dirs);
         }
 
         private void SetDefaultPropertyFormat(SortedDictionary<string, string> dirs, string key, string value)
@@ -271,7 +281,7 @@ namespace OSS.PayCenter.ZFB
                 dirs.Add(key, value);
         }
 
-        protected static string ConvertDicToString(IDictionary<string, string> dics)
+        protected static string ConvertDicToEncodeReqBody(IDictionary<string, string> dics)
         {
             return string.Join("&", dics.Select(d => string.Concat(d.Key, "=", d.Value.UrlEncode())));
         }

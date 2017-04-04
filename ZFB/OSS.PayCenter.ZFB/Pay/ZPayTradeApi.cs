@@ -13,6 +13,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using OSS.Common.ComModels;
 using OSS.PayCenter.ZFB.Pay.Mos;
@@ -26,10 +27,10 @@ namespace OSS.PayCenter.ZFB.Pay
         }
 
 
-        #region 线下收款
+        #region 发起手动线下收款 （手动扫码
 
         /// <summary>
-        /// 统一预下单（收单）（扫码支付   -  用户扫商家二维码）
+        /// 预下单（扫码支付 - 用户扫商家二维码）
         /// </summary>
         /// <param name="payReq"></param>
         public async Task<ZAddPreTradeResp> AddPreTrade(ZAddPreTradeReq payReq)
@@ -41,7 +42,7 @@ namespace OSS.PayCenter.ZFB.Pay
         }
 
         /// <summary>
-        ///   统一预下单（条码支付- 商家扫用户二维码、读取声波发起支付）
+        ///   线下预下单（条码支付- 商家扫用户二维码、读取声波发起支付）
         /// </summary>
         /// <param name="payReq"></param>
         public async Task<ZAddPayTradeResp> AddPayTrade(ZAddPayTradeReq payReq)
@@ -52,6 +53,55 @@ namespace OSS.PayCenter.ZFB.Pay
             return await PostApi<ZAddPayTradeReq, ZAddPayTradeResp>(apiMethod, respColumnName, payReq);
         }
 
+        #endregion
+
+
+        #region 发起客户端收款（自动唤起
+
+        /// <summary>
+        /// 获取客户端App唤起支付请求内容
+        /// </summary>
+        /// <param name="req"></param>
+        public ResultMo<string> GetAppTradeContent(ZAddAppTradeReq req)
+        {
+            const string apiMethod = "alipay.trade.app.pay";
+            var dicsRes = GetReqBodyDics(apiMethod, req);
+            if (!dicsRes.IsSuccess)
+                return dicsRes.ConvertToResultOnly<string>();
+            
+            return new ResultMo<string>(ConvertDicToEncodeReqBody(dicsRes.Data));
+        }
+
+        /// <summary>
+        /// 获取客户端Wap唤起支付请求内容
+        /// </summary>
+        /// <param name="req"></param>
+        public ResultMo<string> GetWapTradeContent(ZAddWapTradeReq req)
+        {
+            const string apiMethod = "alipay.trade.wap.pay";
+            var dicsRes = GetReqBodyDics(apiMethod, req);
+            if (!dicsRes.IsSuccess)
+                return dicsRes.ConvertToResultOnly<string>();
+
+            return new ResultMo<string>(BuildFormHtml(dicsRes.Data));
+        }
+
+        private  string BuildFormHtml(IDictionary<string, string> dics)
+        {
+            StringBuilder sbHtml = new StringBuilder();
+            sbHtml.Append("<form id='alipaysubmit' name='alipaysubmit' action='" + m_ApiUrl + "?charset=" + ApiConfig.Charset +
+                 "' method='POST'>");
+            foreach (KeyValuePair<string, string> temp in dics)
+            {
+                sbHtml.Append($"<input  name='{temp.Key}' value='{temp.Value}'/>");
+            }
+            //submit按钮控件请不要含有name属性
+            sbHtml.Append("<input type='submit' value='submit' style='display:none;'></form>");
+
+            //表单实现自动提交
+            sbHtml.Append("<script>document.forms['alipaysubmit'].submit();</script>");
+            return sbHtml.ToString();
+        }
 
         #endregion
 
@@ -104,6 +154,7 @@ namespace OSS.PayCenter.ZFB.Pay
         }
 
         #endregion
+
         /// <summary>
         ///  验证回调接口签名
         /// </summary>
