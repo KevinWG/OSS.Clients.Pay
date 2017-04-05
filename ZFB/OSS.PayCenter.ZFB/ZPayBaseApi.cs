@@ -177,7 +177,7 @@ namespace OSS.PayCenter.ZFB
                 if (string.IsNullOrEmpty(signType))
                     signType = ApiConfig.SignType;
 
-                var checkSignRes = ZPaySignature.RSACheckContent(signContent, sign, ApiConfig.AppPublicKey,
+                var checkSignRes = ZPayRsaAssist.RSACheckContent(signContent, sign, ApiConfig.AppPublicKey,
                     ApiConfig.Charset, ApiConfig.SignType);
                 if (!checkSignRes)
                 {
@@ -186,7 +186,7 @@ namespace OSS.PayCenter.ZFB
                     {
                         signContent = signContent.Replace("\\/", "/");
                         // 如果验签不通过，转义字符后再次验签
-                        checkSignRes = ZPaySignature.RSACheckContent(signContent, sign,
+                        checkSignRes = ZPayRsaAssist.RSACheckContent(signContent, sign,
                             ApiConfig.AppPublicKey, ApiConfig.Charset, signType);
                     }
 
@@ -262,7 +262,7 @@ namespace OSS.PayCenter.ZFB
 
                 //  签名
                 string signContent = string.Join("&", dirs.Select(d => string.Concat(d.Key, "=", d.Value)));
-                string sign = ZPaySignature.RSASignCharSet(signContent, ApiConfig.AppPrivateKey, ApiConfig.Charset,
+                string sign = ZPayRsaAssist.RSASignCharSet(signContent, ApiConfig.AppPrivateKey, ApiConfig.Charset,
                     ApiConfig.SignType);
                 dirs.Add("sign", sign);
             }
