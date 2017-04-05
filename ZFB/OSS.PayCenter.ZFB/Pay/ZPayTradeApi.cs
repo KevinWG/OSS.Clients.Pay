@@ -172,7 +172,7 @@ namespace OSS.PayCenter.ZFB.Pay
             var checkContent = string.Join("&", sortDics.Select(d => string.Concat(d.Key, "=", d.Value)));
 
             var result = new ResultMo();
-            CheckSign(checkContent, sign, result, signType);
+            CheckSign(checkContent, sign, result);
             return result;
         }
     }

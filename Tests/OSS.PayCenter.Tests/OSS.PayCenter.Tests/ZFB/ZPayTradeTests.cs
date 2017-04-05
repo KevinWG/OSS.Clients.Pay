@@ -31,6 +31,8 @@ namespace OSS.PayCenter.Tests.ZFB
                     var signContent = GetCehckSignContent("alipay_trade_precreate_response", json);
 
                     CheckSign(signContent, sign, res);
+                    CheckSign(signContent, sign, res);
+                    CheckSign(signContent, sign, res);
                 }
             }
         }
@@ -42,16 +44,14 @@ namespace OSS.PayCenter.Tests.ZFB
             var signContent = contentStr.Substring(startIndex, endIndex - startIndex);
             return signContent;
         }
-        protected void CheckSign<T>(string signContent, string sign, T t, string signType = null)
+        private readonly ZPayRsaAssist m_RsaAssist=new ZPayRsaAssist(config.AppPrivateKey, config.AppPublicKey, config.SignType,
+                config.Charset);
+        protected void CheckSign<T>(string signContent, string sign, T t)
         where T : ResultMo, new()
         {
             try
             {
-                if (string.IsNullOrEmpty(signType))
-                    signType = config.SignType;
-
-                var checkSignRes = ZPayRsaAssist.RSACheckContent(signContent, sign, config.AppPublicKey,
-                    config.Charset, config.SignType);
+                var checkSignRes = m_RsaAssist.CheckSign(signContent, sign);
                 if (!checkSignRes)
                 {
                     if (!string.IsNullOrEmpty(signContent) &&
@@ -59,8 +59,7 @@ namespace OSS.PayCenter.Tests.ZFB
                     {
                         signContent = signContent.Replace("\\/", "/");
                         // 如果验签不通过，转义字符后再次验签
-                        checkSignRes = ZPayRsaAssist.RSACheckContent(signContent, sign,
-                            config.AppPublicKey, config.Charset, signType);
+                        checkSignRes = m_RsaAssist.CheckSign(signContent, sign);
                     }
 
                     if (checkSignRes) return;
@@ -74,7 +73,7 @@ namespace OSS.PayCenter.Tests.ZFB
             {
                 t.Ret = (int)ResultTypes.InnerError;
                 t.Message = "解密签名过程中出错，详情请查看日志";
-                LogUtil.Info($"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign}, 签名类型：{signType},  错误信息：{e.Message}",
+                LogUtil.Info($"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign}, 签名类型：{config.SignType},  错误信息：{e.Message}",
                     "CheckSign", ModuleNames.PayCenter);
 #if DEBUG
                 throw e;

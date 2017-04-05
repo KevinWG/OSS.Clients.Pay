@@ -21,40 +21,62 @@ using System.Text;
 namespace OSS.PayCenter.ZFB.SysTools
 {
     /// <summary>
-    ///   rsa加密 ZPayRsaAssist
+    ///   rsa加密
     /// </summary>
     public class ZPayRsaAssist
     {
-        public static bool RSACheckContent(string signContent, string sign, string publicKeyPem, string charset,
-            string signType)
+        private readonly RSACryptoServiceProvider m_PublicRsa;
+        private readonly RSACryptoServiceProvider m_PrivateRsa ;
+        private readonly string m_SignType;
+        private readonly string m_Charset;
+        /// <summary>
+        ///  构造函数
+        /// </summary>
+        /// <param name="privateKeyPem"></param>
+        /// <param name="publicKeyPem"></param>
+        /// <param name="signType"></param>
+        public ZPayRsaAssist(string privateKeyPem,string publicKeyPem,string signType, string charset)
         {
-            var m_PublicRsa = CreateRsaProviderFromPublicKey(publicKeyPem);
+            m_PublicRsa = CreateRsaProviderFromPublicKey(publicKeyPem);
+            m_PrivateRsa = CreateRsaProviderFromPrivateKey(privateKeyPem, signType);
+            m_SignType = signType;
+            m_Charset = charset;
+        }
 
-            bool bVerifyResultOriginal = m_PublicRsa.VerifyData(Encoding.GetEncoding(charset).GetBytes(signContent),
-                "RSA2".Equals(signType) ? "SHA256" : "SHA1", Convert.FromBase64String(sign));
+        /// <summary>
+        ///  验签操作
+        /// </summary>
+        /// <param name="signContent"></param>
+        /// <param name="sign"></param>
+        /// <returns></returns>
+        public  bool CheckSign(string signContent, string sign)
+        {
+            bool bVerifyResultOriginal = m_PublicRsa.VerifyData(Encoding.GetEncoding(m_Charset).GetBytes(signContent),
+                "RSA2".Equals(m_SignType) ? "SHA256" : "SHA1", Convert.FromBase64String(sign));
             return bVerifyResultOriginal;
         }
 
-        public static string RSASignCharSet(string data, string privateKeyPem, string charset, string signType)
+        /// <summary>
+        /// 生成签名
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public  string GenerateSign(string data)
         {
             byte[] signatureBytes = null;
             try
             {
-                RSACryptoServiceProvider m_PrivateRsa = CreateRsaProviderFromPublicKey(privateKeyPem, signType);
-                
-                byte[] dataBytes = string.IsNullOrEmpty(charset)
-                    ? Encoding.UTF8.GetBytes(data)
-                    : Encoding.GetEncoding(charset).GetBytes(data);
+                byte[] dataBytes = Encoding.GetEncoding(m_Charset).GetBytes(data);
 
                 if (null == m_PrivateRsa)
                 {
-                    throw new Exception("您使用的私钥格式错误，请检查RSA私钥配置" + ",charset = " + charset);
+                    throw new Exception("您使用的私钥格式错误，请检查RSA私钥配置" + ",charset = " + m_Charset);
                 }
-                signatureBytes = m_PrivateRsa.SignData(dataBytes, "RSA2".Equals(signType) ? "SHA256" : "SHA1");
+                signatureBytes = m_PrivateRsa.SignData(dataBytes, "RSA2".Equals(m_SignType) ? "SHA256" : "SHA1");
             }
             catch (Exception ex)
             {
-                throw new Exception("您使用的私钥格式错误，请检查RSA私钥配置" + ",charset = " + charset);
+                throw new Exception("您使用的私钥格式错误，请检查RSA私钥配置" + ",charset = " + m_Charset);
             }
             return Convert.ToBase64String(signatureBytes);
         }
@@ -175,7 +197,7 @@ namespace OSS.PayCenter.ZFB.SysTools
 
         #region 通过私钥创建Rsa对象
 
-        private static RSACryptoServiceProvider CreateRsaProviderFromPublicKey(string strKey, string signType)
+        private static RSACryptoServiceProvider CreateRsaProviderFromPrivateKey(string strKey, string signType)
         {
             byte[] data = null;
             //读取带
@@ -195,8 +217,6 @@ namespace OSS.PayCenter.ZFB.SysTools
         }
         private static RSACryptoServiceProvider DecodeRSAPrivateKey(byte[] privkey, string signType)
         {
-            byte[] MODULUS, E, D, P, Q, DP, DQ, IQ;
-
             // --------- Set up stream to decode the asn.1 encoded RSA private key ------
             MemoryStream mem = new MemoryStream(privkey);
             BinaryReader binr = new BinaryReader(mem);  //wrap Memory Stream with BinaryReader for easy reading
@@ -223,28 +243,28 @@ namespace OSS.PayCenter.ZFB.SysTools
 
                 //------ all private key components are Integer sequences ----
                 elems = GetIntegerSize(binr);
-                MODULUS = binr.ReadBytes(elems);
+                var MODULUS = binr.ReadBytes(elems);
 
                 elems = GetIntegerSize(binr);
-                E = binr.ReadBytes(elems);
+                var E = binr.ReadBytes(elems);
 
                 elems = GetIntegerSize(binr);
-                D = binr.ReadBytes(elems);
+                var D = binr.ReadBytes(elems);
 
                 elems = GetIntegerSize(binr);
-                P = binr.ReadBytes(elems);
+                var P = binr.ReadBytes(elems);
 
                 elems = GetIntegerSize(binr);
-                Q = binr.ReadBytes(elems);
+                var Q = binr.ReadBytes(elems);
 
                 elems = GetIntegerSize(binr);
-                DP = binr.ReadBytes(elems);
+                var DP = binr.ReadBytes(elems);
 
                 elems = GetIntegerSize(binr);
-                DQ = binr.ReadBytes(elems);
+                var DQ = binr.ReadBytes(elems);
 
                 elems = GetIntegerSize(binr);
-                IQ = binr.ReadBytes(elems);
+                var IQ = binr.ReadBytes(elems);
 
 
                 // ------- create RSACryptoServiceProvider instance and initialize with public key -----

@@ -37,18 +37,17 @@ namespace OSS.PayCenter.ZFB
     public abstract class ZPayBaseApi
     {
         #region  配置信息部分
-
+        private readonly ZPayRsaAssist m_RsaAssist;
+        
         /// <summary>
         ///   默认配置信息，如果实例中的配置为空会使用当前配置信息
         /// </summary>
         public static ZPayCenterConfig DefaultConfig { get; set; }
 
-        private readonly ZPayCenterConfig _config;
-
         /// <summary>
         /// 支付宝接口配置
         /// </summary>
-        public ZPayCenterConfig ApiConfig => _config ?? DefaultConfig;
+        public ZPayCenterConfig ApiConfig { get; }
 
         /// <summary>
         /// 构造函数
@@ -59,7 +58,10 @@ namespace OSS.PayCenter.ZFB
             if (config == null && DefaultConfig == null)
                 throw new ArgumentNullException(nameof(config),
                     "构造函数中的config 和 全局DefaultConfig 配置信息同时为空，请通过构造函数赋值，或者在程序入口处给 DefaultConfig 赋值！");
-            _config = config;
+
+            ApiConfig = config ?? DefaultConfig;
+            m_RsaAssist = new ZPayRsaAssist(ApiConfig.AppPrivateKey, ApiConfig.AppPublicKey, ApiConfig.SignType,
+                ApiConfig.Charset);
         }
 
         #endregion
@@ -168,17 +170,12 @@ namespace OSS.PayCenter.ZFB
             /// <param name="signContent"></param>
             /// <param name="sign"></param>
             /// <param name="t"></param>
-            /// <param name="signType"></param>
-        protected void CheckSign<T>(string signContent, string sign, T t, string signType = null)
+        protected void CheckSign<T>(string signContent, string sign, T t)
             where T : ResultMo, new()
         {
             try
             {
-                if (string.IsNullOrEmpty(signType))
-                    signType = ApiConfig.SignType;
-
-                var checkSignRes = ZPayRsaAssist.RSACheckContent(signContent, sign, ApiConfig.AppPublicKey,
-                    ApiConfig.Charset, ApiConfig.SignType);
+                var checkSignRes = m_RsaAssist.CheckSign(signContent,sign);
                 if (!checkSignRes)
                 {
                     if (!string.IsNullOrEmpty(signContent) &&
@@ -186,8 +183,7 @@ namespace OSS.PayCenter.ZFB
                     {
                         signContent = signContent.Replace("\\/", "/");
                         // 如果验签不通过，转义字符后再次验签
-                        checkSignRes = ZPayRsaAssist.RSACheckContent(signContent, sign,
-                            ApiConfig.AppPublicKey, ApiConfig.Charset, signType);
+                        checkSignRes = m_RsaAssist.CheckSign(signContent, sign);
                     }
 
                     if (checkSignRes) return;
@@ -201,7 +197,7 @@ namespace OSS.PayCenter.ZFB
             {
                 t.Ret = (int) ResultTypes.InnerError;
                 t.Message = "解密签名过程中出错，详情请查看日志";
-                LogUtil.Info($"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign}, 签名类型：{signType},  错误信息：{e.Message}",
+                LogUtil.Info($"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign}, 签名类型：{ApiConfig.SignType},  错误信息：{e.Message}",
                     "CheckSign", ModuleNames.PayCenter);
 #if DEBUG
                 throw e;
@@ -262,8 +258,7 @@ namespace OSS.PayCenter.ZFB
 
                 //  签名
                 string signContent = string.Join("&", dirs.Select(d => string.Concat(d.Key, "=", d.Value)));
-                string sign = ZPayRsaAssist.RSASignCharSet(signContent, ApiConfig.AppPrivateKey, ApiConfig.Charset,
-                    ApiConfig.SignType);
+                string sign = m_RsaAssist.GenerateSign(signContent);
                 dirs.Add("sign", sign);
             }
             catch (Exception e)
