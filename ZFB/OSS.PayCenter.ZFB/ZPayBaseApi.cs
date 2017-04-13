@@ -79,7 +79,7 @@ namespace OSS.PayCenter.ZFB
         /// <param name="respColumnName">响应实体中的内容列表</param>
         /// <param name="funcFormat">获取实体格式化方法</param>
         /// <returns>实体类型</returns>
-        public async Task<T> RestCommon<T>(OsHttpRequest request, string respColumnName,
+        public async Task<T> RestCommonAsync<T>(OsHttpRequest request, string respColumnName,
             Func<HttpResponseMessage, Task<T>> funcFormat = null)
             where T : ZPayBaseResp, new()
         {
@@ -145,7 +145,7 @@ namespace OSS.PayCenter.ZFB
         /// <param name="respColumnName"></param>
         /// <param name="req"></param>
         /// <returns></returns>
-        public async Task<TResp> PostApi<TReq, TResp>(string apiMethod, string respColumnName, TReq req)
+        public async Task<TResp> PostApiAsync<TReq, TResp>(string apiMethod, string respColumnName, TReq req)
             where TResp : ZPayBaseResp, new()
             where TReq : ZPayBaseReq
         {
@@ -158,7 +158,7 @@ namespace OSS.PayCenter.ZFB
             reqHttp.HttpMothed = HttpMothed.POST;
             reqHttp.CustomBody = ConvertDicToEncodeReqBody(contentDirs.Data);
 
-            return await RestCommon<TResp>(reqHttp, respColumnName);
+            return await RestCommonAsync<TResp>(reqHttp, respColumnName);
         }
 
 

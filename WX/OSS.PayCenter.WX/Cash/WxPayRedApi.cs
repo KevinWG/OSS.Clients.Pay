@@ -55,11 +55,11 @@ namespace OSS.PayCenter.WX.Cash
         /// </summary>
         /// <param name="redReq"></param>
         /// <returns></returns>
-        public async Task<WxPaySendRedResp> SendRedPackage(WxPaySendRedReq redReq)
+        public async Task<WxPaySendRedResp> SendRedPackageAsync(WxPaySendRedReq redReq)
         {
             var urlStr = string.Concat(m_ApiUrl, "/mmpaymkttransfers/sendredpack");
 
-            return await SendRedPackage<WxPaySendRedResp>(urlStr, redReq.GetDics());
+            return await SendRedPackageAsync<WxPaySendRedResp>(urlStr, redReq.GetDics());
         }
 
 
@@ -68,11 +68,11 @@ namespace OSS.PayCenter.WX.Cash
         /// </summary>
         /// <param name="redReq"></param>
         /// <returns></returns>
-        public async Task<WxPaySendRedResp> SendGroupRedPackage(WxPaySendGroupRedReq redReq)
+        public async Task<WxPaySendRedResp> SendGroupRedPackageAsync(WxPaySendGroupRedReq redReq)
         {
             var urlStr = string.Concat(m_ApiUrl, "/mmpaymkttransfers/sendgroupredpack");
 
-            return await SendRedPackage<WxPaySendRedResp>(urlStr, redReq.GetDics());
+            return await SendRedPackageAsync<WxPaySendRedResp>(urlStr, redReq.GetDics());
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace OSS.PayCenter.WX.Cash
         /// <param name="addressUrl">接口地址</param>
         /// <param name="xmlDirs">请求参数的排序字典（不包括：appid,mch_id,sign。 会自动补充）</param>
         /// <returns></returns>
-        private async Task<T> SendRedPackage<T>(string addressUrl, SortedDictionary<string, object> xmlDirs)
+        private async Task<T> SendRedPackageAsync<T>(string addressUrl, SortedDictionary<string, object> xmlDirs)
             where T : WxPayBaseResp, new()
         {
             xmlDirs.Add("wxappid", ApiConfig.AppId);
@@ -95,7 +95,7 @@ namespace OSS.PayCenter.WX.Cash
             req.AddressUrl = addressUrl;
             req.CustomBody = xmlDirs.ProduceXml();
 
-            return await RestCommon<T>(req, null, GetCertHttpClient());
+            return await RestCommonAsync<T>(req, null, GetCertHttpClient());
         }
         #endregion
 
@@ -105,7 +105,7 @@ namespace OSS.PayCenter.WX.Cash
         /// <param name="mch_billno">商户订单号</param>
         /// <param name="bill_type">订单类型</param>
         /// <returns></returns>
-        public async Task<WxPayQueryRedResp> QueryRed(string mch_billno, string bill_type = "MCHT")
+        public async Task<WxPayQueryRedResp> QueryRedAsync(string mch_billno, string bill_type = "MCHT")
         {
             var urlStr = string.Concat(m_ApiUrl, "/mmpaymkttransfers/gethbinfo");
             var dics = new SortedDictionary<string, object>();
@@ -114,7 +114,7 @@ namespace OSS.PayCenter.WX.Cash
             dics["mch_billno"] = mch_billno;
             dics["bill_type"] = bill_type;
 
-            return await PostPaySortDics<WxPayQueryRedResp>(urlStr, dics,null,GetCertHttpClient());
+            return await PostPaySortDicsAsync<WxPayQueryRedResp>(urlStr, dics,null,GetCertHttpClient());
         }
     }
 }

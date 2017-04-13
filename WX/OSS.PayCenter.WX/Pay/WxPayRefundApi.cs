@@ -39,13 +39,13 @@ namespace OSS.PayCenter.WX.Pay
         /// </summary>
         /// <param name="refundReq"></param>
         /// <returns></returns>
-        public async Task<WxPayRefundResp> RefundOrder(WxPayRefundReq refundReq)
+        public async Task<WxPayRefundResp> RefundOrderAsync(WxPayRefundReq refundReq)
         {
             var dics = refundReq.GetDics();
             var url = string.Concat(m_ApiUrl, "/secapi/pay/refund");
             var certClient = GetCertHttpClient();
 
-            return await PostPaySortDics<WxPayRefundResp>(url, dics, null, certClient);
+            return await PostPaySortDicsAsync<WxPayRefundResp>(url, dics, null, certClient);
         }
 
 
@@ -54,12 +54,12 @@ namespace OSS.PayCenter.WX.Pay
         /// </summary>
         /// <param name="refundReq"></param>
         /// <returns></returns>
-        public async Task<WxPayGetRefundResp> GetRefund(WxPayRefundReq refundReq)
+        public async Task<WxPayGetRefundResp> GetRefundAsync(WxPayRefundReq refundReq)
         {
             var dics = refundReq.GetDics();
             var url = string.Concat(m_ApiUrl, "/pay/refundquery");
 
-            return await PostPaySortDics<WxPayGetRefundResp>(url, dics);
+            return await PostPaySortDicsAsync<WxPayGetRefundResp>(url, dics);
         }
 
 
@@ -73,7 +73,7 @@ namespace OSS.PayCenter.WX.Pay
         /// </summary>
         /// <param name="out_trade_no"></param>
         /// <returns></returns>
-        public async Task<WxPayBaseResp> CloseUniOrder(string out_trade_no)
+        public async Task<WxPayBaseResp> CloseUniOrderAsync(string out_trade_no)
         {
             var addressUrl = string.Concat(m_ApiUrl, "/pay/closeorder");
 
@@ -81,7 +81,7 @@ namespace OSS.PayCenter.WX.Pay
             var dics = baseReq.GetDics();
             dics["out_trade_no"] = out_trade_no;
 
-            return await PostPaySortDics<WxPayQueryOrderResp>(addressUrl, dics);
+            return await PostPaySortDicsAsync<WxPayQueryOrderResp>(addressUrl, dics);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace OSS.PayCenter.WX.Pay
         /// <param name="transaction_id">微信订单号 二选一 String(32) 微信的订单号，建议优先使用</param>
         /// <param name="out_trade_no"> 商户订单号 String(32)</param>
         /// <returns></returns>
-        public async Task<WxPayResverOrderResp> ReverseMicroOrder(string transaction_id, string out_trade_no)
+        public async Task<WxPayResverOrderResp> ReverseMicroOrderAsync(string transaction_id, string out_trade_no)
         {
             var addressUrl = string.Concat(m_ApiUrl, "/secapi/pay/reverse");
 
@@ -99,7 +99,7 @@ namespace OSS.PayCenter.WX.Pay
             dics["out_trade_no"] = out_trade_no;
             dics["transaction_id"] = transaction_id;
 
-            return await PostPaySortDics<WxPayResverOrderResp>(addressUrl, dics,null, GetCertHttpClient());
+            return await PostPaySortDicsAsync<WxPayResverOrderResp>(addressUrl, dics,null, GetCertHttpClient());
         }
 
         #endregion

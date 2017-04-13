@@ -52,14 +52,14 @@ namespace OSS.PayCenter.WX.Pay
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        public async Task<WxAddPayUniOrderResp> AddUniOrder(WxAddPayUniOrderReq order)
+        public async Task<WxAddPayUniOrderResp> AddUniOrderAsync(WxAddPayUniOrderReq order)
         {
             var dics = order.GetDics();
             dics["notify_url"] = ApiConfig.NotifyUrl;
 
             string addressUrl = string.Concat(m_ApiUrl, "/pay/unifiedorder");
 
-            return await PostPaySortDics<WxAddPayUniOrderResp>(addressUrl, dics);
+            return await PostPaySortDicsAsync<WxAddPayUniOrderResp>(addressUrl, dics);
         }
 
         /// <summary>
@@ -69,12 +69,12 @@ namespace OSS.PayCenter.WX.Pay
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        public async Task<WxPayOrderTradeResp> AddMicroPayOrder(WxAddMicroPayOrderReq order)
+        public async Task<WxPayOrderTradeResp> AddMicroPayOrderAsync(WxAddMicroPayOrderReq order)
         {
             var dics = order.GetDics();
             string addressUrl = string.Concat(m_ApiUrl, "/pay/micropay");
 
-            return await PostPaySortDics<WxPayOrderTradeResp>(addressUrl, dics);
+            return await PostPaySortDicsAsync<WxPayOrderTradeResp>(addressUrl, dics);
         }
 
         #endregion
@@ -85,7 +85,7 @@ namespace OSS.PayCenter.WX.Pay
         /// <param name="transaction_id">微信订单号 二选一 String(32) 微信的订单号，建议优先使用</param>
         /// <param name="out_trade_no"> 商户订单号 String(32)</param>
         /// <returns></returns>
-        public async Task<WxPayQueryOrderResp> QueryOrder(string transaction_id, string out_trade_no)
+        public async Task<WxPayQueryOrderResp> QueryOrderAsync(string transaction_id, string out_trade_no)
         {
             var addressUrl = string.Concat(m_ApiUrl, "/pay/orderquery");
 
@@ -94,7 +94,7 @@ namespace OSS.PayCenter.WX.Pay
             dics["out_trade_no"] = out_trade_no;
             dics["transaction_id"] = transaction_id;
 
-            return await PostPaySortDics<WxPayQueryOrderResp>(addressUrl, dics);
+            return await PostPaySortDicsAsync<WxPayQueryOrderResp>(addressUrl, dics);
         }
 
 
@@ -132,7 +132,7 @@ namespace OSS.PayCenter.WX.Pay
         /// </summary>
         /// <param name="long_url"></param>
         /// <returns></returns>
-        public async Task<WxPayGetShortUrlResp> GetShortUrl(string long_url)
+        public async Task<WxPayGetShortUrlResp> GetShortUrlAsync(string long_url)
         {
             var url = string.Concat(m_ApiUrl, "/tools/shorturl");
 
@@ -140,7 +140,7 @@ namespace OSS.PayCenter.WX.Pay
             dics["nonce_str"] = Guid.NewGuid().ToString().Replace("-", "");
             dics["long_url"] = long_url;
 
-            return await PostPaySortDics<WxPayGetShortUrlResp>(url, dics, null, null,
+            return await PostPaySortDicsAsync<WxPayGetShortUrlResp>(url, dics, null, null,
                 d => d["long_url"] = d["long_url"].UrlEncode());
         }
 
@@ -149,7 +149,7 @@ namespace OSS.PayCenter.WX.Pay
         /// </summary>
         /// <param name="auth_code"></param>
         /// <returns></returns>
-        public async Task<WxPayAuthCodeOpenIdResp> GetAuthCodeOpenId(string auth_code)
+        public async Task<WxPayAuthCodeOpenIdResp> GetAuthCodeOpenIdAsync(string auth_code)
         {
             var url = string.Concat(m_ApiUrl, "/tools/authcodetoopenid");
 
@@ -157,7 +157,7 @@ namespace OSS.PayCenter.WX.Pay
             dics["nonce_str"] = Guid.NewGuid().ToString().Replace("-", "");
             dics["auth_code"] = auth_code;
 
-            return await PostPaySortDics<WxPayAuthCodeOpenIdResp>(url, dics);
+            return await PostPaySortDicsAsync<WxPayAuthCodeOpenIdResp>(url, dics);
         }
 
         #endregion
@@ -234,7 +234,7 @@ namespace OSS.PayCenter.WX.Pay
         /// </summary>
         /// <param name="billReq"></param>
         /// <returns></returns>
-        public async Task<ResultMo<string>> DownloadBill(WxPayDownloadBillReq billReq)
+        public async Task<ResultMo<string>> DownloadBillAsync(WxPayDownloadBillReq billReq)
         {
             var dics = billReq.GetDics();
 

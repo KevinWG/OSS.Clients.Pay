@@ -31,7 +31,7 @@ namespace OSS.PayCenter.WX.Cash
         /// </summary>
         /// <param name="cashReq"></param>
         /// <returns></returns>
-        public async Task<WxPayTransferCashResp> TransferCash(WxPayTransferCashReq cashReq)
+        public async Task<WxPayTransferCashResp> TransferCashAsync(WxPayTransferCashReq cashReq)
         {
             var addressUrl = string.Concat(m_ApiUrl, "/mmpaymkttransfers/promotion/transfers");
             var dics = cashReq.GetDics();
@@ -46,7 +46,7 @@ namespace OSS.PayCenter.WX.Cash
             req.AddressUrl = addressUrl;
             req.CustomBody = dics.ProduceXml();
 
-            return await RestCommon<WxPayTransferCashResp>(req, null, GetCertHttpClient());
+            return await RestCommonAsync<WxPayTransferCashResp>(req, null, GetCertHttpClient());
         }
 
 
@@ -55,7 +55,7 @@ namespace OSS.PayCenter.WX.Cash
         /// </summary>
         /// <param name="partner_trade_no"></param>
         /// <returns></returns>
-        public async Task<WxPayGetTransferCashResp> GetTransferCash(string partner_trade_no)
+        public async Task<WxPayGetTransferCashResp> GetTransferCashAsync(string partner_trade_no)
         {
             var urlStr = string.Concat(m_ApiUrl, "/mmpaymkttransfers/gettransferinfo");
 
@@ -63,7 +63,7 @@ namespace OSS.PayCenter.WX.Cash
             dics["nonce_str"] = Guid.NewGuid().ToString().Replace("-", "");
             dics["partner_trade_no"] = partner_trade_no;
 
-            return await PostPaySortDics<WxPayGetTransferCashResp>(urlStr, dics,null,GetCertHttpClient());
+            return await PostPaySortDicsAsync<WxPayGetTransferCashResp>(urlStr, dics,null,GetCertHttpClient());
         }
     }
 }

@@ -33,24 +33,24 @@ namespace OSS.PayCenter.ZFB.Pay
         /// 预下单（扫码支付 - 用户扫商家二维码）
         /// </summary>
         /// <param name="payReq"></param>
-        public async Task<ZAddPreTradeResp> AddPreTrade(ZAddPreTradeReq payReq)
+        public async Task<ZAddPreTradeResp> AddPreTradeAsync(ZAddPreTradeReq payReq)
         {
             const string respColumnName = "alipay_trade_precreate_response";
             const string apiMethod = "alipay.trade.precreate";
 
-            return await PostApi<ZAddPreTradeReq, ZAddPreTradeResp>(apiMethod, respColumnName, payReq);
+            return await PostApiAsync<ZAddPreTradeReq, ZAddPreTradeResp>(apiMethod, respColumnName, payReq);
         }
 
         /// <summary>
         ///   线下预下单（条码支付- 商家扫用户二维码、读取声波发起支付）
         /// </summary>
         /// <param name="payReq"></param>
-        public async Task<ZAddPayTradeResp> AddPayTrade(ZAddPayTradeReq payReq)
+        public async Task<ZAddPayTradeResp> AddPayTradeAsync(ZAddPayTradeReq payReq)
         {
             const string respColumnName = "alipay_trade_pay_response";
             const string apiMethod = "alipay.trade.pay";
 
-            return await PostApi<ZAddPayTradeReq, ZAddPayTradeResp>(apiMethod, respColumnName, payReq);
+            return await PostApiAsync<ZAddPayTradeReq, ZAddPayTradeResp>(apiMethod, respColumnName, payReq);
         }
 
         #endregion
@@ -111,12 +111,12 @@ namespace OSS.PayCenter.ZFB.Pay
         ///   统一收单线下交易查询
         /// </summary>
         /// <param name="queryReq"></param>
-        public async Task<ZQueryTradeResp> QueryTrade(ZQueryTradeReq queryReq)
+        public async Task<ZQueryTradeResp> QueryTradeAsync(ZQueryTradeReq queryReq)
         {
             const string respColumnName = "alipay_trade_query_response";
             const string apiMethod = "alipay.trade.query";
 
-            return await PostApi<ZQueryTradeReq, ZQueryTradeResp>(apiMethod, respColumnName, queryReq);
+            return await PostApiAsync<ZQueryTradeReq, ZQueryTradeResp>(apiMethod, respColumnName, queryReq);
         }
 
         #endregion
@@ -127,12 +127,12 @@ namespace OSS.PayCenter.ZFB.Pay
         ///  撤销交易接口
         /// </summary>
         /// <param name="req"></param>
-        public async Task<ZPayCancelResp> CancelTrade(ZPayCancelReq req)
+        public async Task<ZPayCancelResp> CancelTradeAsync(ZPayCancelReq req)
         {
             const string respColumnName = "alipay_trade_cancel_response";
             const string apiMethod = "alipay.trade.cancel";
 
-            return await PostApi<ZPayCancelReq, ZPayCancelResp>(apiMethod, respColumnName, req);
+            return await PostApiAsync<ZPayCancelReq, ZPayCancelResp>(apiMethod, respColumnName, req);
         }
 
         #endregion
@@ -145,12 +145,12 @@ namespace OSS.PayCenter.ZFB.Pay
         ///  获取对账单下载地址
         /// </summary>
         /// <param name="req"></param>
-        public async Task<ZGetDownloadUrlResp> GetDownloadUrl(ZGetDownloadUrlReq req)
+        public async Task<ZGetDownloadUrlResp> GetDownloadUrlAsync(ZGetDownloadUrlReq req)
         {
             const string respColumnName = "alipay_data_dataservice_bill_downloadurl_query_response";
             const string apiMethod = "alipay.data.dataservice.bill.downloadurl.query";
 
-            return await PostApi<ZGetDownloadUrlReq, ZGetDownloadUrlResp>(apiMethod, respColumnName, req);
+            return await PostApiAsync<ZGetDownloadUrlReq, ZGetDownloadUrlResp>(apiMethod, respColumnName, req);
         }
 
         #endregion

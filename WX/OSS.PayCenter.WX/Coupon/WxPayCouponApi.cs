@@ -48,11 +48,11 @@ namespace OSS.PayCenter.WX.Coupon
         /// </summary>
         /// <param name="conpouReq"></param>
         /// <returns></returns>
-        public async Task<WxPaySendConpouResp> SendConpou(WxPaySendConpouReq conpouReq)
+        public async Task<WxPaySendConpouResp> SendConpouAsync(WxPaySendConpouReq conpouReq)
         {
             var urlStr = string.Concat(m_ApiUrl, "/mmpaymkttransfers/send_coupon");
 
-            return await PostPaySortDics<WxPaySendConpouResp>(urlStr, conpouReq.GetDics(), null, GetCertHttpClient());
+            return await PostPaySortDicsAsync<WxPaySendConpouResp>(urlStr, conpouReq.GetDics(), null, GetCertHttpClient());
         }
 
         /// <summary>
@@ -60,11 +60,11 @@ namespace OSS.PayCenter.WX.Coupon
         /// </summary>
         /// <param name="stockReq"></param>
         /// <returns></returns>
-        public async Task<WxPayQueryConpouStockResp> QueryConpouStock(WxPayQueryConpouStockReq stockReq )
+        public async Task<WxPayQueryConpouStockResp> QueryConpouStockAsync(WxPayQueryConpouStockReq stockReq )
         {
             var urlStr = string.Concat(m_ApiUrl, "/mmpaymkttransfers/query_coupon_stock");
 
-            return await PostPaySortDics<WxPayQueryConpouStockResp>(urlStr, stockReq.GetDics());
+            return await PostPaySortDicsAsync<WxPayQueryConpouStockResp>(urlStr, stockReq.GetDics());
         }
 
 
@@ -73,11 +73,11 @@ namespace OSS.PayCenter.WX.Coupon
         /// </summary>
         /// <param name="conpouReq"></param>
         /// <returns></returns>
-        public async Task<WxPayQueryConpouStockResp> QueryConpouDetail(WxPayQueryConpouReq conpouReq)
+        public async Task<WxPayQueryConpouStockResp> QueryConpouDetailAsync(WxPayQueryConpouReq conpouReq)
         {
             var urlStr = string.Concat(m_ApiUrl, "/mmpaymkttransfers/querycouponsinfo");
 
-            return await PostPaySortDics<WxPayQueryConpouStockResp>(urlStr, conpouReq.GetDics());
+            return await PostPaySortDicsAsync<WxPayQueryConpouStockResp>(urlStr, conpouReq.GetDics());
         }
     }
 }

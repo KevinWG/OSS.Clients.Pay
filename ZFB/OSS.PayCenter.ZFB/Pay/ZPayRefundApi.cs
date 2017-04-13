@@ -33,12 +33,12 @@ namespace OSS.PayCenter.ZFB.Pay
         /// 统一预下单（收单）（扫码支付   -  用户扫商家二维码）
         /// </summary>
         /// <param name="refundReq"></param>
-        public async Task<ZPayRefundResp> RefunPay(ZPayRefundReq refundReq)
+        public async Task<ZPayRefundResp> RefunPayAsync(ZPayRefundReq refundReq)
         {
             const string respColumnName = "alipay_trade_refund_response";
             const string apiMethod = "alipay.trade.refund";
 
-            return await PostApi<ZPayRefundReq, ZPayRefundResp>(apiMethod, respColumnName, refundReq);
+            return await PostApiAsync<ZPayRefundReq, ZPayRefundResp>(apiMethod, respColumnName, refundReq);
         }
 
     }
