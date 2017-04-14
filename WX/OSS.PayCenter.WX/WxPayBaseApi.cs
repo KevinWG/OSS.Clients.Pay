@@ -161,7 +161,7 @@ namespace OSS.PayCenter.WX
         /// <param name="client">自定义请求客户端，当前主要是因为标准库没有提供证书设置选项，所以通过上层运行时传入设置委托，在使用证书的子类中构造客户端传入</param>
         /// <param name="dirformat">生成签名后对字典发送前的操作，例如urlencode操作</param>
         /// <returns></returns>
-        protected async Task<T> PostPaySortDicsAsync<T>(string addressUrl, SortedDictionary<string, object> xmlDirs,
+        protected async Task<T> PostApiAsync<T>(string addressUrl, SortedDictionary<string, object> xmlDirs,
             Func<HttpResponseMessage, Task<T>> funcFormat = null,HttpClient client=null,Action<SortedDictionary<string, object>> dirformat=null) where T : WxPayBaseResp, new()
         {
             xmlDirs.Add("appid", ApiConfig.AppId);

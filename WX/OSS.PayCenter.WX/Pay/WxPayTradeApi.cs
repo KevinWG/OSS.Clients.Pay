@@ -59,7 +59,7 @@ namespace OSS.PayCenter.WX.Pay
 
             string addressUrl = string.Concat(m_ApiUrl, "/pay/unifiedorder");
 
-            return await PostPaySortDicsAsync<WxAddPayUniOrderResp>(addressUrl, dics);
+            return await PostApiAsync<WxAddPayUniOrderResp>(addressUrl, dics);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace OSS.PayCenter.WX.Pay
             var dics = order.GetDics();
             string addressUrl = string.Concat(m_ApiUrl, "/pay/micropay");
 
-            return await PostPaySortDicsAsync<WxPayOrderTradeResp>(addressUrl, dics);
+            return await PostApiAsync<WxPayOrderTradeResp>(addressUrl, dics);
         }
 
         #endregion
@@ -94,7 +94,7 @@ namespace OSS.PayCenter.WX.Pay
             dics["out_trade_no"] = out_trade_no;
             dics["transaction_id"] = transaction_id;
 
-            return await PostPaySortDicsAsync<WxPayQueryOrderResp>(addressUrl, dics);
+            return await PostApiAsync<WxPayQueryOrderResp>(addressUrl, dics);
         }
 
 
@@ -140,7 +140,7 @@ namespace OSS.PayCenter.WX.Pay
             dics["nonce_str"] = Guid.NewGuid().ToString().Replace("-", "");
             dics["long_url"] = long_url;
 
-            return await PostPaySortDicsAsync<WxPayGetShortUrlResp>(url, dics, null, null,
+            return await PostApiAsync<WxPayGetShortUrlResp>(url, dics, null, null,
                 d => d["long_url"] = d["long_url"].UrlEncode());
         }
 
@@ -157,7 +157,7 @@ namespace OSS.PayCenter.WX.Pay
             dics["nonce_str"] = Guid.NewGuid().ToString().Replace("-", "");
             dics["auth_code"] = auth_code;
 
-            return await PostPaySortDicsAsync<WxPayAuthCodeOpenIdResp>(url, dics);
+            return await PostApiAsync<WxPayAuthCodeOpenIdResp>(url, dics);
         }
 
         #endregion

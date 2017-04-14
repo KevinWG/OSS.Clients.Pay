@@ -45,7 +45,7 @@ namespace OSS.PayCenter.WX.Pay
             var url = string.Concat(m_ApiUrl, "/secapi/pay/refund");
             var certClient = GetCertHttpClient();
 
-            return await PostPaySortDicsAsync<WxPayRefundResp>(url, dics, null, certClient);
+            return await PostApiAsync<WxPayRefundResp>(url, dics, null, certClient);
         }
 
 
@@ -59,7 +59,7 @@ namespace OSS.PayCenter.WX.Pay
             var dics = refundReq.GetDics();
             var url = string.Concat(m_ApiUrl, "/pay/refundquery");
 
-            return await PostPaySortDicsAsync<WxPayGetRefundResp>(url, dics);
+            return await PostApiAsync<WxPayGetRefundResp>(url, dics);
         }
 
 
@@ -81,7 +81,7 @@ namespace OSS.PayCenter.WX.Pay
             var dics = baseReq.GetDics();
             dics["out_trade_no"] = out_trade_no;
 
-            return await PostPaySortDicsAsync<WxPayQueryOrderResp>(addressUrl, dics);
+            return await PostApiAsync<WxPayQueryOrderResp>(addressUrl, dics);
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace OSS.PayCenter.WX.Pay
             dics["out_trade_no"] = out_trade_no;
             dics["transaction_id"] = transaction_id;
 
-            return await PostPaySortDicsAsync<WxPayResverOrderResp>(addressUrl, dics,null, GetCertHttpClient());
+            return await PostApiAsync<WxPayResverOrderResp>(addressUrl, dics,null, GetCertHttpClient());
         }
 
         #endregion

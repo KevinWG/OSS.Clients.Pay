@@ -63,7 +63,7 @@ namespace OSS.PayCenter.WX.Cash
             dics["nonce_str"] = Guid.NewGuid().ToString().Replace("-", "");
             dics["partner_trade_no"] = partner_trade_no;
 
-            return await PostPaySortDicsAsync<WxPayGetTransferCashResp>(urlStr, dics,null,GetCertHttpClient());
+            return await PostApiAsync<WxPayGetTransferCashResp>(urlStr, dics,null,GetCertHttpClient());
         }
     }
 }

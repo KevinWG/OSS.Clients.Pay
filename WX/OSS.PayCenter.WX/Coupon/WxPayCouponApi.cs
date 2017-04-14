@@ -52,7 +52,7 @@ namespace OSS.PayCenter.WX.Coupon
         {
             var urlStr = string.Concat(m_ApiUrl, "/mmpaymkttransfers/send_coupon");
 
-            return await PostPaySortDicsAsync<WxPaySendConpouResp>(urlStr, conpouReq.GetDics(), null, GetCertHttpClient());
+            return await PostApiAsync<WxPaySendConpouResp>(urlStr, conpouReq.GetDics(), null, GetCertHttpClient());
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace OSS.PayCenter.WX.Coupon
         {
             var urlStr = string.Concat(m_ApiUrl, "/mmpaymkttransfers/query_coupon_stock");
 
-            return await PostPaySortDicsAsync<WxPayQueryConpouStockResp>(urlStr, stockReq.GetDics());
+            return await PostApiAsync<WxPayQueryConpouStockResp>(urlStr, stockReq.GetDics());
         }
 
 
@@ -77,7 +77,7 @@ namespace OSS.PayCenter.WX.Coupon
         {
             var urlStr = string.Concat(m_ApiUrl, "/mmpaymkttransfers/querycouponsinfo");
 
-            return await PostPaySortDicsAsync<WxPayQueryConpouStockResp>(urlStr, conpouReq.GetDics());
+            return await PostApiAsync<WxPayQueryConpouStockResp>(urlStr, conpouReq.GetDics());
         }
     }
 }

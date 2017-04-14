@@ -114,7 +114,7 @@ namespace OSS.PayCenter.WX.Cash
             dics["mch_billno"] = mch_billno;
             dics["bill_type"] = bill_type;
 
-            return await PostPaySortDicsAsync<WxPayQueryRedResp>(urlStr, dics,null,GetCertHttpClient());
+            return await PostApiAsync<WxPayQueryRedResp>(urlStr, dics,null,GetCertHttpClient());
         }
     }
 }
