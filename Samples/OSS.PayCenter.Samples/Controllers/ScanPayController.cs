@@ -30,7 +30,7 @@ namespace OSS.PayCenter.Samples.Controllers
             payReq.total_amount = order.order_price;
             payReq.subject = order.order_name;
 
-            var res = zPayApi.AddPreTrade(payReq).WaitResult();
+            var res = zPayApi.AddPreTradeAsync(payReq).WaitResult();
             return Json(res);
         }
 

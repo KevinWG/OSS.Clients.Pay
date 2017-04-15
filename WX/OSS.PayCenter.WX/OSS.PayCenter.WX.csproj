@@ -2,6 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
+    <Authors>Keivn</Authors>
+    <Company>OSSCoder</Company>
+    <Product>OSS.PayCenter</Product>
+    <Description>微信相关支付Api</Description>
+    <PackageIconUrl>http://7xil4i.com1.z0.glb.clouddn.com/osscoder_icon.jpg</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/KevinWG/OSS.PayCenter</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/KevinWG/OSS.PayCenter</RepositoryUrl>
+    <PackageReleaseNotes>微信相关Api</PackageReleaseNotes>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard1.3\OSS.PayCenter.WX.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
