@@ -1,7 +1,6 @@
 # 快速了解
-  OSS支付SDK，主要打造微信支付，支付宝支付，以及其他银行支付接口标准库项目
-  此项目以标准库的形式提供服务，也就是可以同时支持.Net Framework(4.6及以上版本) 和 .Net Core
-
+	OSS支付SDK，主要打造微信支付，支付宝支付，以及其他银行支付接口标准库项目
+	此项目以标准库的形式提供服务，也就是可以同时支持.Net Framework(4.6及以上版本) 和 .Net Core
 如果有问题，也可以在公众号(osscoder)中提问:
 ![osscoder](http://7xil4i.com1.z0.glb.clouddn.com/osscoder_icon.jpg)
 
