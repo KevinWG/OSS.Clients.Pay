@@ -10,7 +10,27 @@ namespace OSS.PayCenter.Tests
     [TestClass]
     public class WxPayTradeTests
     {
-        private WxPayTradeApi m_Api=new WxPayTradeApi();
+        // 声明配置
+        private static WxPayCenterConfig config= new WxPayCenterConfig()
+        {
+            AppSource = "11",
+            AppId = "wx2428e34e0e7dc6ef",
+            MchId = "1233410002",
+            Key = "e10adc3849ba56abbe56e056f20f883e",
+            AppSecret = "51c56b886b5be869567dd389b3e5d1d6",
+
+            CertPassword = "1233410002",
+            CertPath = "cert/apiclient_cert.p12",
+            NotifyUrl = "http://www.osscoder.com",
+            // 设置证书附加请求方式
+            SetCertificata = (handler, cert) =>
+            {
+                handler.ServerCertificateCustomValidationCallback = (msg, c, chain, sslErrors) => true;
+                handler.ClientCertificates.Add(cert);
+            }
+        };
+        //  调用示例
+        private static WxPayTradeApi m_Api=new WxPayTradeApi(config);
         
 
         static WxPayTradeTests()
@@ -37,7 +57,7 @@ namespace OSS.PayCenter.Tests
         }
 
         [TestMethod]
-        public void TestMethod1()
+        public void AddUniOrderAsyncTest()
         {
             var order = new WxAddPayUniOrderReq();
 
@@ -49,7 +69,7 @@ namespace OSS.PayCenter.Tests
             order.trade_type = "JSAPI";
             order.total_fee = 100;
 
-            var res = m_Api.AddUniOrder(order).WaitResult();
+            var res = m_Api.AddUniOrderAsync(order).WaitResult();
             Assert.IsTrue(res.IsSuccess);
         }
 
