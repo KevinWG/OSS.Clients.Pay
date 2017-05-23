@@ -19,7 +19,7 @@ namespace OSS.PayCenter.Samples.Controllers
         }
 
         [HttpPost]
-        public IActionResult ZPay(PayOrderMo order)
+        public async Task<IActionResult> ZPay(PayOrderMo order)
         {
             string orderNum = DateTime.Now.ToString("yyyyMMddHHmmss");
 
@@ -30,7 +30,7 @@ namespace OSS.PayCenter.Samples.Controllers
             payReq.total_amount = order.order_price;
             payReq.subject = order.order_name;
 
-            var res = zPayApi.AddPreTradeAsync(payReq).WaitResult();
+            var res =await zPayApi.AddPreTradeAsync(payReq);
             return Json(res);
         }
 
