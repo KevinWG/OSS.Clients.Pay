@@ -1,3 +1,4 @@
+using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using OSS.Common.Modules.LogModule;
@@ -49,6 +50,7 @@ namespace OSS.PayCenter.Samples.Controllers
         public IActionResult ZCallBack(ZPayCallBackResp resp)
         {
             var dics = Request.Form.ToDictionary(f => f.Key, f => f.Value.ToString());
+            LogUtil.Info($"回调内容：{string.Join("&",dics)}");
 
             var res = zPayApi.CheckCallBackSign(dics);
             LogUtil.Info($"支付状态：{res.Ret}, 消息：{res.Message}");

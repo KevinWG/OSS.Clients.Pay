@@ -16,6 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OSS.Common.ComModels;
+using OSS.Common.Extention;
 using OSS.PayCenter.ZFB.Pay.Mos;
 
 namespace OSS.PayCenter.ZFB.Pay
@@ -169,7 +170,8 @@ namespace OSS.PayCenter.ZFB.Pay
             formDics.Remove("sign_type");
 
             var sortDics = new SortedDictionary<string, string>(formDics);
-            var checkContent = string.Join("&", sortDics.Select(d => string.Concat(d.Key, "=", d.Value)));
+
+            var checkContent = string.Join("&", sortDics.Select(d => string.Concat(d.Key, "=", d.Value.UrlDecode())));
 
             var result = new ResultMo();
             CheckSign(checkContent, sign, result);

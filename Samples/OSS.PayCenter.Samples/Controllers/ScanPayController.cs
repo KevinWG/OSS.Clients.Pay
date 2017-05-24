@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using OSS.Common.Extention;
 using OSS.PayCenter.Samples.Models;
@@ -23,7 +24,7 @@ namespace OSS.PayCenter.Samples.Controllers
         {
             string orderNum = DateTime.Now.ToString("yyyyMMddHHmmss");
 
-            var payReq = new ZAddPreTradeReq("http://pay.sample.osscoder.com/base/ZCallBack");
+            var payReq = new ZAddPreTradeReq("http://test.pay.osscoder.com/base/ZCallBack");
 
             payReq.body = order.order_name;
             payReq.out_trade_no = orderNum;
