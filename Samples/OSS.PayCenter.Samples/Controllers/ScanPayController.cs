@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using OSS.Common.Extention;
-using OSS.PayCenter.Samples.Models;
-using OSS.PayCenter.ZFB.Pay;
-using OSS.PayCenter.ZFB.Pay.Mos;
+using OSS.PaySdk.Ali.Pay.Mos;
+using OSS.PaySdk.Samples.Models;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace OSS.PayCenter.Samples.Controllers
+namespace OSS.PaySdk.Samples.Controllers
 {
     public class ScanPayController : BaseController
     {

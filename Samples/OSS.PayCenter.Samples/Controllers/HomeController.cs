@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace OSS.PayCenter.Samples.Controllers
+namespace OSS.PaySdk.Samples.Controllers
 {
     public class HomeController : Controller
     {

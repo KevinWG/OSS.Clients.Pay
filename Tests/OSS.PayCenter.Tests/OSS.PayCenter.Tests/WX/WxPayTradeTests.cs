@@ -1,11 +1,11 @@
 ﻿using System.Collections.Concurrent;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OSS.Common.Extention;
-using OSS.PayCenter.WX;
-using OSS.PayCenter.WX.Pay;
-using OSS.PayCenter.WX.Pay.Mos;
+using OSS.PaySdk.Wx;
+using OSS.PaySdk.Wx.Pay;
+using OSS.PaySdk.Wx.Pay.Mos;
 
-namespace OSS.PayCenter.Tests
+namespace OSS.PaySdk.Tests.WX
 {
     [TestClass]
     public class WxPayTradeTests

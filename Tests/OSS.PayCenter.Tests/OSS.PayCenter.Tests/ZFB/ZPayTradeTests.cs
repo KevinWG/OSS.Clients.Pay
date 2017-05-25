@@ -5,12 +5,12 @@ using OSS.Common.ComModels;
 using OSS.Common.ComModels.Enums;
 using OSS.Common.Extention;
 using OSS.Common.Modules;
-using OSS.Common.Modules.LogModule;
-using OSS.PayCenter.ZFB.Pay;
-using OSS.PayCenter.ZFB.Pay.Mos;
-using OSS.PayCenter.ZFB.SysTools;
+using OSS.Common.Plugs.LogPlug;
+using OSS.PaySdk.Ali.Pay;
+using OSS.PaySdk.Ali.Pay.Mos;
+using OSS.PaySdk.Ali.SysTools;
 
-namespace OSS.PayCenter.Tests.ZFB
+namespace OSS.PaySdk.Tests.ZFB
 {
     [TestClass]
     public class ZPayTradeTests : ZPayBaseTests
@@ -92,7 +92,7 @@ namespace OSS.PayCenter.Tests.ZFB
             payReq.subject = "测试";
             payReq.total_amount = 0.01M;
 
-            var res= m_Api.AddPreTrade(payReq).WaitResult();
+            var res= m_Api.AddPreTradeAsync(payReq).WaitResult();
            var result=  res.IsSuccess;
 
         }

@@ -1,8 +1,7 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OSS.PayCenter.ZFB;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OSS.PaySdk.Ali;
 
-namespace OSS.PayCenter.Tests.ZFB
+namespace OSS.PaySdk.Tests.ZFB
 {
     [TestClass]
     public class ZPayBaseTests

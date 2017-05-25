@@ -1,13 +1,12 @@
-using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using OSS.Common.Modules.LogModule;
-using OSS.PayCenter.WX;
-using OSS.PayCenter.ZFB;
-using OSS.PayCenter.ZFB.Pay;
-using OSS.PayCenter.ZFB.Pay.Mos;
+using OSS.Common.Plugs.LogPlug;
+using OSS.PaySdk.Ali;
+using OSS.PaySdk.Ali.Pay;
+using OSS.PaySdk.Ali.Pay.Mos;
+using OSS.PaySdk.Wx;
 
-namespace OSS.PayCenter.Samples.Controllers
+namespace OSS.PaySdk.Samples.Controllers
 {
     public class BaseController : Controller
     {

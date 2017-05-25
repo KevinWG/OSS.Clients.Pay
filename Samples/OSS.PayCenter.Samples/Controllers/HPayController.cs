@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OSS.PayCenter.Samples.Models;
+using OSS.PaySdk.Samples.Models;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace OSS.PayCenter.Samples.Controllers
+namespace OSS.PaySdk.Samples.Controllers
 {
     public class HPayController : BaseController
     {
