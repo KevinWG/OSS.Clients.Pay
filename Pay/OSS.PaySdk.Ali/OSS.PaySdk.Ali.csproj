@@ -7,15 +7,22 @@
     <Company>OSSCoder</Company>
     <Product>OSS.PayCenter</Product>
     <Description>支付宝支付相关接口</Description>
-    <PackageProjectUrl>https://github.com/KevinWG/OSS.PayCenter</PackageProjectUrl>
-    <PackageIconUrl>http://7xil4i.com1.z0.glb.clouddn.com/osscoder_icon.jpg</PackageIconUrl>
-    <RepositoryUrl>https://github.com/KevinWG/OSS.PayCenter</RepositoryUrl>
-    <PackageReleaseNotes>支付宝支付相关接口</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/KevinWG/OSS.PaySdk/tree/master/Pay/OSS.PaySdk.Ali</PackageProjectUrl>
+    <PackageIconUrl>http://okwsur8oy.bkt.clouddn.com/logo.jpg</PackageIconUrl>
+    <RepositoryUrl>https://github.com/KevinWG/OSS.PaySdk</RepositoryUrl>
+    <PackageReleaseNotes>升级类库，修改名称</PackageReleaseNotes>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <PackageLicenseUrl>https://github.com/KevinWG/OSS.PaySdk/blob/master/LICENSE</PackageLicenseUrl>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netstandard1.3\OSS.PayCenter.ZFB.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard1.3\OSS.PaySdk.Ali.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

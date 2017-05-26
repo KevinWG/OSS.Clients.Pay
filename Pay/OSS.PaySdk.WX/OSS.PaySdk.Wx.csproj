@@ -6,15 +6,23 @@
     <Company>OSSCoder</Company>
     <Product>OSS.PayCenter</Product>
     <Description>微信相关支付Api</Description>
-    <PackageIconUrl>http://7xil4i.com1.z0.glb.clouddn.com/osscoder_icon.jpg</PackageIconUrl>
-    <PackageProjectUrl>https://github.com/KevinWG/OSS.PayCenter</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/KevinWG/OSS.PayCenter</RepositoryUrl>
-    <PackageReleaseNotes>微信相关Api</PackageReleaseNotes>
+    <PackageIconUrl>http://okwsur8oy.bkt.clouddn.com/logo.jpg</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/KevinWG/OSS.PaySdk/tree/master/Pay/OSS.PaySdk.Wx</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/KevinWG/OSS.PaySdk</RepositoryUrl>
+    <PackageReleaseNotes>升级类库</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Copyright>OSSCoder</Copyright>
+    <PackageLicenseUrl>https://github.com/KevinWG/OSS.PaySdk/blob/master/LICENSE</PackageLicenseUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netstandard1.3\OSS.PayCenter.WX.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard1.3\OSS.PaySdk.Wx.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

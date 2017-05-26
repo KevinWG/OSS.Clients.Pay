@@ -7,8 +7,8 @@
 
 # OSS.PayCenter 使用
 ### 一. 安装使用
-      nuget下安装命令：**Install-Package OSS.PayCenter.WX**	（微信支付
-      nuget下安装命令：**Install-Package OSS.PayCenter.ZFB**	（支付宝支付
+      nuget下安装命令：**Install-Package OSS.PaySdk.Wx**	（微信支付
+      nuget下安装命令：**Install-Package OSS.PaySdk.Ali**	（支付宝支付
 
 ### 二. 调用示例
 
