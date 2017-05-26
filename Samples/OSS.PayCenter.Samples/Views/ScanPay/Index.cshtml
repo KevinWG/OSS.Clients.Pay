@@ -94,7 +94,7 @@
                     order: {
                         order_name: "",
                         order_price: 0,
-                        pay_channel: "10"
+                        pay_channel: "20"
                     },
                     is_submit: false
                 }
@@ -121,6 +121,7 @@
             template: "#pay-qr-template",
             props: ["pay_code"]
         });
+
         var payVue = new Vue({
             el: "#hpay",
             data: {
@@ -128,15 +129,19 @@
             },
             methods: {
                 CallPayCode: function (channel, res) {
-                    $("#pay-qr-modal").modal();
-                    this.pay_code = res.qr_code;
+                    if (res.IsSuccess) {
+                        $("#pay-qr-modal").modal();
+                        this.pay_code = res.qr_code;
 
-                    var typeNumber = 4;
-                    var errorCorrectionLevel = 'L';
-                    var qr = qrcode(typeNumber, errorCorrectionLevel);
-                    qr.addData(res.qr_code);
-                    qr.make();
-                    document.getElementById('qr-code-contanier').innerHTML = qr.createImgTag();
+                        var typeNumber = 4;
+                        var errorCorrectionLevel = 'L';
+                        var qr = qrcode(typeNumber, errorCorrectionLevel);
+                        qr.addData(res.qr_code);
+                        qr.make();
+                        document.getElementById('qr-code-contanier').innerHTML = qr.createImgTag();
+                    } else {
+                        alert("创建支付订单二维码失败，详情："+res.Message);
+                    }
                 }
             }
         });
