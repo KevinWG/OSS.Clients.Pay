@@ -38,8 +38,9 @@ namespace OSS.PaySdk.Ali
     public abstract class ZPayBaseApi
     {
         #region  配置信息部分
+
         private readonly ZPayRsaAssist m_RsaAssist;
-        
+
         /// <summary>
         ///   默认配置信息，如果实例中的配置为空会使用当前配置信息
         /// </summary>
@@ -70,7 +71,7 @@ namespace OSS.PaySdk.Ali
         /// <summary>
         /// 支付宝api接口地址
         /// </summary>
-        protected const string m_ApiUrl = "https://openapi.alipay.com/gateway.do";
+        protected const string m_ApiUrl = "https://openapi.alipaydev.com/gateway.do";
 
         /// <summary>
         /// 处理远程请求方法，并返回需要的实体
@@ -150,7 +151,7 @@ namespace OSS.PaySdk.Ali
             where TResp : ZPayBaseResp, new()
             where TReq : ZPayBaseReq
         {
-           var contentDirs=GetReqBodyDics(apiMethod, req);
+            var contentDirs = GetReqBodyDics(apiMethod, req);
             if (!contentDirs.IsSuccess)
                 return contentDirs.ConvertToResult<TResp>();
 
@@ -164,19 +165,20 @@ namespace OSS.PaySdk.Ali
 
 
         #region 验证返回签名部分
-            /// <summary>
-            ///  返回结果验签
-            /// </summary>
-            /// <typeparam name="T"></typeparam>
-            /// <param name="signContent"></param>
-            /// <param name="sign"></param>
-            /// <param name="t"></param>
+
+        /// <summary>
+        ///  返回结果验签
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="signContent"></param>
+        /// <param name="sign"></param>
+        /// <param name="t"></param>
         protected void CheckSign<T>(string signContent, string sign, T t)
             where T : ResultMo, new()
         {
             try
             {
-                var checkSignRes = m_RsaAssist.CheckSign(signContent,sign);
+                var checkSignRes = m_RsaAssist.CheckSign(signContent, sign);
                 if (!checkSignRes)
                 {
                     if (!string.IsNullOrEmpty(signContent) &&
@@ -198,14 +200,15 @@ namespace OSS.PaySdk.Ali
             {
                 t.Ret = (int) ResultTypes.InnerError;
                 t.Message = "解密签名过程中出错，详情请查看日志";
-                LogUtil.Info($"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign}, 签名类型：{ApiConfig.SignType},  错误信息：{e.Message}",
+                LogUtil.Info(
+                    $"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign}, 签名类型：{ApiConfig.SignType},  错误信息：{e.Message}",
                     "CheckSign", ModuleNames.PayCenter);
 #if DEBUG
                 throw e;
 #endif
             }
         }
-        
+
         /// <summary>
         ///  获取需要验签的内容部分
         /// </summary>
@@ -219,7 +222,8 @@ namespace OSS.PaySdk.Ali
             var signContent = contentStr.Substring(startIndex, endIndex - startIndex);
             return signContent;
         }
-#endregion
+
+        #endregion
 
         #region 补充相关属性并签名
 
@@ -247,7 +251,7 @@ namespace OSS.PaySdk.Ali
                 SetDefaultPropertyFormat(dirs, "version", ApiConfig.Version);
 
                 SetDefaultPropertyFormat(dirs, "biz_content",
-                    JsonConvert.SerializeObject(req, Formatting.Indented, new JsonSerializerSettings()
+                    JsonConvert.SerializeObject(req, Formatting.None, new JsonSerializerSettings()
                     {
                         NullValueHandling = NullValueHandling.Ignore,
                         DefaultValueHandling = DefaultValueHandling.Ignore,
@@ -264,8 +268,8 @@ namespace OSS.PaySdk.Ali
             }
             catch (Exception e)
             {
-                LogUtil.Error(string.Concat("处理签名字典出错，详细信息：",e.Message), "Z_GetReqBodyDics",ModuleNames.PayCenter);
-                return new ResultMo<IDictionary<string, string>>((int)ResultTypes.InnerError,"处理签名字典出错，详细信息请查看日志");
+                LogUtil.Error(string.Concat("处理签名字典出错，详细信息：", e.Message), "Z_GetReqBodyDics", ModuleNames.PayCenter);
+                return new ResultMo<IDictionary<string, string>>((int) ResultTypes.InnerError, "处理签名字典出错，详细信息请查看日志");
             }
             return new ResultMo<IDictionary<string, string>>(dirs);
         }
