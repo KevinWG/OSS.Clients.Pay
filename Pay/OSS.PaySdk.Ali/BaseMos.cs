@@ -60,7 +60,7 @@ namespace OSS.PaySdk.Ali
                 _code = value;
                 if (_code!= "10000")
                 {
-                    Ret = 0;
+                    ret = 0;
                 }
             }
         }

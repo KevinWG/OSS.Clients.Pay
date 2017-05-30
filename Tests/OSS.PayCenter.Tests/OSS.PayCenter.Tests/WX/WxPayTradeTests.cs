@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OSS.Common.ComModels;
 using OSS.Common.Extention;
 using OSS.PaySdk.Wx;
 using OSS.PaySdk.Wx.Pay;
@@ -70,7 +71,7 @@ namespace OSS.PaySdk.Tests.WX
             order.total_fee = 100;
 
             var res = m_Api.AddUniOrderAsync(order).WaitResult();
-            Assert.IsTrue(res.IsSuccess);
+            Assert.IsTrue(res.IsSuccess());
         }
 
 

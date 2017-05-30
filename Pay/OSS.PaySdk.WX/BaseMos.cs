@@ -110,7 +110,7 @@ namespace OSS.PaySdk.Wx
                 _resultCode = value;
                 if (_resultCode.ToUpper() != "SUCCESS")
                 {
-                    Ret = 0;
+                    ret = 0;
                 }
             }
         }

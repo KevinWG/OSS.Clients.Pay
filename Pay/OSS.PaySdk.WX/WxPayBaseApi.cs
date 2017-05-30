@@ -19,17 +19,20 @@ using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Xml;
+using OSS.Common.ComModels;
 using OSS.Common.ComModels.Enums;
 using OSS.Common.Encrypt;
-using OSS.Common.Modules;
+using OSS.Common.Plugs;
 using OSS.Common.Plugs.LogPlug;
-using OSS.Http;
 using OSS.Http.Extention;
 using OSS.Http.Mos;
 using OSS.PaySdk.Wx.SysTools;
 
 namespace OSS.PaySdk.Wx
 {
+    /// <summary>
+    ///  微信支付基类
+    /// </summary>
     public abstract class WxPayBaseApi
     {
         /// <summary>
@@ -100,10 +103,10 @@ namespace OSS.PaySdk.Wx
             }
             catch (Exception ex)
             {
-                t = new T() {Ret = (int) ResultTypes.InnerError, Message = ex.Message};
+                t = new T() {ret = (int) ResultTypes.InnerError, message = ex.Message};
                 errorKey= LogUtil.Error(string.Concat("基类请求出错，错误信息：", ex.Message), "RestCommon", ModuleNames.PayCenter);
             }
-            return t ?? new T() {Ret = 0,Message = string.Concat("当前请求出错，错误码：", errorKey) };
+            return t ?? new T() {ret = 0,message = string.Concat("当前请求出错，错误码：", errorKey) };
         }
 
         /// <summary>
@@ -132,21 +135,21 @@ namespace OSS.PaySdk.Wx
 
                 if (signStr != t.sign)
                 {
-                    t.Ret = (int)ResultTypes.ParaNotMeet;
-                    t.Message = "返回的结果签名（sign）不匹配";
+                    t.ret = (int)ResultTypes.ParaNotMeet;
+                    t.message = "返回的结果签名（sign）不匹配";
                 }
             }
 
             if (t.return_code.ToUpper() != "SUCCESS")
             {
-                //通信结果处理，这个其实没意义，脱裤子放屁
-                t.Ret = 0;
-                t.Message = t.return_msg;
+                //通信结果处理，这个微信做的其实没意义，脱裤子放屁
+                t.ret = 0;
+                t.message = t.return_msg;
             }
-            else if (!t.IsSuccess)
+            else if (!t.IsSuccess())
             {
                 //  请求数据结果处理
-                t.Message = GetErrMsg(t.err_code?.ToUpper());
+                t.message = GetErrMsg(t.err_code?.ToUpper());
             }
 
             return t;

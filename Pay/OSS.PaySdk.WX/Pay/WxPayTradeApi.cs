@@ -120,7 +120,7 @@ namespace OSS.PaySdk.Wx.Pay
         public string GetTradeSendXml(ResultMo res)
         {
             return
-                $"<xml><return_code><![CDATA[{(res.IsSuccess ? "Success" : "FAIL")}]]></return_code><return_msg><![CDATA[{res.Message}]]></return_msg></xml>";
+                $"<xml><return_code><![CDATA[{(res.IsSuccess() ? "Success" : "FAIL")}]]></return_code><return_msg><![CDATA[{res.message}]]></return_msg></xml>";
         }
 
         #endregion
@@ -256,7 +256,7 @@ namespace OSS.PaySdk.Wx.Pay
 
                 return new ResultMo<string>(ResultTypes.ObjectStateError, content);
             }
-            return new ResultMo<string>() {Ret = 0, Message = "当前请求出错！"};
+            return new ResultMo<string>() {ret = 0, message = "当前请求出错！"};
         }
 
         #endregion

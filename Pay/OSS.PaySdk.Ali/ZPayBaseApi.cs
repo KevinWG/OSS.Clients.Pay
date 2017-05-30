@@ -23,9 +23,8 @@ using Newtonsoft.Json.Linq;
 using OSS.Common.ComModels;
 using OSS.Common.ComModels.Enums;
 using OSS.Common.Extention;
-using OSS.Common.Modules;
+using OSS.Common.Plugs;
 using OSS.Common.Plugs.LogPlug;
-using OSS.Http;
 using OSS.Http.Extention;
 using OSS.Http.Mos;
 using OSS.PaySdk.Ali.SysTools;
@@ -108,12 +107,12 @@ namespace OSS.PaySdk.Ali
                         if (resJsonObj == null)
                             return new T()
                             {
-                                Ret = (int) ResultTypes.ObjectStateError,
-                                Message = "基础请求响应不正确，请检查地址或者网络是否正常！"
+                                ret = (int) ResultTypes.ObjectStateError,
+                                message = "基础请求响应不正确，请检查地址或者网络是否正常！"
                             };
 
                         t = resJsonObj[respColumnName].ToObject<T>();
-                        if (t.IsSuccess)
+                        if (t.IsSuccess())
                         {
                             var sign = resJsonObj["sign"].ToString();
                             var signContent = GetCehckSignContent(respColumnName, contentStr);
@@ -121,7 +120,7 @@ namespace OSS.PaySdk.Ali
                             CheckSign(signContent, sign, t);
                         }
                         else
-                            t.Message = string.Concat(t.msg, "-", t.sub_msg);
+                            t.message = string.Concat(t.msg, "-", t.sub_msg);
                     }
                 }
             }
@@ -131,8 +130,8 @@ namespace OSS.PaySdk.Ali
                     ModuleNames.SocialCenter);
                 t = new T()
                 {
-                    Ret = (int) ResultTypes.InnerError,
-                    Message = string.Concat("基类请求出错，请检查网络是否正常，错误码：", logCode)
+                    ret = (int) ResultTypes.InnerError,
+                    message = string.Concat("基类请求出错，请检查网络是否正常，错误码：", logCode)
                 };
             }
             return t;
@@ -152,13 +151,13 @@ namespace OSS.PaySdk.Ali
             where TReq : ZPayBaseReq
         {
             var contentDirs = GetReqBodyDics(apiMethod, req);
-            if (!contentDirs.IsSuccess)
+            if (!contentDirs.IsSuccess())
                 return contentDirs.ConvertToResult<TResp>();
 
             var reqHttp = new OsHttpRequest();
 
             reqHttp.HttpMothed = HttpMothed.POST;
-            reqHttp.CustomBody = ConvertDicToEncodeReqBody(contentDirs.Data);
+            reqHttp.CustomBody = ConvertDicToEncodeReqBody(contentDirs.data);
 
             return await RestCommonAsync<TResp>(reqHttp, respColumnName);
         }
@@ -191,15 +190,15 @@ namespace OSS.PaySdk.Ali
 
                     if (checkSignRes) return;
 
-                    t.Ret = (int) ResultTypes.UnAuthorize;
-                    t.Message = "当前签名非法！";
+                    t.ret = (int) ResultTypes.UnAuthorize;
+                    t.message = "当前签名非法！";
                 }
 
             }
             catch (Exception e)
             {
-                t.Ret = (int) ResultTypes.InnerError;
-                t.Message = "解密签名过程中出错，详情请查看日志";
+                t.ret = (int) ResultTypes.InnerError;
+                t.message = "解密签名过程中出错，详情请查看日志";
                 LogUtil.Info(
                     $"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign}, 签名类型：{ApiConfig.SignType},  错误信息：{e.Message}",
                     "CheckSign", ModuleNames.PayCenter);
