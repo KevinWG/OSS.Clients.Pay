@@ -135,7 +135,7 @@ namespace OSS.PaySdk.Wx
 
                 if (signStr != t.sign)
                 {
-                    t.ret = (int)ResultTypes.ParaNotMeet;
+                    t.ret = (int)ResultTypes.ParaError;
                     t.message = "返回的结果签名（sign）不匹配";
                 }
             }
