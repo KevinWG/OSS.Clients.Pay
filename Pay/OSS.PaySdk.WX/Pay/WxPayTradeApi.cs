@@ -242,10 +242,12 @@ namespace OSS.PaySdk.Wx.Pay
             dics.Add("mch_id", ApiConfig.MchId);
             CompleteDicSign(dics);
 
-            var req = new OsHttpRequest();
-            req.HttpMothed = HttpMothed.POST;
-            req.AddressUrl = string.Concat(m_ApiUrl, "/pay/downloadbill");
-            req.CustomBody = dics.ProduceXml();
+            var req = new OsHttpRequest
+            {
+                HttpMothed = HttpMothed.POST,
+                AddressUrl = string.Concat(m_ApiUrl, "/pay/downloadbill"),
+                CustomBody = dics.ProduceXml()
+            };
 
             var response = await req.RestSend();
             if (response.IsSuccessStatusCode)
@@ -256,7 +258,7 @@ namespace OSS.PaySdk.Wx.Pay
 
                 return new ResultMo<string>(ResultTypes.ObjectStateError, content);
             }
-            return new ResultMo<string>() {ret = 0, message = "当前请求出错！"};
+            return new ResultMo<string>() {ret = -1, message = "当前请求出错！"};
         }
 
         #endregion
