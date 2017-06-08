@@ -52,10 +52,7 @@ namespace OSS.PaySdk.Wx
         /// <summary>
         /// 微信接口配置
         /// </summary>
-        public WxPayCenterConfig ApiConfig
-        {
-            get { return _config ?? DefaultConfig; }
-        }
+        public WxPayCenterConfig ApiConfig => _config ?? DefaultConfig;
 
         /// <summary>
         /// 构造函数

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OSS.Common.ComModels;
 using OSS.Common.Extention;
@@ -58,7 +59,7 @@ namespace OSS.PaySdk.Tests.WX
         }
 
         [TestMethod]
-        public void AddUniOrderAsyncTest()
+        public async Task AddUniOrderAsyncTest()
         {
             var order = new WxAddPayUniOrderReq();
 
@@ -70,7 +71,10 @@ namespace OSS.PaySdk.Tests.WX
             order.trade_type = "JSAPI";
             order.total_fee = 100;
 
-            var res = m_Api.AddUniOrderAsync(order).WaitResult();
+            order.spbill_create_ip = "127.0.0.1";
+           
+
+            var res =await m_Api.AddUniOrderAsync(order);
             Assert.IsTrue(res.IsSuccess());
         }
 

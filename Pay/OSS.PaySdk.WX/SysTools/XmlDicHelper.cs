@@ -28,7 +28,7 @@ namespace OSS.PaySdk.Wx.SysTools
        public static string ProduceXml(this SortedDictionary<string,object> dics )
         {
             StringBuilder xml = new StringBuilder();
-
+            xml.Append("<xml>");
             foreach (var item in dics)
             {
                 if (item.Value is int
@@ -49,6 +49,8 @@ namespace OSS.PaySdk.Wx.SysTools
                         .Append("</").Append(item.Key).Append(">");
                 }
             }
+            xml.Append("</xml>");
+
             return xml.ToString();
         }
 
