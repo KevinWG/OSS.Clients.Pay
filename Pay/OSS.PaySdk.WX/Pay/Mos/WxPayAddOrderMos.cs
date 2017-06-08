@@ -35,7 +35,7 @@ namespace OSS.PaySdk.Wx.Pay.Mos
         public string time_expire { get; set; }
 
         /// <summary>   
-        ///    交易类型 必填 String(16) 取值如下：JSAPI，NATIVE，APP等，说明详见参数规定
+        ///    交易类型 必填 String(16) 取值如下：JSAPI，NATIVE，APP。H5支付的交易类型为 MWEB
         /// </summary>  
         public string trade_type { get; set; }
 
@@ -55,6 +55,13 @@ namespace OSS.PaySdk.Wx.Pay.Mos
         public string openid { get; set; }
 
         /// <summary>
+        ///  H5支付需要的场景值,示例
+        /// {"h5_info": {"type":"IOS/Android","app_name": "王者荣耀","bundle_id": "com.tencent.wzryIOS"}}
+        /// {"h5_info": {"type":"Wap","wap_url": "https://m.jd.com","wap_name": "京东官网"}}
+        /// </summary>
+        public string scene_info { get; set; }
+
+        /// <summary>
         ///  设置需要需要运算的字典值
         /// </summary>
         protected override void SetSignDics()
@@ -67,6 +74,7 @@ namespace OSS.PaySdk.Wx.Pay.Mos
             SetDicItem("product_id", product_id);
             SetDicItem("limit_pay", limit_pay);
             SetDicItem("openid", openid);
+            SetDicItem("scene_info", scene_info);
         }
         
     }
@@ -123,6 +131,12 @@ namespace OSS.PaySdk.Wx.Pay.Mos
         public int price { get; set; }
     }
 
+
+   
+
+    /// <summary>
+    /// 支付下单响应
+    /// </summary>
     public class WxAddPayUniOrderResp : WxPayBaseResp
     {
         /// <summary>   
@@ -131,7 +145,7 @@ namespace OSS.PaySdk.Wx.Pay.Mos
         public string device_info { get; set; }
 
         /// <summary>   
-        ///    交易类型 必填 String(16) 交易类型，取值为：JSAPI，NATIVE，APP等，说明详见参数规定
+        ///    交易类型 必填 String(16) 交易类型，取值为：JSAPI，NATIVE，APP,H5支付固定传 【MWEB】
         /// </summary>  
         public string trade_type { get; set; }
 
@@ -145,12 +159,19 @@ namespace OSS.PaySdk.Wx.Pay.Mos
         /// </summary>  
         public string code_url { get; set; }
 
+        /// <summary>
+        /// 支付跳转链接
+        /// mweb_url为拉起微信支付收银台的中间页面，可通过访问该url来拉起微信客户端，完成支付,mweb_url的有效期为5分钟
+        /// </summary>
+        public string mweb_url { get; set; }
+
         protected override void FormatPropertiesFromMsg()
         {
             device_info = this["device_info"];
             trade_type = this["trade_type"];
             prepay_id = this["prepay_id"];
             code_url = this["code_url"];
+            mweb_url = this["mweb_url"];
         }
     }
     #endregion
