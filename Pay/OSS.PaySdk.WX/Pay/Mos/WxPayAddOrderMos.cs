@@ -273,10 +273,11 @@ namespace OSS.PaySdk.Wx.Pay.Mos
                     {
                         detailStr.Append("{");
                         detailStr.Append("\"goods_id\":\"").Append(item.goods_id).Append("\"");
-                        detailStr.Append(",\"wxpay_goods_id\":\"").Append(item.wxpay_goods_id).Append("\"");
+                        if(!string.IsNullOrEmpty(item.wxpay_goods_id))
+                            detailStr.Append(",\"wxpay_goods_id\":\"").Append(item.wxpay_goods_id).Append("\"");
                         detailStr.Append(",\"goods_name\":\"").Append(item.goods_name).Append("\"");
                         detailStr.Append(",\"quantity\":").Append(item.quantity);
-                        detailStr.Append(",\"price\":").Append(item.wxpay_goods_id);
+                        detailStr.Append(",\"price\":").Append(item.price);
                         detailStr.Append("}");
                     }
                     detailStr.Append("]");
