@@ -57,10 +57,10 @@ namespace OSS.PaySdk.Ali.Pay
         #endregion
 
 
-        #region 发起客户端收款（自动唤起
+        #region 发起客户端收款（自动唤起 )
 
         /// <summary>
-        /// 获取客户端App唤起支付请求内容
+        /// 获取客户端App唤起支付请求内容，把这个字符串返回给App端，App就可以调用app sdk中的api调起支付了。
         /// </summary>
         /// <param name="req"></param>
         public ResultMo<string> GetAppTradeContent(ZAddAppTradeReq req)
