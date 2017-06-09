@@ -184,7 +184,36 @@ namespace OSS.PaySdk.Wx
         ///  补充完善 字典sign签名
         /// </summary>
         /// <param name="xmlDirs"></param>
-        protected internal void CompleteDicSign(SortedDictionary<string, object> xmlDirs)
+        public void CompleteDicSign(SortedDictionary<string, object> xmlDirs)
+        {
+            xmlDirs.Add("sign", GetSign(xmlDirs));
+        }
+
+        /// <summary>
+        /// 生成签名,统一方法
+        /// </summary>
+        /// <param name="encryptStr">不含key的参与签名串</param>
+        /// <returns></returns>
+        public string GetSign(string encryptStr)
+        {
+            return Md5.EncryptHexString(string.Concat(encryptStr, "&key=", ApiConfig.Key)).ToUpper();
+        }
+
+        /// <summary>
+        /// 获取时间戳，Unixtimestamp秒数
+        /// </summary>
+        /// <returns></returns>
+        public long GetTimeStamp()
+        {
+            return DateTime.Now.ToUtcSeconds();
+        }
+
+        /// <summary>
+        /// 生成签名,统一方法
+        /// </summary>
+        /// <param name="xmlDirs"></param>
+        /// <returns></returns>
+        public string GetSign(SortedDictionary<string, object> xmlDirs)
         {
             var encStr = string.Join("&",
                 xmlDirs.Select(
@@ -195,10 +224,10 @@ namespace OSS.PaySdk.Wx
                             ? string.Empty
                             : string.Concat(k.Key, "=", str);
                     }));
-            var sign = GetSign(encStr);// Md5.EncryptHexString(string.Concat(encStr, "&key=", ApiConfig.Key)).ToUpper();
-            xmlDirs.Add("sign", sign);
+            var sign = GetSign(encStr);
+            return sign;
         }
-
+        
         /// <summary>
         /// 生成签名,统一方法
         /// </summary>
