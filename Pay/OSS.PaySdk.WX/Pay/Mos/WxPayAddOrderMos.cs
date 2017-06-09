@@ -245,6 +245,7 @@ namespace OSS.PaySdk.Wx.Pay.Mos
         /// 商品条目详情
         /// </summary>
         public WxPayOrderDetailMo detail { get; set; }
+
         /// <summary>
         ///  设置需要需要运算的字典值
         /// </summary>
@@ -260,30 +261,29 @@ namespace OSS.PaySdk.Wx.Pay.Mos
             SetDicItem("spbill_create_ip", spbill_create_ip);
             SetDicItem("goods_tag", goods_tag);
 
-            if (detail != null)
-            {
-                StringBuilder detailStr = new StringBuilder("{");
+            if (detail == null) return;
 
-                detailStr.Append("\"cost_price\":").Append(detail.cost_price);
-                detailStr.Append(",\"receipt_id\":\"").Append(detail.receipt_id).Append("\"");
-                if (detail.detail != null && detail.detail.Count > 0)
+            var detailStr = new StringBuilder("{");
+
+            detailStr.Append("\"cost_price\":").Append(detail.cost_price);
+            detailStr.Append(",\"receipt_id\":\"").Append(detail.receipt_id).Append("\"");
+            if (detail.detail != null && detail.detail.Count > 0)
+            {
+                detailStr.Append(",\"detail\":[");
+                foreach (var item in detail.detail)
                 {
-                    detailStr.Append(",\"detail\":[");
-                    foreach (var item in detail.detail)
-                    {
-                        detailStr.Append("{");
-                        detailStr.Append("\"goods_id\":\"").Append(item.goods_id).Append("\"");
-                        detailStr.Append(",\"wxpay_goods_id\":\"").Append(item.wxpay_goods_id).Append("\"");
-                        detailStr.Append(",\"goods_name\":\"").Append(item.goods_name).Append("\"");
-                        detailStr.Append(",\"quantity\":").Append(item.quantity);
-                        detailStr.Append(",\"price\":").Append(item.wxpay_goods_id);
-                        detailStr.Append("}");
-                    }
-                    detailStr.Append("]");
+                    detailStr.Append("{");
+                    detailStr.Append("\"goods_id\":\"").Append(item.goods_id).Append("\"");
+                    detailStr.Append(",\"wxpay_goods_id\":\"").Append(item.wxpay_goods_id).Append("\"");
+                    detailStr.Append(",\"goods_name\":\"").Append(item.goods_name).Append("\"");
+                    detailStr.Append(",\"quantity\":").Append(item.quantity);
+                    detailStr.Append(",\"price\":").Append(item.price);
+                    detailStr.Append("}");
                 }
-                detailStr.Append("}");
-                SetDicItem("detail", detailStr.ToString());
+                detailStr.Append("]");
             }
+            detailStr.Append("}");
+            SetDicItem("detail", detailStr.ToString());
         }
     }
 
