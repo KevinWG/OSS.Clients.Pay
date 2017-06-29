@@ -201,7 +201,7 @@ namespace OSS.PaySdk.Wx
             var sb = new StringBuilder();
             var first = true;
 
-            foreach (var d in xmlDirs.Where(d => d.Key != "sign" && !string.IsNullOrEmpty(d.Value)))
+            foreach (var d in xmlDirs.Where(d => d.Key != "sign" && (!string.IsNullOrEmpty(d.Value?.ToString()))))
             {
                 if (first)
                 {
