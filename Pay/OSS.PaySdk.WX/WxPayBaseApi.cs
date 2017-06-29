@@ -121,12 +121,24 @@ namespace OSS.PaySdk.Wx
 
             if (dics.ContainsKey("sign"))
             {
-                var encryptStr = string.Join("&", dics.Select(d =>
+                var sb = new StringBuilder();
+                var first = true;
+
+                foreach (var d in dics.Where(d => d.Key != "sign" && !string.IsNullOrEmpty(d.Value)))
                 {
-                    if (d.Key != "sign" && !string.IsNullOrEmpty(d.Value))
-                        return string.Concat(d.Key, "=", d.Value);
-                    return string.Empty;
-                }));
+                    if (first)
+                    {
+                        first = false;
+                        sb.AppendFormat("{0}={1}", d.Key, d.Value);
+                    }
+                    else
+                    {
+                        sb.AppendFormat("&{0}={1}", d.Key, d.Value);
+                    }
+                }
+
+                var encryptStr = sb.ToString();
+                
                 var signStr = GetSign(encryptStr);
 
                 if (signStr != t.sign)
@@ -186,15 +198,23 @@ namespace OSS.PaySdk.Wx
         /// <param name="xmlDirs"></param>
         protected internal void CompleteDicSign(SortedDictionary<string, object> xmlDirs)
         {
-            var encStr = string.Join("&",
-                xmlDirs.Select(
-                    k =>
-                    {
-                        var str = k.Value?.ToString();
-                        return string.IsNullOrEmpty(str)
-                            ? string.Empty
-                            : string.Concat(k.Key, "=", str);
-                    }));
+            var sb = new StringBuilder();
+            var first = true;
+
+            foreach (var d in xmlDirs.Where(d => d.Key != "sign" && !string.IsNullOrEmpty(d.Value)))
+            {
+                if (first)
+                {
+                    first = false;
+                    sb.AppendFormat("{0}={1}", d.Key, d.Value);
+                }
+                else
+                {
+                    sb.AppendFormat("&{0}={1}", d.Key, d.Value);
+                }
+            }
+
+            var encStr = sb.ToString();
             var sign = GetSign(encStr);// Md5.EncryptHexString(string.Concat(encStr, "&key=", ApiConfig.Key)).ToUpper();
             xmlDirs.Add("sign", sign);
         }
