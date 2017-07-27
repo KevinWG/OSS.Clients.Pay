@@ -29,12 +29,14 @@ namespace OSS.PaySdk.Ali.SysTools
         private readonly RSACryptoServiceProvider m_PrivateRsa ;
         private readonly string m_SignType;
         private readonly string m_Charset;
+
         /// <summary>
         ///  构造函数
         /// </summary>
         /// <param name="privateKeyPem"></param>
         /// <param name="publicKeyPem"></param>
         /// <param name="signType"></param>
+        /// <param name="charset"></param>
         public ZPayRsaAssist(string privateKeyPem,string publicKeyPem,string signType, string charset)
         {
             m_PublicRsa = CreateRsaProviderFromPublicKey(publicKeyPem);

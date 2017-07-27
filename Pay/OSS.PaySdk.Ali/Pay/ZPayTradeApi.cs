@@ -164,7 +164,7 @@ namespace OSS.PaySdk.Ali.Pay
         public ResultMo CheckCallBackSign(IDictionary<string, string> formDics)
         {
             var sign = formDics["sign"];
-            var signType = formDics["sign_type"];
+            //var signType = formDics["sign_type"];
 
             formDics.Remove("sign");
             formDics.Remove("sign_type");

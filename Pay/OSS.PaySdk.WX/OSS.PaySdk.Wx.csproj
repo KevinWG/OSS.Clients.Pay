@@ -9,13 +9,13 @@
     <PackageIconUrl>http://img1.static.osscoder.com/logo.jpg</PackageIconUrl>
     <PackageProjectUrl>https://github.com/KevinWG/OSS.PaySdk/tree/master/Pay/OSS.PaySdk.Wx</PackageProjectUrl>
     <RepositoryUrl>https://github.com/KevinWG/OSS.PaySdk</RepositoryUrl>
-    <PackageReleaseNotes>修复商品条目价格的bug</PackageReleaseNotes>
+    <PackageReleaseNotes>优化属性</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <AssemblyVersion>1.0.2.5</AssemblyVersion>
-    <FileVersion>1.0.2.5</FileVersion>
+    <AssemblyVersion>1.0.2.6</AssemblyVersion>
+    <FileVersion>1.0.2.6</FileVersion>
     <Copyright>OSSCoder</Copyright>
     <PackageLicenseUrl>https://github.com/KevinWG/OSS.PaySdk/blob/master/LICENSE</PackageLicenseUrl>
-    <Version>1.0.2.5</Version>
+    <Version>1.0.2.6</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

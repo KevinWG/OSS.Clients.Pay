@@ -216,8 +216,9 @@ namespace OSS.PaySdk.Ali
         /// <returns></returns>
         private static string GetCehckSignContent(string respColumnName, string contentStr)
         {
-            int startIndex = contentStr.IndexOf(respColumnName, StringComparison.Ordinal) + respColumnName.Length + 2;
-            int endIndex = contentStr.LastIndexOf(',');
+            var startIndex = contentStr.IndexOf(respColumnName, StringComparison.Ordinal) + respColumnName.Length + 2;
+            var endIndex = contentStr.LastIndexOf(',');
+
             var signContent = contentStr.Substring(startIndex, endIndex - startIndex);
             return signContent;
         }
