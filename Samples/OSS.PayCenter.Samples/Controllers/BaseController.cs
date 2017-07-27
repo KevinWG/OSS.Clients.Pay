@@ -52,7 +52,7 @@ namespace OSS.PaySdk.Samples.Controllers
             LogUtil.Info($"回调内容：{string.Join("&",dics)}");
 
             var res = zPayApi.CheckCallBackSign(dics);
-            LogUtil.Info($"支付状态：{res.ret}, 消息：{res.message}");
+            LogUtil.Info($"支付状态：{res.ret}, 消息：{res.msg}");
             
             return Content("success");
         }

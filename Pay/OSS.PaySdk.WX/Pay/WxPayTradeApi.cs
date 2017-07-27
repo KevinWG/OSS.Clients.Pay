@@ -120,7 +120,7 @@ namespace OSS.PaySdk.Wx.Pay
         public string GetTradeSendXml(ResultMo res)
         {
             return
-                $"<xml><return_code><![CDATA[{(res.IsSuccess() ? "Success" : "FAIL")}]]></return_code><return_msg><![CDATA[{res.message}]]></return_msg></xml>";
+                $"<xml><return_code><![CDATA[{(res.IsSuccess() ? "Success" : "FAIL")}]]></return_code><return_msg><![CDATA[{res.msg}]]></return_msg></xml>";
         }
 
         #endregion
@@ -250,15 +250,11 @@ namespace OSS.PaySdk.Wx.Pay
             };
 
             var response = await req.RestSend();
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                if (content.StartsWith("<xml>"))
-                    return new ResultMo<string>(content);
+            if (!response.IsSuccessStatusCode) return new ResultMo<string>() {ret = -1, msg = "当前请求出错！"};
 
-                return new ResultMo<string>(ResultTypes.ObjectStateError, content);
-            }
-            return new ResultMo<string>() {ret = -1, message = "当前请求出错！"};
+            var content = await response.Content.ReadAsStringAsync();
+            return content.StartsWith("<xml>") ? new ResultMo<string>(content) 
+                : new ResultMo<string>(ResultTypes.ObjectStateError, content);
         }
 
         #endregion

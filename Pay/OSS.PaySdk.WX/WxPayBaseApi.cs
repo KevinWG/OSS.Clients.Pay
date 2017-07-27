@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using OSS.Common.ComModels;
@@ -100,7 +101,7 @@ namespace OSS.PaySdk.Wx
             catch (Exception ex)
             {
                 var errorKey = LogUtil.Error(string.Concat("基类请求出错，错误信息：", ex.Message), "RestCommon", ModuleNames.PayCenter);
-                t = new T() { ret = -1, message = string.Concat("当前请求出错，错误码：", errorKey) };
+                t = new T() { ret = -1, msg = string.Concat("当前请求出错，错误码：", errorKey) };
             }
             return t;
         }
@@ -122,29 +123,18 @@ namespace OSS.PaySdk.Wx
             if (dics.ContainsKey("sign"))
             {
                 var sb = new StringBuilder();
-                var first = true;
-
                 foreach (var d in dics.Where(d => d.Key != "sign" && !string.IsNullOrEmpty(d.Value)))
                 {
-                    if (first)
-                    {
-                        first = false;
-                        sb.AppendFormat("{0}={1}", d.Key, d.Value);
-                    }
-                    else
-                    {
-                        sb.AppendFormat("&{0}={1}", d.Key, d.Value);
-                    }
+                    sb.AppendFormat("{0}={1}&", d.Key, d.Value);
                 }
 
-                var encryptStr = sb.ToString();
-                
+                var encryptStr = sb.ToString().TrimEnd('&');
                 var signStr = GetSign(encryptStr);
 
                 if (signStr != t.sign)
                 {
                     t.ret = (int)ResultTypes.ParaError;
-                    t.message = "返回的结果签名（sign）不匹配";
+                    t.msg = "返回的结果签名（sign）不匹配";
                 }
             }
 
@@ -152,12 +142,12 @@ namespace OSS.PaySdk.Wx
             {
                 //通信结果处理，这个微信做的其实没意义，脱裤子放屁
                 t.ret = -1;
-                t.message = t.return_msg;
+                t.msg = t.return_msg;
             }
             else if (!t.IsSuccess())
             {
                 //  请求数据结果处理
-                t.message = GetErrMsg(t.err_code?.ToUpper());
+                t.msg = GetErrMsg(t.err_code?.ToUpper());
             }
 
             return t;

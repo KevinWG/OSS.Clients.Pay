@@ -108,7 +108,7 @@ namespace OSS.PaySdk.Ali
                             return new T()
                             {
                                 ret = (int) ResultTypes.ObjectStateError,
-                                message = "基础请求响应不正确，请检查地址或者网络是否正常！"
+                                msg = "基础请求响应不正确，请检查地址或者网络是否正常！"
                             };
 
                         t = resJsonObj[respColumnName].ToObject<T>();
@@ -120,7 +120,7 @@ namespace OSS.PaySdk.Ali
                             CheckSign(signContent, sign, t);
                         }
                         else
-                            t.message = string.Concat(t.msg, "-", t.sub_msg);
+                            t.msg = string.Concat(t.msg, "-", t.sub_msg);
                     }
                 }
             }
@@ -131,7 +131,7 @@ namespace OSS.PaySdk.Ali
                 t = new T()
                 {
                     ret = (int) ResultTypes.InnerError,
-                    message = string.Concat("基类请求出错，请检查网络是否正常，错误码：", logCode)
+                    msg = string.Concat("基类请求出错，请检查网络是否正常，错误码：", logCode)
                 };
             }
             return t;
@@ -191,14 +191,14 @@ namespace OSS.PaySdk.Ali
                     if (checkSignRes) return;
 
                     t.ret = (int) ResultTypes.UnAuthorize;
-                    t.message = "当前签名非法！";
+                    t.msg = "当前签名非法！";
                 }
 
             }
             catch (Exception e)
             {
                 t.ret = (int) ResultTypes.InnerError;
-                t.message = "解密签名过程中出错，详情请查看日志";
+                t.msg = "解密签名过程中出错，详情请查看日志";
                 LogUtil.Info(
                     $"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign}, 签名类型：{ApiConfig.SignType},  错误信息：{e.Message}",
                     "CheckSign", ModuleNames.PayCenter);
