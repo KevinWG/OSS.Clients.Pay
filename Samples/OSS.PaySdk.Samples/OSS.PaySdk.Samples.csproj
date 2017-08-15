@@ -12,4 +12,16 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\lib\vue\.github\CODE_OF_CONDUCT.md" />
+    <None Include="wwwroot\lib\vue\.github\CONTRIBUTING.md" />
+    <None Include="wwwroot\lib\vue\.github\ISSUE_TEMPLATE.md" />
+    <None Include="wwwroot\lib\vue\.github\PULL_REQUEST_TEMPLATE.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Pay\OSS.PaySdk.Ali\OSS.PaySdk.Ali.csproj" />
+    <ProjectReference Include="..\..\Pay\OSS.PaySdk.WX\OSS.PaySdk.Wx.csproj" />
+  </ItemGroup>
+
 </Project>
