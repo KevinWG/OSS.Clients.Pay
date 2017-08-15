@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.3</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Version>1.0.2.2</Version>
     <Authors>Kevin</Authors>
     <Company>OSSCoder</Company>
@@ -26,9 +26,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.1" />
-    <PackageReference Include="OSS.Common" Version="1.1.5.53" />
-    <PackageReference Include="OSS.Http" Version="2.2.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="OSS.Common" Version="1.2.0" />
+    <PackageReference Include="OSS.Http" Version="2.3.0" />
     <PackageReference Include="System.Security.Cryptography.Csp" Version="4.3.0" />
   </ItemGroup>
 

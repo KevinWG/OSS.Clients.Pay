@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://test.pay.osscoder.com:59363/",
+      "applicationUrl": "http://localhost:56369/",
       "sslPort": 0
     }
   },
@@ -15,13 +15,13 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "OSS.PayCenter.Samples": {
+    "OSS.PaySdk.Samples": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:59364"
+      "applicationUrl": "http://localhost:56370/"
     }
   }
 }
