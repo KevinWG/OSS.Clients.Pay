@@ -27,9 +27,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OSS.Common" Version="1.1.5.53" />
+    <PackageReference Include="OSS.Common" Version="1.1.5.58" />
     <PackageReference Include="OSS.Http" Version="2.2.0.3" />
-    <PackageReference Include="System.Xml.XmlDocument" Version="4.0.1" />
+    <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
   </ItemGroup>
 
 </Project>
