@@ -283,8 +283,7 @@ namespace OSS.PaySdk.Wx
             => m_DicErrMsg.ContainsKey(errCode) ? m_DicErrMsg[errCode] : string.Empty;
 
         #endregion
-
-
+        
         private HttpClient _client;
         /// <summary>
         ///   获取设置了证书的HttpClient
@@ -294,8 +293,12 @@ namespace OSS.PaySdk.Wx
         {
             if (_client != null) return _client;
 
+            var cert = new X509Certificate2(ApiConfig.CertPath, ApiConfig.CertPassword);
             var reqHandler = new HttpClientHandler();
-            ApiConfig.SetCertificata?.Invoke(reqHandler,new X509Certificate2(ApiConfig.CertPath,ApiConfig.CertPassword));
+
+            reqHandler.ServerCertificateCustomValidationCallback = (msg, c, chain, sslErrors) => true;
+            reqHandler.ClientCertificates.Add(cert);
+            
             _client = new HttpClient(reqHandler);
             return _client;
         }

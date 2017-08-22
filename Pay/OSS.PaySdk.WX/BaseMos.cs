@@ -224,16 +224,16 @@ namespace OSS.PaySdk.Wx
         /// </summary>
         public string CertPassword { get; set; }
 
-        /// <summary>
-        ///  设置请求证书委托（使用证书接口必填-退款，发红包等）
-        ///  当前标准库最高版本1.6中HttpClientHandler还不直接支持证书设置，公开当前属性，方便不同运行时框架设置自己的赋值方式
-        ///  例如：config.SetCertificata = (handler, cert) =>
-        ///    {
-        ///        handler.ServerCertificateCustomValidationCallback = (msg, c, chain, sslErrors) => true;
-        ///        handler.ClientCertificates.Add(cert);
-        ///    };
-        /// </summary>
-        public Action<HttpClientHandler, X509Certificate2> SetCertificata { get; set; }
+        ///// <summary>
+        /////  设置请求证书委托（使用证书接口必填-退款，发红包等）
+        /////  当前标准库最高版本1.6中HttpClientHandler还不直接支持证书设置，公开当前属性，方便不同运行时框架设置自己的赋值方式
+        /////  例如：config.SetCertificata = (handler, cert) =>
+        /////    {
+        /////        handler.ServerCertificateCustomValidationCallback = (msg, c, chain, sslErrors) => true;
+        /////        handler.ClientCertificates.Add(cert);
+        /////    };
+        ///// </summary>
+        //public Action<HttpClientHandler, X509Certificate2> SetCertificata { get; set; }
     }
 
 
