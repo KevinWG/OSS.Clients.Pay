@@ -12,7 +12,7 @@ namespace OSS.PaySdk.Tests.ZFB
         private static string publicKey =
             "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArEGMX+VF5JE9OJjYU8Pc4UdYfEGN3hQDjOTREXCYaLOC7tzC2IfTa9vvJyxpx0IBknsSR++VJXiW7EddRmSIcesydiC5XvaWOB1vsLJ8xxWPGyB9L6f4/aoUrd8s9dsv0l5U3CyvIT4FzJF3Z8SyV7vfObwrwCVq/ELrN2CtN1J4bgvKFaZglzslNVIKR3HTTpOq3XJvKZ/dFHLQdw7+Un44InoLj21Z5Fu17M+J3rAAbzJD28infsG6NMBrz7WtbrlJyDacOerOJIPjYeEniNXd3FOUwx1qRgoRq+Z9xLYIZvhjPz2k4iopI1pboPPnrjvwJ5uTwqREJchluNlEiQIDAQAB";
 
-        protected static ZPayCenterConfig config { get; set; } = new ZPayCenterConfig()
+        protected static ZPayConfig config { get; set; } = new ZPayConfig()
         {
             AppSource = "1",
             AppId = "2016080300153582",

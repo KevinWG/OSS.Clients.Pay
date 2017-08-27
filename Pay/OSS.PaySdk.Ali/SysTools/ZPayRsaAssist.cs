@@ -1,6 +1,4 @@
-﻿
-
-#region Copyright (C) 2017 Kevin (OSS开源作坊) 公众号：osscoder
+﻿#region Copyright (C) 2017 Kevin (OSS开源作坊) 公众号：osscoder
 
 /***************************************************************************
 *　　	文件功能描述：支付宝支付模快 —— 签名加密助手
@@ -27,7 +25,7 @@ namespace OSS.PaySdk.Ali.SysTools
     {
         private readonly RSACryptoServiceProvider m_PublicRsa;
         private readonly RSACryptoServiceProvider m_PrivateRsa ;
-        private readonly string m_SignType;
+        //private readonly string m_SignType;
         private readonly string m_Charset;
 
         /// <summary>
@@ -35,13 +33,12 @@ namespace OSS.PaySdk.Ali.SysTools
         /// </summary>
         /// <param name="privateKeyPem"></param>
         /// <param name="publicKeyPem"></param>
-        /// <param name="signType"></param>
         /// <param name="charset"></param>
-        public ZPayRsaAssist(string privateKeyPem,string publicKeyPem,string signType, string charset)
+        public ZPayRsaAssist(string privateKeyPem,string publicKeyPem,string charset)
         {
             m_PublicRsa = CreateRsaProviderFromPublicKey(publicKeyPem);
-            m_PrivateRsa = CreateRsaProviderFromPrivateKey(privateKeyPem, signType);
-            m_SignType = signType;
+            m_PrivateRsa = CreateRsaProviderFromPrivateKey(privateKeyPem);
+            //m_SignType = signType;
             m_Charset = charset;
         }
 
@@ -53,8 +50,9 @@ namespace OSS.PaySdk.Ali.SysTools
         /// <returns></returns>
         public  bool CheckSign(string signContent, string sign)
         {
-            bool bVerifyResultOriginal = m_PublicRsa.VerifyData(Encoding.GetEncoding(m_Charset).GetBytes(signContent),
-                "RSA2".Equals(m_SignType) ? "SHA256" : "SHA1", Convert.FromBase64String(sign));
+            var bytes = Encoding.GetEncoding(m_Charset).GetBytes(signContent);
+            var bVerifyResultOriginal = m_PublicRsa.VerifyData(bytes
+                , Convert.FromBase64String(sign), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
             return bVerifyResultOriginal;
         }
 
@@ -69,7 +67,7 @@ namespace OSS.PaySdk.Ali.SysTools
                 throw new Exception("您使用的私钥格式错误，请检查RSA私钥配置" + ",charset = " + m_Charset);
 
             var dataBytes = Encoding.GetEncoding(m_Charset).GetBytes(data);
-            var signatureBytes = m_PrivateRsa.SignData(dataBytes, "RSA2".Equals(m_SignType) ? "SHA256" : "SHA1");
+            var signatureBytes = m_PrivateRsa.SignData(dataBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
 
             return Convert.ToBase64String(signatureBytes);
         }
@@ -139,7 +137,8 @@ namespace OSS.PaySdk.Ali.SysTools
                     }
 
                     twobytes = binr.ReadUInt16();
-                    byte lowbyte = 0x00;
+
+                    byte lowbyte=0x00;
                     byte highbyte = 0x00;
 
                     switch (twobytes)
@@ -203,25 +202,19 @@ namespace OSS.PaySdk.Ali.SysTools
 
         #region 通过私钥创建Rsa对象
 
-        private static RSACryptoServiceProvider CreateRsaProviderFromPrivateKey(string strKey, string signType)
+        private static RSACryptoServiceProvider CreateRsaProviderFromPrivateKey(string strKey)
         {
             byte[] data = null;
             //读取带
             //ata = Encoding.Default.GetBytes(strKey);
             data = Convert.FromBase64String(strKey);
             //data = GetPem("RSA PRIVATE KEY", data);
-            try
-            {
-                RSACryptoServiceProvider rsa = DecodeRSAPrivateKey(data, signType);
-                return rsa;
-            }
-            catch (Exception ex)
-            {
-                //    throw new AopException("EncryptContent = woshihaoren,zheshiyigeceshi,wanerde", ex);
-            }
-            return null;
+
+            var rsa = DecodeRSAPrivateKey(data);
+            return rsa;
         }
-        private static RSACryptoServiceProvider DecodeRSAPrivateKey(byte[] privkey, string signType)
+
+        private static RSACryptoServiceProvider DecodeRSAPrivateKey(byte[] privkey)
         {
             // --------- Set up stream to decode the asn.1 encoded RSA private key ------
             var mem = new MemoryStream(privkey);
@@ -279,11 +272,7 @@ namespace OSS.PaySdk.Ali.SysTools
                 var CspParameters = new CspParameters();
                 CspParameters.Flags = CspProviderFlags.UseMachineKeyStore;
 
-                var bitLen = 1024;
-                if ("RSA2".Equals(signType))
-                {
-                    bitLen = 2048;
-                }
+                const int bitLen = 2048;
 
                 var rsaParams = new RSAParameters
                 {
@@ -301,13 +290,16 @@ namespace OSS.PaySdk.Ali.SysTools
                 rsa.ImportParameters(rsaParams);
                 return rsa;
             }
-            catch (Exception ex)
-            {
-                return null;
-            }
             finally
             {
-                binr.Dispose();
+                if (binr!=null)
+                {
+                    binr.Dispose();
+                }
+                if (mem!=null)
+                {
+                    mem.Dispose();
+                }
             }
         }
         private static int GetIntegerSize(BinaryReader binr)

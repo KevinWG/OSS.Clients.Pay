@@ -23,7 +23,7 @@ namespace OSS.PaySdk.Ali.Pay
 {
     public class ZPayTradeApi : ZPayBaseApi
     {
-        public ZPayTradeApi(ZPayCenterConfig config = null) : base(config)
+        public ZPayTradeApi(ZPayConfig config = null) : base(config)
         {
         }
 
@@ -67,10 +67,9 @@ namespace OSS.PaySdk.Ali.Pay
         {
             const string apiMethod = "alipay.trade.app.pay";
             var dicsRes = GetReqBodyDics(apiMethod, req);
-            if (!dicsRes.IsSuccess())
-                return dicsRes.ConvertToResultOnly<string>();
-            
-            return new ResultMo<string>(ConvertDicToEncodeReqBody(dicsRes.data));
+            return !dicsRes.IsSuccess() 
+                ? dicsRes.ConvertToResultOnly<string>() 
+                : new ResultMo<string>(ConvertDicToEncodeReqBody(dicsRes.data));
         }
 
         /// <summary>
@@ -81,10 +80,9 @@ namespace OSS.PaySdk.Ali.Pay
         {
             const string apiMethod = "alipay.trade.wap.pay";
             var dicsRes = GetReqBodyDics(apiMethod, req);
-            if (!dicsRes.IsSuccess())
-                return dicsRes.ConvertToResultOnly<string>();
-
-            return new ResultMo<string>(BuildFormHtml(dicsRes.data));
+            return !dicsRes.IsSuccess() 
+                ? dicsRes.ConvertToResultOnly<string>() 
+                : new ResultMo<string>(BuildFormHtml(dicsRes.data));
         }
 
         private  string BuildFormHtml(IDictionary<string, string> dics)

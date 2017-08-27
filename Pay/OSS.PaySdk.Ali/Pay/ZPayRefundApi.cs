@@ -25,7 +25,7 @@ namespace OSS.PaySdk.Ali.Pay
         ///  构造函数
         /// </summary>
         /// <param name="config"></param>
-        public ZPayRefundApi(ZPayCenterConfig config=null) : base(config)
+        public ZPayRefundApi(ZPayConfig config=null) : base(config)
         {
         }
 

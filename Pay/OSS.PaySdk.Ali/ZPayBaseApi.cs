@@ -43,26 +43,25 @@ namespace OSS.PaySdk.Ali
         /// <summary>
         ///   默认配置信息，如果实例中的配置为空会使用当前配置信息
         /// </summary>
-        public static ZPayCenterConfig DefaultConfig { get; set; }
+        public static ZPayConfig DefaultConfig { get; set; }
 
         /// <summary>
         /// 支付宝接口配置
         /// </summary>
-        public ZPayCenterConfig ApiConfig { get; }
+        public ZPayConfig ApiConfig { get; }
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="config"></param>
-        protected ZPayBaseApi(ZPayCenterConfig config)
+        protected ZPayBaseApi(ZPayConfig config)
         {
             if (config == null && DefaultConfig == null)
                 throw new ArgumentNullException(nameof(config),
                     "构造函数中的config 和 全局DefaultConfig 配置信息同时为空，请通过构造函数赋值，或者在程序入口处给 DefaultConfig 赋值！");
 
             ApiConfig = config ?? DefaultConfig;
-            m_RsaAssist = new ZPayRsaAssist(ApiConfig.AppPrivateKey, ApiConfig.AppPublicKey, ApiConfig.SignType,
-                ApiConfig.Charset);
+            m_RsaAssist = new ZPayRsaAssist(ApiConfig.AppPrivateKey, ApiConfig.AppPublicKey,ApiConfig.Charset);
         }
 
         #endregion
@@ -154,11 +153,12 @@ namespace OSS.PaySdk.Ali
             if (!contentDirs.IsSuccess())
                 return contentDirs.ConvertToResult<TResp>();
 
-            var reqHttp = new OsHttpRequest();
-
-            reqHttp.HttpMothed = HttpMothed.POST;
-            reqHttp.CustomBody = ConvertDicToEncodeReqBody(contentDirs.data);
-
+            var reqHttp = new OsHttpRequest
+            {
+                HttpMothed = HttpMothed.POST,
+                CustomBody = ConvertDicToEncodeReqBody(contentDirs.data)
+            };
+            
             return await RestCommonAsync<TResp>(reqHttp, respColumnName);
         }
 
@@ -178,29 +178,27 @@ namespace OSS.PaySdk.Ali
             try
             {
                 var checkSignRes = m_RsaAssist.CheckSign(signContent, sign);
-                if (!checkSignRes)
+                if (checkSignRes) return;
+
+                if (!string.IsNullOrEmpty(signContent) &&
+                    signContent.Contains("\\/"))
                 {
-                    if (!string.IsNullOrEmpty(signContent) &&
-                        signContent.Contains("\\/"))
-                    {
-                        signContent = signContent.Replace("\\/", "/");
-                        // 如果验签不通过，转义字符后再次验签
-                        checkSignRes = m_RsaAssist.CheckSign(signContent, sign);
-                    }
-
-                    if (checkSignRes) return;
-
-                    t.ret = (int) ResultTypes.UnAuthorize;
-                    t.msg = "当前签名非法！";
+                    signContent = signContent.Replace("\\/", "/");
+                    // 如果验签不通过，转义字符后再次验签
+                    checkSignRes = m_RsaAssist.CheckSign(signContent, sign);
                 }
 
+                if (checkSignRes) return;
+
+                t.ret = (int) ResultTypes.UnAuthorize;
+                t.msg = "当前签名非法！";
             }
             catch (Exception e)
             {
                 t.ret = (int) ResultTypes.InnerError;
                 t.msg = "解密签名过程中出错，详情请查看日志";
                 LogUtil.Info(
-                    $"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign}, 签名类型：{ApiConfig.SignType},  错误信息：{e.Message}",
+                    $"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign}, 错误信息：{e.Message}",
                     "CheckSign", ModuleNames.PayCenter);
 #if DEBUG
                 throw e;
@@ -236,7 +234,7 @@ namespace OSS.PaySdk.Ali
         protected internal ResultMo<IDictionary<string, string>> GetReqBodyDics<T>(string method, T req)
             where T : ZPayBaseReq
         {
-            SortedDictionary<string, string> dirs = new SortedDictionary<string, string>();
+            var dirs = new SortedDictionary<string, string>();
             try
             {
                 SetDefaultPropertyFormat(dirs, "app_id", ApiConfig.AppId);
@@ -245,7 +243,7 @@ namespace OSS.PaySdk.Ali
                 SetDefaultPropertyFormat(dirs, "notify_url", req.GetNotifyUrl());
                 SetDefaultPropertyFormat(dirs, "return_url", req.GetReturnUrl());
 
-                SetDefaultPropertyFormat(dirs, "sign_type", ApiConfig.SignType);
+                SetDefaultPropertyFormat(dirs, "sign_type", "RSA2");
                 dirs.Add("timestamp", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                 SetDefaultPropertyFormat(dirs, "format", ApiConfig.Format);
                 SetDefaultPropertyFormat(dirs, "version", ApiConfig.Version);
@@ -262,8 +260,8 @@ namespace OSS.PaySdk.Ali
                     SetDefaultPropertyFormat(dirs, "app_auth_token", req.auth_token.app_auth_token);
 
                 //  签名
-                string signContent = string.Join("&", dirs.Select(d => string.Concat(d.Key, "=", d.Value)));
-                string sign = m_RsaAssist.GenerateSign(signContent);
+                var signContent = string.Join("&", dirs.Select(d => string.Concat(d.Key, "=", d.Value)));
+                var sign = m_RsaAssist.GenerateSign(signContent);
                 dirs.Add("sign", sign);
             }
             catch (Exception e)
@@ -274,13 +272,18 @@ namespace OSS.PaySdk.Ali
             return new ResultMo<IDictionary<string, string>>(dirs);
         }
 
-        private void SetDefaultPropertyFormat(SortedDictionary<string, string> dirs, string key, string value)
+        private static void SetDefaultPropertyFormat(IDictionary<string, string> dirs, string key, string value)
         {
             if (!dirs.ContainsKey(key)
                 && !string.IsNullOrEmpty(value))
                 dirs.Add(key, value);
         }
 
+        /// <summary>
+        ///  转化生成签名后的请求内容
+        /// </summary>
+        /// <param name="dics"></param>
+        /// <returns></returns>
         protected static string ConvertDicToEncodeReqBody(IDictionary<string, string> dics)
         {
             return string.Join("&", dics.Select(d => string.Concat(d.Key, "=", d.Value.UrlEncode())));
