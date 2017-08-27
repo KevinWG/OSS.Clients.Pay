@@ -34,7 +34,7 @@ namespace OSS.PaySdk.Wx
     /// <summary>
     ///  微信支付基类
     /// </summary>
-    public abstract class WxPayBaseApi
+    public abstract class WxPayBaseApi:BaseConfigProvider<WxPayCenterConfig>
     {
         /// <summary>
         /// 微信api接口地址
@@ -44,27 +44,11 @@ namespace OSS.PaySdk.Wx
         #region  处理基本配置
 
         /// <summary>
-        ///   默认配置信息，如果实例中的构造函数配置为空可以使用当前全局配置信息
-        /// </summary>
-        public static WxPayCenterConfig DefaultConfig { get; set; }
-
-        private readonly WxPayCenterConfig _config;
-
-        /// <summary>
-        /// 微信接口配置
-        /// </summary>
-        public WxPayCenterConfig ApiConfig => _config ?? DefaultConfig;
-
-        /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="config"></param>
-        protected WxPayBaseApi(WxPayCenterConfig config)
+        protected WxPayBaseApi(WxPayCenterConfig config) : base(config)
         {
-            if (config == null && DefaultConfig == null)
-                throw new ArgumentNullException("config",
-                    "构造函数中的config 和 全局DefaultConfig 配置信息同时为空，请通过构造函数赋值，或者在程序入口处给 DefaultConfig 赋值！");
-            _config = config;
         }
 
         #endregion
@@ -292,11 +276,13 @@ namespace OSS.PaySdk.Wx
         protected internal HttpClient GetCertHttpClient()
         {
             if (_client != null) return _client;
+   
+            var reqHandler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (msg, c, chain, sslErrors) => true
+            };
 
             var cert = new X509Certificate2(ApiConfig.CertPath, ApiConfig.CertPassword);
-            var reqHandler = new HttpClientHandler();
-
-            reqHandler.ServerCertificateCustomValidationCallback = (msg, c, chain, sslErrors) => true;
             reqHandler.ClientCertificates.Add(cert);
             
             _client = new HttpClient(reqHandler);
