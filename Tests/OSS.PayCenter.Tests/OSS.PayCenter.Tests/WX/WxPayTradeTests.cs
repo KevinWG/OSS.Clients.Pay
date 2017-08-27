@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OSS.Common.ComModels;
-using OSS.Common.Extention;
 using OSS.PaySdk.Wx;
 using OSS.PaySdk.Wx.Pay;
 using OSS.PaySdk.Wx.Pay.Mos;
@@ -25,38 +24,11 @@ namespace OSS.PaySdk.Tests.WX
             CertPath = "cert/apiclient_cert.p12",
             NotifyUrl = "http://www.osscoder.com",
             // 设置证书附加请求方式
-            SetCertificata = (handler, cert) =>
-            {
-                handler.ServerCertificateCustomValidationCallback = (msg, c, chain, sslErrors) => true;
-                handler.ClientCertificates.Add(cert);
-            }
+         
         };
         //  调用示例
         private static WxPayTradeApi m_Api=new WxPayTradeApi(config);
         
-
-        static WxPayTradeTests()
-        {
-            WxPayBaseApi.DefaultConfig = new WxPayCenterConfig()
-            {
-                AppSource = "11",
-                AppId = "wx2428e34e0e7dc6ef",
-                MchId = "1233410002",
-                Key = "e10adc3849ba56abbe56e056f20f883e",
-                AppSecret = "51c56b886b5be869567dd389b3e5d1d6",
-
-                CertPassword = "1233410002",
-                CertPath = "cert/apiclient_cert.p12",
-                NotifyUrl = "http://www.osscoder.com",
-                // 设置证书方式
-                SetCertificata = (handler, cert) =>
-                {
-                    handler.ServerCertificateCustomValidationCallback = (msg, c, chain, sslErrors) => true;
-                    handler.ClientCertificates.Add(cert);
-                }
-            };
-
-        }
 
         [TestMethod]
         public async Task AddUniOrderAsyncTest()

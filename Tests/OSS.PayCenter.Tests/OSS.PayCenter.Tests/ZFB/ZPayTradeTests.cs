@@ -44,7 +44,7 @@ namespace OSS.PaySdk.Tests.ZFB
         }
 
         private readonly ZPayRsaAssist m_RsaAssist = new ZPayRsaAssist(config.AppPrivateKey, config.AppPublicKey,
-            config.SignType,
+         
             config.Charset);
 
         protected void CheckSign<T>(string signContent, string sign, T t)
@@ -66,15 +66,15 @@ namespace OSS.PaySdk.Tests.ZFB
                     if (checkSignRes) return;
 
                     t.ret = (int) ResultTypes.UnAuthorize;
-                    t.message = "当前签名非法！";
+                    t.msg = "当前签名非法！";
                 }
 
             }
             catch (Exception e)
             {
                 t.ret = (int) ResultTypes.InnerError;
-                t.message = "解密签名过程中出错，详情请查看日志";
-                LogUtil.Info($"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign}, 签名类型：{config.SignType},  错误信息：{e.Message}",
+                t.msg = "解密签名过程中出错，详情请查看日志";
+                LogUtil.Info($"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign},   错误信息：{e.Message}",
                     "CheckSign", ModuleNames.PayCenter);
 #if DEBUG
                 throw e;
@@ -87,13 +87,13 @@ namespace OSS.PaySdk.Tests.ZFB
         [TestMethod]
         public void AddPreTradeTest()
         {
-            var payReq = new ZAddPreTradeReq("http://pay.sample.osscoder.com");
-
-            payReq.out_trade_no = "20170328125923";
-            payReq.body = "测试商品";
-            payReq.subject = "测试";
-            payReq.total_amount = 0.01M;
-
+            var payReq = new ZAddPreTradeReq("http://pay.sample.osscoder.com")
+            {
+                out_trade_no = "20170328125923",
+                body = "测试商品",
+                subject = "测试",
+                total_amount = 0.01M
+            };
             var res = m_Api.AddPreTradeAsync(payReq).WaitResult();
             var result = res.IsSuccess();
 
