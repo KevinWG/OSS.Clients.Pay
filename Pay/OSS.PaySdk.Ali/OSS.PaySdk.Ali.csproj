@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.1.1</Version>
+    <Version>1.1.2</Version>
     <Authors>Kevin</Authors>
     <Company>OSSCoder</Company>
     <Product>OSS.PayCenter</Product>
@@ -10,11 +10,11 @@
     <PackageProjectUrl>https://github.com/KevinWG/OSS.PaySdk/tree/master/Pay/OSS.PaySdk.Ali</PackageProjectUrl>
     <PackageIconUrl>http://img1.static.osscoder.com/logo.jpg</PackageIconUrl>
     <RepositoryUrl>https://github.com/KevinWG/OSS.PaySdk</RepositoryUrl>
-    <PackageReleaseNotes>添加上下文动态配置实现</PackageReleaseNotes>
+    <PackageReleaseNotes>更新底层直接支持Framework</PackageReleaseNotes>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://github.com/KevinWG/OSS.PaySdk/blob/master/LICENSE</PackageLicenseUrl>
-    <AssemblyVersion>1.1.1.0</AssemblyVersion>
-    <FileVersion>1.1.1.0</FileVersion>
+    <AssemblyVersion>1.1.2.0</AssemblyVersion>
+    <FileVersion>1.1.2.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -27,8 +27,8 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="OSS.Common" Version="1.2.2.2" />
-    <PackageReference Include="OSS.Http" Version="2.3.0" />
+    <PackageReference Include="OSS.Common" Version="1.2.2.3" />
+    <PackageReference Include="OSS.Http" Version="2.3.3" />
     <PackageReference Include="System.Security.Cryptography.Csp" Version="4.3.0" />
   </ItemGroup>
 
