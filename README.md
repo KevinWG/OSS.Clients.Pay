@@ -86,3 +86,8 @@ public async Task<IActionResult> ZPay(PayOrderMo order)
 }
 ```
 
+### 三. 注意事项
+	
+	因为底层接口使用了Task返回，在.Net Framework MVC项目中如果你的在action中通过 Result或者wait等方式，直接返回ActionResult对象，界面会出现假死状态，解决方案：
+	1. action 返回类型 ActionResult 修改为 async Task<ActionResult>, 全程异步
+	2. 将异步调用方法 通过 var task=  Task.Run(()=> 异步方法 )返回异步对象，再使用task.Result即可
