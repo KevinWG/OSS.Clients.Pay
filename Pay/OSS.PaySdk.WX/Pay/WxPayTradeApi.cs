@@ -207,12 +207,14 @@ namespace OSS.PaySdk.Wx.Pay
         /// <returns></returns>
         public string GetScanCallBackResponse(WxAddPayUniOrderResp uniOrder)
         {
-            var res = new WxPayScanCallBackResMo();
-            res.err_code_des = uniOrder.err_code_des;
-            res.prepay_id = uniOrder.prepay_id;
-            res.result_code = uniOrder.result_code;
-            res.return_code = uniOrder.return_code;
-            res.return_msg = uniOrder.return_msg;
+            var res = new WxPayScanCallBackResMo
+            {
+                err_code_des = uniOrder.err_code_des,
+                prepay_id = uniOrder.prepay_id,
+                result_code = uniOrder.result_code,
+                return_code = uniOrder.return_code,
+                return_msg = uniOrder.return_msg
+            };
 
             var dics = res.GetDics();
             dics.Add("appid", ApiConfig.AppId);

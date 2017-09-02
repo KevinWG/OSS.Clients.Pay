@@ -175,19 +175,17 @@ namespace OSS.PaySdk.Wx
             var sb = new StringBuilder();
             var first = true;
 
-            foreach (var d in xmlDirs.Where(d => d.Key != "sign" && (!string.IsNullOrEmpty(d.Value?.ToString()))))
+            foreach (var item in xmlDirs)
             {
-                if (first)
-                {
-                    first = false;
-                    sb.AppendFormat("{0}={1}", d.Key, d.Value);
-                }
-                else
-                {
-                    sb.AppendFormat("&{0}={1}", d.Key, d.Value);
-                }
-            }
+                var value = item.Value?.ToString();
+                if (item.Key == "sign" || string.IsNullOrEmpty(value)) continue;
 
+                sb.Append(first ? string.Empty : "&").Append(item.Key).Append(value);
+
+                if (first)
+                    first = false;
+            }
+            
             var encStr = sb.ToString();
             var sign = GetSign(encStr);// Md5.EncryptHexString(string.Concat(encStr, "&key=", ApiConfig.Key)).ToUpper();
             xmlDirs.Add("sign", sign);

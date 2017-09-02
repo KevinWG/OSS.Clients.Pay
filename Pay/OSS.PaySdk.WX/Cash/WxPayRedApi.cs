@@ -46,8 +46,7 @@ namespace OSS.PaySdk.Wx.Cash
         }
 
         #endregion
-
-
+        
         #region  发送红包接口
 
         /// <summary>
