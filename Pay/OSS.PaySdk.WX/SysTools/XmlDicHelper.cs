@@ -74,12 +74,12 @@ namespace OSS.PaySdk.Wx.SysTools
 
             xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xmlStr);
-            XmlNode xmlNode = xmlDoc.FirstChild;
-            XmlNodeList nodes = xmlNode.ChildNodes;
+            var xmlNode = xmlDoc.FirstChild;
+            var nodes = xmlNode.ChildNodes;
 
             foreach (XmlNode xn in nodes)
             {
-                XmlElement xe = (XmlElement)xn;
+                var xe = (XmlElement)xn;
                 dirs[xe.Name] = xe.InnerText;
             }
 

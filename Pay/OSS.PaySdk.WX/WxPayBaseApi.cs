@@ -34,7 +34,7 @@ namespace OSS.PaySdk.Wx
     /// <summary>
     ///  微信支付基类
     /// </summary>
-    public abstract class WxPayBaseApi:BaseConfigProvider<WxPayCenterConfig>
+    public abstract class WxPayBaseApi:BaseConfigProvider<WxPayCenterConfig,WxPayBaseApi>
     {
         /// <summary>
         /// 微信api接口地址
@@ -49,6 +49,7 @@ namespace OSS.PaySdk.Wx
         /// <param name="config"></param>
         protected WxPayBaseApi(WxPayCenterConfig config) : base(config)
         {
+            ModuleName = WxPayConfigProvider.ModuleName;
         }
 
         #endregion
@@ -286,6 +287,11 @@ namespace OSS.PaySdk.Wx
             _client = new HttpClient(reqHandler);
             return _client;
         }
-
+        
+        /// <inheritdoc />
+        protected override WxPayCenterConfig GetDefaultConfig()
+        {
+            return WxPayConfigProvider.DefaultConfig;
+        }
     }
 }

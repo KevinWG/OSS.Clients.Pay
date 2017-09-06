@@ -25,6 +25,9 @@ using OSS.PaySdk.Wx.SysTools;
 
 namespace OSS.PaySdk.Wx.Pay
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class WxPayTradeApi : WxPayBaseApi
     {
         #region   全局错误码注册
@@ -89,10 +92,12 @@ namespace OSS.PaySdk.Wx.Pay
         {
             var addressUrl = string.Concat(m_ApiUrl, "/pay/orderquery");
 
-            var dics = new SortedDictionary<string, object>();
-            dics["nonce_str"] = Guid.NewGuid().ToString().Replace("-", "");
-            dics["out_trade_no"] = out_trade_no;
-            dics["transaction_id"] = transaction_id;
+            var dics = new SortedDictionary<string, object>
+            {
+                ["nonce_str"] = Guid.NewGuid().ToString().Replace("-", ""),
+                ["out_trade_no"] = out_trade_no,
+                ["transaction_id"] = transaction_id
+            };
 
             return await PostApiAsync<WxPayQueryOrderResp>(addressUrl, dics);
         }

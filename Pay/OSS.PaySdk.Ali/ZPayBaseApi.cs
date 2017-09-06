@@ -34,7 +34,7 @@ namespace OSS.PaySdk.Ali
     /// <summary>
     ///支付宝接口SDK基类
     /// </summary>
-    public abstract class ZPayBaseApi:BaseConfigProvider<ZPayConfig>
+    public abstract class ZPayBaseApi:BaseConfigProvider<ZPayConfig, ZPayBaseApi>
     {
         #region  配置信息部分
 
