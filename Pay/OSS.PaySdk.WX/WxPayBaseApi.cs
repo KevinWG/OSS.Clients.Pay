@@ -181,7 +181,7 @@ namespace OSS.PaySdk.Wx
                 var value = item.Value?.ToString();
                 if (item.Key == "sign" || string.IsNullOrEmpty(value)) continue;
 
-                sb.Append(first ? string.Empty : "&").Append(item.Key).Append(value);
+                sb.Append(first ? string.Empty : "&").Append(item.Key).Append("=").Append(value);
 
                 if (first)
                     first = false;
