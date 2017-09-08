@@ -130,7 +130,7 @@ namespace OSS.PaySdk.Ali
     public class ZPayConfig
     {
         /// <summary>
-        ///  格式化类型  只有json
+        ///  格式化类型  只有json（默认） 
         /// </summary>
         public string Format { get; set; } = "JSON";
 

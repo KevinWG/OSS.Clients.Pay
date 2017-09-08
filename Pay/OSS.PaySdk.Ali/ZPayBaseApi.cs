@@ -37,8 +37,6 @@ namespace OSS.PaySdk.Ali
     public abstract class ZPayBaseApi:BaseConfigProvider<ZPayConfig, ZPayBaseApi>
     {
         #region  配置信息部分
-
-        private ZPayRsaAssist _rsaAssist;
         
         /// <summary>
         /// 构造函数
@@ -46,20 +44,17 @@ namespace OSS.PaySdk.Ali
         /// <param name="config"></param>
         protected ZPayBaseApi(ZPayConfig config):base(config)
         {
-            if (config != null)
-                GenerateRsaAssist(config);
         }
-
-        /// <inheritdoc />
-        public override void SetContextConfig(ZPayConfig config)
+        
+        /// <summary>
+        ///  加密对象提供者
+        ///     为了同时满足多租户多线程上下文配置， 所以这里静态线程变量赋值，如果不存在则创建
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        private ZPayRsaAssist GenerateRsaAssist(ZPayConfig config)
         {
-            base.SetContextConfig(config);
-            GenerateRsaAssist(config);
-        }
-
-        private void GenerateRsaAssist(ZPayConfig config)
-        {
-            _rsaAssist = new ZPayRsaAssist(config.AppPrivateKey, config.AppPublicKey, config.Charset);
+            return new ZPayRsaAssist(config.AppPrivateKey, config.AppPublicKey, config.Charset);
         }
 
         #endregion
@@ -68,6 +63,7 @@ namespace OSS.PaySdk.Ali
         /// 支付宝api接口地址
         /// </summary>
         protected const string m_ApiUrl = "https://openapi.alipay.com/gateway.do";
+
 
         /// <summary>
         /// 处理远程请求方法，并返回需要的实体
@@ -175,7 +171,8 @@ namespace OSS.PaySdk.Ali
         {
             try
             {
-                var checkSignRes = _rsaAssist.CheckSign(signContent, sign);
+                var rsaAssist = GenerateRsaAssist(ApiConfig);
+                var checkSignRes = rsaAssist.CheckSign(signContent, sign);
                 if (checkSignRes) return;
 
                 if (!string.IsNullOrEmpty(signContent) &&
@@ -183,7 +180,7 @@ namespace OSS.PaySdk.Ali
                 {
                     signContent = signContent.Replace("\\/", "/");
                     // 如果验签不通过，转义字符后再次验签
-                    checkSignRes = _rsaAssist.CheckSign(signContent, sign);
+                    checkSignRes = rsaAssist.CheckSign(signContent, sign);
                 }
 
                 if (checkSignRes) return;
@@ -259,7 +256,7 @@ namespace OSS.PaySdk.Ali
 
                 //  签名
                 var signContent = string.Join("&", dirs.Select(d => string.Concat(d.Key, "=", d.Value)));
-                var sign = _rsaAssist.GenerateSign(signContent);
+                var sign = GenerateRsaAssist(ApiConfig).GenerateSign(signContent);
                 dirs.Add("sign", sign);
             }
             catch (Exception e)

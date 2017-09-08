@@ -23,6 +23,9 @@ namespace OSS.PaySdk.Ali.SysTools
     /// </summary>
     public class ZPayRsaAssist
     {
+
+        internal string AppId { get; set; }
+
         private readonly RSACryptoServiceProvider m_PublicRsa;
         private readonly RSACryptoServiceProvider m_PrivateRsa ;
         //private readonly string m_SignType;
