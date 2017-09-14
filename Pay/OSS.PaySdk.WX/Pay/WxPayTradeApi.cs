@@ -125,7 +125,7 @@ namespace OSS.PaySdk.Wx.Pay
         public string GetTradeSendXml(ResultMo res)
         {
             return
-                $"<xml><return_code><![CDATA[{(res.IsSuccess() ? "Success" : "FAIL")}]]></return_code><return_msg><![CDATA[{res.msg}]]></return_msg></xml>";
+                $"<xml><return_code><![CDATA[{(res.IsSuccess() ? "success" : "FAIL")}]]></return_code><return_msg><![CDATA[{res.msg}]]></return_msg></xml>";
         }
 
         #endregion
