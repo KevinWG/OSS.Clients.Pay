@@ -26,7 +26,7 @@ using OSS.PaySdk.Wx.SysTools;
 namespace OSS.PaySdk.Wx.Pay
 {
     /// <summary>
-    /// 
+    ///  发起支付相关API
     /// </summary>
     public class WxPayTradeApi : WxPayBaseApi
     {
@@ -38,8 +38,7 @@ namespace OSS.PaySdk.Wx.Pay
         }
 
         #endregion
-
-
+        
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -50,34 +49,44 @@ namespace OSS.PaySdk.Wx.Pay
 
         #region  下单接口
 
+
         /// <summary>
         ///   统一下单接口
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        public async Task<WxAddPayUniOrderResp> AddUniOrderAsync(WxAddPayUniOrderReq order)
+        public async Task<WxAddPayOrderResp> AddUniOrderAsync(WxAddPayUniOrderReq order)
+        {
+            return await AddSmallAppOrderAsync(order);
+        }
+
+        /// <summary>
+        ///   统一下单接口
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        public async Task<WxAddPayOrderResp> AddSmallAppOrderAsync(WxAddSmallAppOrderReq order)
         {
             var dics = order.GetDics();
             dics["notify_url"] = ApiConfig.NotifyUrl;
 
-            string addressUrl = string.Concat(m_ApiUrl, "/pay/unifiedorder");
+            var addressUrl = string.Concat(m_ApiUrl, "/pay/unifiedorder");
 
-            return await PostApiAsync<WxAddPayUniOrderResp>(addressUrl, dics);
+            return await PostApiAsync<WxAddPayOrderResp>(addressUrl, dics);
         }
-
         /// <summary>
-        ///   扫码下单接口
+        ///   刷卡下单接口
         /// 提交支付请求后微信会同步返回支付结果。当返回结果为“系统错误（err_code=SYSTEMERROR）”时，商户系统等待5秒后调用【查询订单API】，查询支付实际交易结果；
         /// 当返回结果为“USERPAYING”时，商户系统可设置间隔时间(建议10秒)重新查询支付结果，直到支付成功或超时(建议30秒)
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        public async Task<WxPayOrderTradeResp> AddMicroPayOrderAsync(WxAddMicroPayOrderReq order)
+        public async Task<WxAddMicroPayOrderResp> AddMicroPayOrderAsync(WxAddMicroPayOrderReq order)
         {
             var dics = order.GetDics();
-            string addressUrl = string.Concat(m_ApiUrl, "/pay/micropay");
+            var addressUrl = string.Concat(m_ApiUrl, "/pay/micropay");
 
-            return await PostApiAsync<WxPayOrderTradeResp>(addressUrl, dics);
+            return await PostApiAsync<WxAddMicroPayOrderResp>(addressUrl, dics);
         }
 
         #endregion
@@ -101,9 +110,7 @@ namespace OSS.PaySdk.Wx.Pay
 
             return await PostApiAsync<WxPayQueryOrderResp>(addressUrl, dics);
         }
-
-
-
+        
 
         #region  订单结果通知解析 和 生成返回结果xml方法
 
@@ -167,10 +174,6 @@ namespace OSS.PaySdk.Wx.Pay
 
         #endregion
 
-
-
-
-
         #region   扫码支付模式一
 
         /// <summary>
@@ -210,7 +213,7 @@ namespace OSS.PaySdk.Wx.Pay
         /// </summary>
         /// <param name="uniOrder"></param>
         /// <returns></returns>
-        public string GetScanCallBackResponse(WxAddPayUniOrderResp uniOrder)
+        public string GetScanCallBackResponse(WxAddPayOrderResp uniOrder)
         {
             var res = new WxPayScanCallBackResMo
             {
@@ -231,9 +234,7 @@ namespace OSS.PaySdk.Wx.Pay
 
 
         #endregion
-
-
-
+        
         #region  下载对账单
 
         /// <summary>

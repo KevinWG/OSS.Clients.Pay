@@ -104,7 +104,7 @@ namespace OSS.PaySdk.Wx
         /// </summary>  
         public string result_code
         {
-            get { return _resultCode; }
+            get => _resultCode;
             set
             {
                 _resultCode = value;
@@ -124,8 +124,7 @@ namespace OSS.PaySdk.Wx
         ///    错误代码描述 可空 String(128) 错误信息描述
         /// </summary>  
         public string err_code_des { get; set; }
-
-
+        
         /// <summary>
         ///   响应对象的xml实体
         /// </summary>

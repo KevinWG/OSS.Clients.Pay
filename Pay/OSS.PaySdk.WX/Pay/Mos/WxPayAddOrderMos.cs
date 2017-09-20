@@ -11,18 +11,41 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Text;
-
 namespace OSS.PaySdk.Wx.Pay.Mos
 {
-
     #region   统一下单接口
 
     /// <summary>
-    ///   微信订单支付统一下单请求参数
+    ///  统一下单请求实体
     /// </summary>
-    public class WxAddPayUniOrderReq: WxAddPayOrderBaseReq
+    public class WxAddPayUniOrderReq  : WxAddSmallAppOrderReq
+    {
+        /// <summary>
+        /// H5场景值 【必填】
+        ///   【IOS 或 Android】 【不建议】 {"h5_info": {"type":"IOS/Android","app_name": "王者荣耀","bundle_id": "com.tencent.wzryIOS"}}
+        ///   【 WAP站点 】{"h5_info": {"type":"Wap","wap_url": "https://m.jd.com","wap_name": "京东官网"}}
+        /// 
+        /// 公众号和扫码支付 场景值 【选填】
+        ///    {"store_info":{"id": "门店ID","name": "名称","area_code": "编码","address": "地址" }} 
+        /// 
+        /// App 场景值 【选填】 
+        ///    { "store_id": "门店唯一标识 选填", "store_name":"门店名称 选填”}
+        /// </summary>
+        public string scene_info { get; set; }
+
+        /// <inheritdoc />
+        protected override void SetSignDics()
+        {
+            base.SetSignDics();
+            SetDicItem("scene_info", scene_info);
+        }
+    }
+
+
+    /// <summary>
+    ///   小程序的统一下单
+    /// </summary>
+    public class WxAddSmallAppOrderReq : WxAddPayOrderBaseReq
     {
         /// <summary>   
         ///    交易起始时间 可空 String(14) 订单生成时间，格式为yyyyMMddHHmmss，如2009年12月25日9点10分10秒表示为20091225091010。其他详见时间规则===
@@ -35,120 +58,43 @@ namespace OSS.PaySdk.Wx.Pay.Mos
         public string time_expire { get; set; }
 
         /// <summary>   
-        ///    交易类型 必填 String(16) 取值如下：JSAPI，NATIVE，APP。H5支付的交易类型为 MWEB
+        ///  交易类型 必填 String(16) 取值如下：JSAPI，NATIVE，APP, MWEB
+        ///    H5支付的交易类型为 MWEB
+        ///    小程序取值如：JSAPI
         /// </summary>  
         public string trade_type { get; set; }
 
         /// <summary>   
-        ///    商品ID 可空 String(32) trade_type=NATIVE时（即扫码支付），此参数必传。此参数为二维码中包含的商品ID，商户自行定义。
+        ///    商品ID 可空 String(32) trade_type=NATIVE时（即扫码支付），此参数必传。
+        ///    此参数为二维码中包含的商品ID，商户自行定义。
         /// </summary>  
         public string product_id { get; set; }
-
-        /// <summary>   
-        ///    指定支付方式 可空 String(32) 上传此参数no_credit--可限制用户不能使用信用卡支付
-        /// </summary>  
-        public string limit_pay { get; set; }
 
         /// <summary>   
         ///    用户标识 可空 String(128) trade_type=JSAPI时（即公众号支付），此参数必传，此参数为微信用户在商户对应appid下的唯一标识。openid如何获取，可参考【获取openid】。企业号请使用【企业号OAuth2.0接口】获取企业号内成员userid，再调用【企业号userid转openid接口】进行转换
         /// </summary>
         public string openid { get; set; }
 
-        /// <summary>
-        ///  H5支付需要的场景值,示例
-        /// {"h5_info": {"type":"IOS/Android","app_name": "王者荣耀","bundle_id": "com.tencent.wzryIOS"}}
-        /// {"h5_info": {"type":"Wap","wap_url": "https://m.jd.com","wap_name": "京东官网"}}
-        /// </summary>
-        public string scene_info { get; set; }
 
-        /// <summary>
-        ///  设置需要需要运算的字典值
-        /// </summary>
+        /// <inheritdoc />
         protected override void SetSignDics()
         {
             base.SetSignDics();
             SetDicItem("time_start", time_start);
             SetDicItem("time_expire", time_expire);
-
             SetDicItem("trade_type", trade_type);
             SetDicItem("product_id", product_id);
-            SetDicItem("limit_pay", limit_pay);
             SetDicItem("openid", openid);
-            SetDicItem("scene_info", scene_info);
         }
         
     }
 
-    /// <summary>
-    /// 支付商品详情实体
-    /// </summary>
-    public class WxPayOrderDetailMo
-    {
-        /// <summary>
-        ///  订单原价，商户侧一张小票订单可能被分多次支付，订单原价用于记录整张小票的支付金额。当订单原价与支付金额不相等则被判定为拆单，无法享受优惠。
-        /// </summary>
-        public int cost_price { get; set; }
-
-        /// <summary>
-        /// 商家小票ID
-        /// </summary>
-        public string receipt_id { get; set; }
-
-        /// <summary>
-        /// 商品详情
-        /// </summary>
-        public List<WxPayOrderDetailItemMo> detail { get; set; }
-    }
 
     /// <summary>
-    /// 支付商品详情条目实体
+    /// 统一支付下单响应
     /// </summary>
-    public class WxPayOrderDetailItemMo
+    public class WxAddPayOrderResp : WxAddPayOrderBaseResp
     {
-        /// <summary>
-        ///  商品的编号
-        /// </summary>
-        public string goods_id { get; set; }
-
-        /// <summary>
-        /// 微信支付定义的统一商品编号
-        /// </summary>
-        public string wxpay_goods_id { get; set; }
-
-        /// <summary>
-        ///  商品名称 
-        /// </summary>
-        public string goods_name { get; set; }
-
-        /// <summary>
-        ///  商品数量 
-        /// </summary>
-        public int quantity { get; set; }
-
-        /// <summary>
-        ///  商品单价，如果商户有优惠，需传输商户优惠后的单价 注意：单品总金额应小于或等于订单总金额total_fee，否则会无法享受优惠
-        /// </summary>
-        public int price { get; set; }
-    }
-
-
-   
-
-    /// <summary>
-    /// 支付下单响应
-    /// </summary>
-    public class WxAddPayUniOrderResp : WxPayBaseResp
-    {
-        /// <summary>   
-        ///    设备号 可空 String(32) 自定义参数，可以为请求支付的终端设备号等
-        /// </summary>  
-        public string device_info { get; set; }
-
-        /// <summary>   
-        ///    交易类型 必填 String(16) 交易类型，取值为：JSAPI，NATIVE，APP,H5支付固定传 【MWEB】
-        /// </summary>  
-        public string trade_type { get; set; }
-
         /// <summary>   
         ///    预支付交易会话标识 必填 String(64) 微信生成的预支付回话标识，用于后续接口调用中使用，该值有效期为2小时
         /// </summary>  
@@ -158,39 +104,19 @@ namespace OSS.PaySdk.Wx.Pay.Mos
         ///    二维码链接 可空 String(64) trade_type为NATIVE时有返回，用于生成二维码，展示给用户进行扫码支付
         /// </summary>  
         public string code_url { get; set; }
-
+         
         /// <summary>
-        /// 支付跳转链接
+        /// 支付跳转链接【H5支付使用】
         /// mweb_url为拉起微信支付收银台的中间页面，可通过访问该url来拉起微信客户端，完成支付,mweb_url的有效期为5分钟
         /// </summary>
         public string mweb_url { get; set; }
 
+        /// <inheritdoc />
         protected override void FormatPropertiesFromMsg()
         {
-            device_info = this["device_info"];
-            trade_type = this["trade_type"];
             prepay_id = this["prepay_id"];
             code_url = this["code_url"];
             mweb_url = this["mweb_url"];
-        }
-    }
-    #endregion
-
-    #region   扫码下单接口
-    /// <summary>
-    ///  扫码下单请求
-    /// </summary>
-    public class WxAddMicroPayOrderReq : WxAddPayOrderBaseReq
-    {
-        /// <summary>   
-        ///    授权码 必填 String(128) 扫码支付授权码，设备读取用户微信中的条码或者二维码信息
-        /// </summary>  
-        public string auth_code { get; set; }
-
-        protected override void SetSignDics()
-        {
-            base.SetSignDics();
-            SetDicItem("auth_code", auth_code);
         }
     }
 
@@ -225,7 +151,7 @@ namespace OSS.PaySdk.Wx.Pay.Mos
         ///    标价币种 可空 String(16) 符合ISO 4217标准的三位字母代码，默认人民币：CNY，详细列表请参见货币类型
         /// </summary>  
         public string fee_type { get; set; } = "CNY";
-
+        
         /// <summary>   
         ///    标价金额 必填 Int 订单总金额，单位为分，详见支付金额
         /// </summary>  
@@ -235,17 +161,22 @@ namespace OSS.PaySdk.Wx.Pay.Mos
         ///    终端IP 必填 String(16) APP和网页支付提交用户端ip，Native支付填调用微信支付API的机器IP。
         /// </summary>  
         public string spbill_create_ip { get; set; }
-        
+
         /// <summary>   
-        ///    商品标记 可空 String(32) 商品标记，使用代金券或立减优惠功能时需要的参数，说明详见代金券或立减优惠
+        /// 订单优惠标记 可空 String(32) 商品标记，使用代金券或立减优惠功能时需要的参数，说明详见代金券或立减优惠
         /// </summary>  
         public string goods_tag { get; set; }
         
         /// <summary>
         /// 商品条目详情
         /// </summary>
-        public WxPayOrderDetailMo detail { get; set; }
+        public string detail { get; set; }
 
+        /// <summary>   
+        ///    指定支付方式 可空 String(32) 上传此参数no_credit--可限制用户不能使用信用卡支付
+        /// </summary>  
+        public string limit_pay { get; set; }
+        
         /// <summary>
         ///  设置需要需要运算的字典值
         /// </summary>
@@ -260,31 +191,32 @@ namespace OSS.PaySdk.Wx.Pay.Mos
             SetDicItem("total_fee", total_fee);
             SetDicItem("spbill_create_ip", spbill_create_ip);
             SetDicItem("goods_tag", goods_tag);
-
-            if (detail == null) return;
-
-            var detailStr = new StringBuilder("{");
-
-            detailStr.Append("\"cost_price\":").Append(detail.cost_price);
-            detailStr.Append(",\"receipt_id\":\"").Append(detail.receipt_id).Append("\"");
-            if (detail.detail != null && detail.detail.Count > 0)
-            {
-                detailStr.Append(",\"detail\":[");
-                foreach (var item in detail.detail)
-                {
-                    detailStr.Append("{");
-                    detailStr.Append("\"goods_id\":\"").Append(item.goods_id).Append("\"");
-                    detailStr.Append(",\"wxpay_goods_id\":\"").Append(item.wxpay_goods_id).Append("\"");
-                    detailStr.Append(",\"goods_name\":\"").Append(item.goods_name).Append("\"");
-                    detailStr.Append(",\"quantity\":").Append(item.quantity);
-                    detailStr.Append(",\"price\":").Append(item.price);
-                    detailStr.Append("}");
-                }
-                detailStr.Append("]");
-            }
-            detailStr.Append("}");
-            SetDicItem("detail", detailStr.ToString());
+            SetDicItem("detail", detail);
+            SetDicItem("limit_pay", limit_pay);
         }
     }
+    
+    /// <summary>
+    /// 支付下单响应
+    /// </summary>
+    public class WxAddPayOrderBaseResp : WxPayBaseResp
+    {
+        /// <summary>   
+        ///    设备号 可空 String(32) 自定义参数，可以为请求支付的终端设备号等
+        /// </summary>  
+        public string device_info { get; set; }
 
+        /// <summary>   
+        ///    交易类型 必填 String(16) 交易类型，取值为：JSAPI，NATIVE，APP,H5支付固定传 【MWEB】
+        /// </summary>  
+        public string trade_type { get; set; }
+
+
+        /// <inheritdoc />
+        protected override void FormatPropertiesFromMsg()
+        {
+            device_info = this["device_info"];
+            trade_type = this["trade_type"];
+        }
+    }
 }
