@@ -37,7 +37,7 @@ namespace OSS.PaySdk.Wx.Cash
             var dics = cashReq.GetDics();
 
             dics.Add("mch_appid", ApiConfig.AppId);
-            dics.Add("mch_id", ApiConfig.MchId);
+            dics.Add("mchid", ApiConfig.MchId);
 
             CompleteDicSign(dics);
 
