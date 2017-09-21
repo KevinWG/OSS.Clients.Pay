@@ -11,6 +11,8 @@
 
 #endregion
 
+using OSS.Common.ComModels;
+
 namespace OSS.PaySdk.Wx.Pay.Mos
 {
     #region   统一下单接口
@@ -218,5 +220,57 @@ namespace OSS.PaySdk.Wx.Pay.Mos
             device_info = this["device_info"];
             trade_type = this["trade_type"];
         }
+    }
+
+    /// <summary>
+    ///  获取公众号和小程序唤起客户端需要的实体
+    /// </summary>
+    public class WxGetJsClientParaResp : ResultMo
+    {
+        /// <summary>
+        ///  公众号id
+        /// </summary>
+        public string app_id { get; set; }
+
+        /// <summary>
+        ///  时间戳
+        /// </summary>
+        public string time_stamp { get; set; }
+
+        /// <summary>
+        ///  随机字符串
+        /// </summary>
+        public string nonce { get; set; }
+
+        /// <summary>
+        ///  订单详情扩展字符串
+        /// </summary>
+        public string package { get; set; }
+
+        /// <summary>
+        ///  签名方式
+        /// </summary>
+        public string sign_type { get; set; } = "MD5";
+
+        /// <summary>
+        ///  签名
+        /// </summary>
+        public string sign { get; set; }
+    }
+
+    /// <summary>
+    /// 获取App唤起客户端需要的实体
+    /// </summary>
+    public class WxGetAppClientParaResp : WxGetJsClientParaResp
+    {
+        /// <summary>
+        ///  预支付交易会话ID	
+        /// </summary>
+        public string prepay_id { get; set; }
+
+        /// <summary>
+        ///  商户号Id
+        /// </summary>
+        public string mch_id { get; set; }
     }
 }

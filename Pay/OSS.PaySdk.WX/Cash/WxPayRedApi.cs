@@ -107,11 +107,13 @@ namespace OSS.PaySdk.Wx.Cash
         public async Task<WxPayQueryRedResp> QueryRedAsync(string mch_billno, string bill_type = "MCHT")
         {
             var urlStr = string.Concat(m_ApiUrl, "/mmpaymkttransfers/gethbinfo");
-            var dics = new SortedDictionary<string, object>();
-            dics["nonce_str"] = Guid.NewGuid().ToString().Replace("-", "");
 
-            dics["mch_billno"] = mch_billno;
-            dics["bill_type"] = bill_type;
+            var dics = new SortedDictionary<string, object>
+            {
+                ["nonce_str"] = SysUtil.GenerateNonceStr(),
+                ["mch_billno"] = mch_billno,
+                ["bill_type"] = bill_type
+            };
 
             return await PostApiAsync<WxPayQueryRedResp>(urlStr, dics,null,GetCertHttpClient());
         }

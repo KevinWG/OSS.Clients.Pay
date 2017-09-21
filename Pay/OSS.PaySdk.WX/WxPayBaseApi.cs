@@ -100,21 +100,14 @@ namespace OSS.PaySdk.Wx
         protected T GetRespResult<T>(string contentStr) where T : WxPayBaseResp, new()
         {
             XmlDocument resultXml = null;
-            var dics = XmlDicHelper.ChangXmlToDir(contentStr, ref resultXml);
+            var dics = SysUtil.ChangXmlToDir(contentStr, ref resultXml);
 
             var t = new T {RespXml = resultXml};
             t.FromResContent(dics);
 
             if (dics.ContainsKey("sign"))
             {
-                var sb = new StringBuilder();
-                foreach (var d in dics.Where(d => d.Key != "sign" && !string.IsNullOrEmpty(d.Value)))
-                {
-                    sb.AppendFormat("{0}={1}&", d.Key, d.Value);
-                }
-
-                var encryptStr = sb.ToString().TrimEnd('&');
-                var signStr = GetSign(encryptStr);
+                var signStr = GetSign(GetSignContent(dics));
 
                 if (signStr != t.sign)
                 {
@@ -169,38 +162,46 @@ namespace OSS.PaySdk.Wx
 
         /// <summary>
         ///  补充完善 字典sign签名
+        ///  toDelete
         /// </summary>
         /// <param name="xmlDirs"></param>
         protected internal void CompleteDicSign(SortedDictionary<string, object> xmlDirs)
         {
-            var sb = new StringBuilder();
-            var first = true;
-
-            foreach (var item in xmlDirs)
-            {
-                var value = item.Value?.ToString();
-                if (item.Key == "sign" || string.IsNullOrEmpty(value)) continue;
-
-                sb.Append(first ? string.Empty : "&").Append(item.Key).Append("=").Append(value);
-
-                if (first)
-                    first = false;
-            }
-            
-            var encStr = sb.ToString();
-            var sign = GetSign(encStr);// Md5.EncryptHexString(string.Concat(encStr, "&key=", ApiConfig.Key)).ToUpper();
+            var encStr = GetSignContent(xmlDirs);
+            var sign = GetSign(encStr);
             xmlDirs.Add("sign", sign);
         }
 
         /// <summary>
         /// 生成签名,统一方法
         /// </summary>
-        /// <param name="encryptStr">不含key的参与签名串</param>
+        /// <param name="encStr">不含key的参与签名串</param>
         /// <returns></returns>
-        protected string GetSign(string encryptStr)
+        protected string GetSign(string encStr)
         {
-            return Md5.EncryptHexString(string.Concat(encryptStr, "&key=", ApiConfig.Key)).ToUpper();
+            return Md5.EncryptHexString(string.Concat(encStr, "&key=", ApiConfig.Key)).ToUpper();
         }
+        /// <summary>
+        ///  获取签名内容字符串
+        /// </summary>
+        /// <param name="xmlDirs"></param>
+        /// <returns></returns>
+        protected static string GetSignContent(SortedDictionary<string, object> xmlDirs)
+        {
+            var sb = new StringBuilder();
+
+            foreach (var item in xmlDirs)
+            {
+                var value = item.Value?.ToString();
+                if (item.Key == "sign" || string.IsNullOrEmpty(value)) continue;
+
+                sb.Append(item.Key).Append("=").Append(value).Append("&");
+            }
+
+            var encStr = sb.ToString().TrimEnd('&');
+            return encStr;
+        }
+
         #endregion
 
         #region  全局错误处理

@@ -13,7 +13,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using OSS.Common.ComModels;
 using OSS.Common.ComModels.Enums;
@@ -74,6 +73,8 @@ namespace OSS.PaySdk.Wx.Pay
 
             return await PostApiAsync<WxAddPayOrderResp>(addressUrl, dics);
         }
+
+
         /// <summary>
         ///   刷卡下单接口
         /// 提交支付请求后微信会同步返回支付结果。当返回结果为“系统错误（err_code=SYSTEMERROR）”时，商户系统等待5秒后调用【查询订单API】，查询支付实际交易结果；
@@ -88,6 +89,69 @@ namespace OSS.PaySdk.Wx.Pay
 
             return await PostApiAsync<WxAddMicroPayOrderResp>(addressUrl, dics);
         }
+
+        /// <summary>
+        ///  获取js唤起客户端参数
+        /// </summary>
+        /// <param name="addRes"></param>
+        /// <returns></returns>
+        public WxGetJsClientParaResp GetJsClientParaResp(WxAddPayOrderResp addRes)
+        {
+            var jsPara = new WxGetJsClientParaResp
+            {
+                app_id = ApiConfig.AppId,
+                time_stamp = DateTime.Now.ToLocalSeconds().ToString(),
+                nonce = SysUtil.GenerateNonceStr(),
+                package = string.Concat("prepay_id=", addRes.prepay_id)
+            };
+
+            var dics = new SortedDictionary<string, object>
+            {
+                ["appId"] = jsPara.app_id,
+                ["timeStamp"] = jsPara.time_stamp,
+                ["nonceStr"] = jsPara.nonce,
+                ["package"] = jsPara.package,
+                ["signType"] = jsPara.sign_type
+            };
+            jsPara.sign = GetSign(GetSignContent(dics));
+
+            return jsPara;
+        }
+
+        /// <summary>
+        /// 获取app唤起客户端参数
+        /// </summary>
+        /// <param name="addRes"></param>
+        /// <returns></returns>
+        public WxGetAppClientParaResp GetAppClientParaResp(WxAddPayOrderResp addRes)
+        {
+            var appPara = new WxGetAppClientParaResp
+            {
+                app_id = ApiConfig.AppId,
+                mch_id = ApiConfig.MchId,
+                time_stamp = DateTime.Now.ToLocalSeconds().ToString(),
+                nonce = SysUtil.GenerateNonceStr(),
+                prepay_id = addRes.prepay_id,
+
+                package = "Sign=WXPay"
+            };
+
+            var dics = new SortedDictionary<string, object>
+            {
+                ["appid"] = appPara.app_id,
+                ["partnerid"] = appPara.mch_id,
+                ["timeStamp"] = appPara.time_stamp,
+                ["nonceStr"] = appPara.nonce,
+                ["package"] = appPara.package,
+
+                ["prepayid"] = appPara.prepay_id
+            };
+            appPara.sign = GetSign(GetSignContent(dics));
+
+            return appPara;
+        }
+
+    
 
         #endregion
 
@@ -148,9 +212,11 @@ namespace OSS.PaySdk.Wx.Pay
         {
             var url = string.Concat(m_ApiUrl, "/tools/shorturl");
 
-            var dics = new SortedDictionary<string, object>();
-            dics["nonce_str"] = Guid.NewGuid().ToString().Replace("-", "");
-            dics["long_url"] = long_url;
+            var dics = new SortedDictionary<string, object>
+            {
+                ["nonce_str"] = SysUtil.GenerateNonceStr(),
+                ["long_url"] = long_url
+            };
 
             return await PostApiAsync<WxPayGetShortUrlResp>(url, dics, null, null,
                 d => d["long_url"] = d["long_url"].UrlEncode());
@@ -165,9 +231,11 @@ namespace OSS.PaySdk.Wx.Pay
         {
             var url = string.Concat(m_ApiUrl, "/tools/authcodetoopenid");
 
-            var dics = new SortedDictionary<string, object>();
-            dics["nonce_str"] = Guid.NewGuid().ToString().Replace("-", "");
-            dics["auth_code"] = auth_code;
+            var dics = new SortedDictionary<string, object>
+            {
+                ["nonce_str"] = SysUtil.GenerateNonceStr(),
+                ["auth_code"] = auth_code
+            };
 
             return await PostApiAsync<WxPayAuthCodeOpenIdResp>(url, dics);
         }
@@ -183,16 +251,15 @@ namespace OSS.PaySdk.Wx.Pay
         /// <returns></returns>
         public string CreateScanCode(string product_id)
         {
-            var dics = new SortedDictionary<string, string>
+            var dics = new SortedDictionary<string, object>
             {
                 ["time_stamp"] = DateTime.Now.ToLocalSeconds().ToString(),
-                ["nonce_str"] = Guid.NewGuid().ToString().Replace("-", ""),
+                ["nonce_str"] = SysUtil.GenerateNonceStr(),
                 ["product_id"] = product_id,
                 ["appid"] = ApiConfig.AppId,
                 ["mch_id"] = ApiConfig.MchId
             };
-
-            string encStr = string.Join("&", dics.Select(k => string.Concat(k.Key, "=", k.Value)));
+            var encStr = GetSignContent(dics);
             var sign = GetSign(encStr);
 
             return string.Concat("weixin://wxpay/bizpayurl?", encStr, "&sign=", sign);

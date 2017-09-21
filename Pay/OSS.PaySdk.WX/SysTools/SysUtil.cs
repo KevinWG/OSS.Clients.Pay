@@ -18,7 +18,7 @@ using System.Xml;
 
 namespace OSS.PaySdk.Wx.SysTools
 {
-    internal static class XmlDicHelper
+    internal static class SysUtil
     {
         /// <summary>
         ///  字典转到xml
@@ -64,13 +64,13 @@ namespace OSS.PaySdk.Wx.SysTools
         /// <param name="xmlStr"></param>
         /// <param name="xmlDoc">通过字符串转化后的xml对象</param>
         /// <returns></returns>
-        public static SortedDictionary<string, string> ChangXmlToDir(string xmlStr,ref XmlDocument xmlDoc)
+        public static SortedDictionary<string, object> ChangXmlToDir(string xmlStr,ref XmlDocument xmlDoc)
         {
             if (string.IsNullOrEmpty(xmlStr))
             {
                 return null;
             }
-            var dirs = new SortedDictionary<string, string>();
+            var dirs = new SortedDictionary<string, object>();
 
             xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xmlStr);
@@ -84,6 +84,30 @@ namespace OSS.PaySdk.Wx.SysTools
             }
 
             return dirs;
+        }
+
+        
+        private static readonly Random _rnd = new Random();
+        private static readonly char[] _arrChar = {
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            'a', 'b', 'd', 'c', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'p', 'r', 'q', 's', 't', 'u', 'v',
+            'w', 'z', 'y', 'x',
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'Q', 'P', 'R', 'T', 'S', 'V', 'U',
+            'W', 'X', 'Y', 'Z'
+        };
+        /// <summary>
+        /// 生成随机串
+        /// </summary>
+        /// <returns></returns>
+        public static string GenerateNonceStr()
+        {
+            var num = new StringBuilder();
+
+            for (var i = 0; i < 8; i++)
+            {
+                num.Append(_arrChar[_rnd.Next(0, 59)].ToString());
+            }
+            return num.ToString();
         }
     }
 }
