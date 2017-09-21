@@ -93,16 +93,16 @@ namespace OSS.PaySdk.Wx.Pay
         /// <summary>
         ///  获取js唤起客户端参数
         /// </summary>
-        /// <param name="addRes"></param>
+        /// <param name="prepayId">预支付交易Id</param>
         /// <returns></returns>
-        public WxGetJsClientParaResp GetJsClientParaResp(WxAddPayOrderResp addRes)
+        public WxGetJsClientParaResp GetJsClientParaResp(string prepayId)
         {
             var jsPara = new WxGetJsClientParaResp
             {
                 app_id = ApiConfig.AppId,
                 time_stamp = DateTime.Now.ToLocalSeconds().ToString(),
                 nonce = SysUtil.GenerateNonceStr(),
-                package = string.Concat("prepay_id=", addRes.prepay_id)
+                package = string.Concat("prepay_id=", prepayId)
             };
 
             var dics = new SortedDictionary<string, object>
@@ -121,9 +121,9 @@ namespace OSS.PaySdk.Wx.Pay
         /// <summary>
         /// 获取app唤起客户端参数
         /// </summary>
-        /// <param name="addRes"></param>
+        /// <param name="prepayId">预支付交易Id</param>
         /// <returns></returns>
-        public WxGetAppClientParaResp GetAppClientParaResp(WxAddPayOrderResp addRes)
+        public WxGetAppClientParaResp GetAppClientParaResp(string prepayId)
         {
             var appPara = new WxGetAppClientParaResp
             {
@@ -131,7 +131,7 @@ namespace OSS.PaySdk.Wx.Pay
                 mch_id = ApiConfig.MchId,
                 time_stamp = DateTime.Now.ToLocalSeconds().ToString(),
                 nonce = SysUtil.GenerateNonceStr(),
-                prepay_id = addRes.prepay_id,
+                prepay_id = prepayId,
 
                 package = "Sign=WXPay"
             };
