@@ -101,6 +101,7 @@ namespace OSS.PaySdk.Wx.Cash.Mos
         protected override void FormatPropertiesFromMsg()
         {
             base.FormatPropertiesFromMsg();
+            mch_id = this["mchid"];
             partner_trade_no = this["partner_trade_no"];
             payment_no = this["payment_no"];
             payment_time = this["payment_time"];
