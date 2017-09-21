@@ -67,8 +67,6 @@ namespace OSS.PaySdk.Wx.Pay
         public async Task<WxAddPayOrderResp> AddSmallAppOrderAsync(WxAddSmallAppOrderReq order)
         {
             var dics = order.GetDics();
-            dics["notify_url"] = ApiConfig.NotifyUrl;
-
             var addressUrl = string.Concat(m_ApiUrl, "/pay/unifiedorder");
 
             return await PostApiAsync<WxAddPayOrderResp>(addressUrl, dics);
@@ -187,18 +185,7 @@ namespace OSS.PaySdk.Wx.Pay
         {
             return GetRespResult<WxPayOrderTradeResp>(contentXmlStr);
         }
-
-        /// <summary>
-        ///   接受微信支付通知后需要返回的信息
-        /// </summary>
-        /// <param name="res"></param>
-        /// <returns></returns>
-        public string GetTradeSendXml(ResultMo res)
-        {
-            return
-                $"<xml><return_code><![CDATA[{(res.IsSuccess() ? "SUCCESS" : "FAIL")}]]></return_code><return_msg><![CDATA[{res.msg}]]></return_msg></xml>";
-        }
-
+        
         #endregion
 
         #region  辅助部分方法

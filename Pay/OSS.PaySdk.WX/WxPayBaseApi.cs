@@ -202,7 +202,19 @@ namespace OSS.PaySdk.Wx
             return encStr;
         }
 
+        /// <summary>
+        ///   接受微信支付通知后需要返回的信息
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
+        public string GetCallBackReturnXml(ResultMo res)
+        {
+            return
+                $"<xml><return_code><![CDATA[{(res.IsSuccess() ? "SUCCESS" : "FAIL")}]]></return_code><return_msg><![CDATA[{res.msg}]]></return_msg></xml>";
+        }
         #endregion
+
+
 
         #region  全局错误处理
 

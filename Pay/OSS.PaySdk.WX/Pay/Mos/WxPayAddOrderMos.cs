@@ -20,18 +20,16 @@ namespace OSS.PaySdk.Wx.Pay.Mos
     /// <summary>
     ///  统一下单请求实体
     /// </summary>
-    public class WxAddPayUniOrderReq  : WxAddSmallAppOrderReq
+    public class WxAddPayUniOrderReq : WxAddSmallAppOrderReq
     {
         /// <summary>
-        /// H5场景值 【必填】
-        ///   【IOS 或 Android】 【不建议】 {"h5_info": {"type":"IOS/Android","app_name": "王者荣耀","bundle_id": "com.tencent.wzryIOS"}}
-        ///   【 WAP站点 】{"h5_info": {"type":"Wap","wap_url": "https://m.jd.com","wap_name": "京东官网"}}
-        /// 
-        /// 公众号和扫码支付 场景值 【选填】
-        ///    {"store_info":{"id": "门店ID","name": "名称","area_code": "编码","address": "地址" }} 
-        /// 
-        /// App 场景值 【选填】 
-        ///    { "store_id": "门店唯一标识 选填", "store_name":"门店名称 选填”}
+        /// <para>H5场景值 【必填】</para>
+        /// <para>   WAP站点:{"h5_info": {"type":"Wap","wap_url": "https://m.jd.com","wap_name": "京东官网"}}</para>
+        /// <para>   IOS 或 Android(不建议H5，优先app支付): {"h5_info": {"type":"IOS/Android","app_name": "王者荣耀","bundle_id": "com.tencent.wzryIOS"}}</para>
+        /// <para>公众号和扫码支付 场景值 【选填】</para>
+        /// <para>    {"store_info":{"id": "门店ID","name": "名称","area_code": "编码","address": "地址" }} </para>
+        /// <para>App 场景值 【选填】</para>
+        /// <para>    { "store_id": "门店唯一标识 选填", "store_name":"门店名称 选填”}</para>
         /// </summary>
         public string scene_info { get; set; }
 
@@ -76,7 +74,11 @@ namespace OSS.PaySdk.Wx.Pay.Mos
         ///    用户标识 可空 String(128) trade_type=JSAPI时（即公众号支付），此参数必传，此参数为微信用户在商户对应appid下的唯一标识。openid如何获取，可参考【获取openid】。企业号请使用【企业号OAuth2.0接口】获取企业号内成员userid，再调用【企业号userid转openid接口】进行转换
         /// </summary>
         public string openid { get; set; }
-
+        
+        /// <summary>
+        ///  回调通知地址,公号等用到
+        /// </summary>
+        public string notify_url { get; set; }
 
         /// <inheritdoc />
         protected override void SetSignDics()
@@ -87,6 +89,8 @@ namespace OSS.PaySdk.Wx.Pay.Mos
             SetDicItem("trade_type", trade_type);
             SetDicItem("product_id", product_id);
             SetDicItem("openid", openid);
+
+            SetDicItem("notify_url", notify_url);
         }
         
     }
@@ -136,6 +140,12 @@ namespace OSS.PaySdk.Wx.Pay.Mos
 
         /// <summary>   
         ///    商品描述 必填 String(128) 商品简单描述，该字段请按照规范传递，具体请见参数规定 https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=4_2
+        /// <para>商品描述交易字段格式根据不同的应用场景按照以下格式：
+        ///（1）PC网站——传入浏览器打开的网站主页title名-实际商品名称，例如：腾讯充值中心-QQ会员充值；
+        ///（2） 公众号——传入公众号名称-实际商品名称，例如：腾讯形象店- image-QQ公仔；
+        ///（3） H5——应用在浏览器网页上的场景，传入浏览器打开的移动网页的主页title名-实际商品名称，例如：腾讯充值中心-QQ会员充值；
+        ///（4） 线下门店——门店品牌名-城市分店名-实际商品名称，例如： image形象店-深圳腾大- QQ公仔）
+        ///（5） APP——需传入应用市场上的APP名字-实际商品名称，天天爱消除-游戏充值</para>
         /// </summary>  
         public string body { get; set; }
 
@@ -170,7 +180,7 @@ namespace OSS.PaySdk.Wx.Pay.Mos
         public string goods_tag { get; set; }
         
         /// <summary>
-        /// 商品条目详情
+        /// 商品条目详情: 请参照具体的JSON格式
         /// </summary>
         public string detail { get; set; }
 
@@ -209,7 +219,7 @@ namespace OSS.PaySdk.Wx.Pay.Mos
         public string device_info { get; set; }
 
         /// <summary>   
-        ///    交易类型 必填 String(16) 交易类型，取值为：JSAPI，NATIVE，APP,H5支付固定传 【MWEB】
+        ///    交易类型 必填 String(16) 交易类型，取值为：JSAPI，NATIVE，APP，MWEB。
         /// </summary>  
         public string trade_type { get; set; }
 

@@ -177,13 +177,11 @@ namespace OSS.PaySdk.Wx
         #endregion
     }
 
+    /// <summary>
+    ///  微信支付配置信息
+    /// </summary>
     public class WxPayCenterConfig
     {
-        /// <summary>
-        ///  应用来源，自定义字段
-        /// </summary>
-        public string AppSource { get; set; }
-
         /// <summary>
         ///  应用Id
         /// </summary>
@@ -204,12 +202,7 @@ namespace OSS.PaySdk.Wx
         /// </summary>
         public string Key { get; set; }
 
-        /// <summary>
-        ///  回调通知地址,公号等用到
-        /// </summary>
-        public string NotifyUrl { get; set; }
-
-
+        
         /// <summary>
         /// 证书路径,  请填写绝对路径，为了安全，请不要将证书放在网站目录下
         /// </summary>
@@ -220,8 +213,4 @@ namespace OSS.PaySdk.Wx
         /// </summary>
         public string CertPassword { get; set; }
     }
-
-
-
-
 }
