@@ -18,39 +18,48 @@
 // 声明配置
 private static WxPayCenterConfig config= new WxPayCenterConfig()
 {
-    AppSource = "11",
-    AppId = "wx2428e34e0e7dc6ef",
-    MchId = "1233410002",
-    Key = "e10adc3849ba56abbe56e056f20f883e",
-    AppSecret = "51c56b886b5be869567dd389b3e5d1d6",
+    AppId = "xxxxxxxxxx",
+    MchId = "xxxxxxxxxx",
+    Key = "xxxxxxxxxx",
+    AppSecret = "xxxxxxxxxx",
 
-    CertPassword = "1233410002",
-    CertPath = "cert/apiclient_cert.p12",
-    NotifyUrl = "http://www.osscoder.com",
-    // 设置证书附加请求方式
-    SetCertificata = (handler, cert) =>
-    {
-        handler.ServerCertificateCustomValidationCallback = (msg, c, chain, sslErrors) => true;
-        handler.ClientCertificates.Add(cert);
-    }
+    CertPassword = "xxxxxxxxxx",
+    CertPath = "cert/xxxxxxxxxx.p12"   
 };
-//  调用示例
-private static WxPayTradeApi m_Api=new WxPayTradeApi(config);
+//  公众号调用示例
+private static WxPayTradeApi _api=new WxPayTradeApi(config);
 
-public void AddUniOrderAsyncTest()
+public async Task<IActionResult> GetJsPayInfo()
 {
-    var order = new WxAddPayUniOrderReq();
+    var order = new WxAddPayUniOrderReq
+    {
+        notify_url = "http://你的域名/wxpay/receive",
+        body = "OSSCoder-测试商品",
+        device_info = "WEB",
+        openid = "oldRAw-Wu4eOD5CVPWeWVDOvhRbo",
+        out_trade_no = "123456789",
+        spbill_create_ip = "114.242.25.208",
+        total_fee = 1,
+        trade_type = "JSAPI"
+    };
+    
+    var orderRes=await _api.AddUniOrderAsync(order);
+    if (!orderRes.IsSuccess()) return Json(orderRes);
 
-    order.device_info = "WEB";
-    order.body = "测试商品支付";
-    order.openid = "sdfvsfdbf345678888fhngfbsdfbsdfb";
-
-    order.out_trade_no = "2017022423560123";
-    order.trade_type = "JSAPI";
-    order.total_fee = 100;
-
-    var res = m_Api.AddUniOrderAsync(order).WaitResult();
-    Assert.IsTrue(res.IsSuccess);
+    var jsPara = _api.GetJsClientParaResp(orderRes.prepay_id);
+    return Json(jsPara);
+}
+public IActionResult receive()
+{
+    string strPayResult;
+    using (var streamReader = new StreamReader(Request.Body))
+    {
+        strPayResult = streamReader.ReadToEnd();
+    }
+    var payRes = _api.DecryptTradeResult(strPayResult);
+    // to do something with payRes
+    var returnXml = _api.GetCallBackReturnXml(new ResultMo());
+    return Content(returnXml);
 }
 ```
 
@@ -63,7 +72,7 @@ public void AddUniOrderAsyncTest()
 protected static ZPayCenterConfig ZPayConfig { get; set; } = new ZPayCenterConfig()
 {
     AppSource = "1",
-    AppId = "2016080300153582",
+    AppId = "xxxxxxxxxx",
     AppPrivateKey = privateKey,
     AppPublicKey = publicKey
 };
