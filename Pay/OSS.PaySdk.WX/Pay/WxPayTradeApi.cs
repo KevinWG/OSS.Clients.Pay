@@ -56,16 +56,6 @@ namespace OSS.PaySdk.Wx.Pay
         /// <returns></returns>
         public async Task<WxAddPayOrderResp> AddUniOrderAsync(WxAddPayUniOrderReq order)
         {
-            return await AddSmallAppOrderAsync(order);
-        }
-
-        /// <summary>
-        ///   统一下单接口
-        /// </summary>
-        /// <param name="order"></param>
-        /// <returns></returns>
-        public async Task<WxAddPayOrderResp> AddSmallAppOrderAsync(WxAddSmallAppOrderReq order)
-        {
             var dics = order.GetDics();
             var addressUrl = string.Concat(m_ApiUrl, "/pay/unifiedorder");
 
@@ -181,7 +171,7 @@ namespace OSS.PaySdk.Wx.Pay
         /// </summary>
         /// <param name="contentXmlStr">通知结果内容</param>
         /// <returns>如果签名验证不通过，Ret=310</returns>
-        public WxPayOrderTradeResp DecryptTradeResult(string contentXmlStr)
+        public WxPayOrderTradeResp DecryptPayResult(string contentXmlStr)
         {
             return GetRespResult<WxPayOrderTradeResp>(contentXmlStr);
         }

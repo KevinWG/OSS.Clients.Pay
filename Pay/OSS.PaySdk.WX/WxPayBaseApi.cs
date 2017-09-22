@@ -16,6 +16,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -291,7 +292,7 @@ namespace OSS.PaySdk.Wx
    
             var reqHandler = new HttpClientHandler
             {
-                ServerCertificateCustomValidationCallback = (msg, c, chain, sslErrors) => true
+                ServerCertificateCustomValidationCallback = (msg, c, chain, sslErrors) => sslErrors == SslPolicyErrors.None
             };
 
             var cert = new X509Certificate2(ApiConfig.CertPath, ApiConfig.CertPassword);

@@ -18,34 +18,9 @@ namespace OSS.PaySdk.Wx.Pay.Mos
     #region   统一下单接口
 
     /// <summary>
-    ///  统一下单请求实体
+    ///   统一下单请求实体
     /// </summary>
-    public class WxAddPayUniOrderReq : WxAddSmallAppOrderReq
-    {
-        /// <summary>
-        /// <para>H5场景值 【必填】</para>
-        /// <para>   WAP站点:{"h5_info": {"type":"Wap","wap_url": "https://m.jd.com","wap_name": "京东官网"}}</para>
-        /// <para>   IOS 或 Android(不建议H5，优先app支付): {"h5_info": {"type":"IOS/Android","app_name": "王者荣耀","bundle_id": "com.tencent.wzryIOS"}}</para>
-        /// <para>公众号和扫码支付 场景值 【选填】</para>
-        /// <para>    {"store_info":{"id": "门店ID","name": "名称","area_code": "编码","address": "地址" }} </para>
-        /// <para>App 场景值 【选填】</para>
-        /// <para>    { "store_id": "门店唯一标识 选填", "store_name":"门店名称 选填”}</para>
-        /// </summary>
-        public string scene_info { get; set; }
-
-        /// <inheritdoc />
-        protected override void SetSignDics()
-        {
-            base.SetSignDics();
-            SetDicItem("scene_info", scene_info);
-        }
-    }
-
-
-    /// <summary>
-    ///   小程序的统一下单
-    /// </summary>
-    public class WxAddSmallAppOrderReq : WxAddPayOrderBaseReq
+    public class WxAddPayUniOrderReq : WxAddPayOrderBaseReq
     {
         /// <summary>   
         ///    交易起始时间 可空 String(14) 订单生成时间，格式为yyyyMMddHHmmss，如2009年12月25日9点10分10秒表示为20091225091010。其他详见时间规则===
@@ -79,7 +54,18 @@ namespace OSS.PaySdk.Wx.Pay.Mos
         ///  回调通知地址,公号等用到
         /// </summary>
         public string notify_url { get; set; }
+        /// <summary>
+        /// <para>H5场景值 【必填】</para>
+        /// <para>   WAP站点:{"h5_info": {"type":"Wap","wap_url": "https://m.jd.com","wap_name": "京东官网"}}</para>
+        /// <para>   IOS 或 Android(不建议H5，优先app支付): {"h5_info": {"type":"IOS/Android","app_name": "王者荣耀","bundle_id": "com.tencent.wzryIOS"}}</para>
+        /// <para>公众号和扫码支付 场景值 【选填】</para>
+        /// <para>    {"store_info":{"id": "门店ID","name": "名称","area_code": "编码","address": "地址" }} </para>
+        /// <para>App 场景值 【选填】</para>
+        /// <para>    { "store_id": "门店唯一标识 选填", "store_name":"门店名称 选填”}</para>
+        /// </summary>
+        public string scene_info { get; set; }
 
+      
         /// <inheritdoc />
         protected override void SetSignDics()
         {
@@ -91,6 +77,7 @@ namespace OSS.PaySdk.Wx.Pay.Mos
             SetDicItem("openid", openid);
 
             SetDicItem("notify_url", notify_url);
+            SetDicItem("scene_info", scene_info);
         }
         
     }

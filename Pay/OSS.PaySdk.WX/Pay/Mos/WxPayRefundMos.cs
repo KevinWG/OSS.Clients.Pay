@@ -28,7 +28,7 @@ namespace OSS.PaySdk.Wx.Pay.Mos
         public string device_info { get; set; }
 
         /// <summary>   
-        ///    微信订单号 和商户订单号二选一 String(28) 微信生成的订单号，在支付通知中有返回
+        ///    微信交易订单号 和商户订单号二选一 String(28) 微信生成的订单号，在支付通知中有返回
         /// </summary>  
         public string transaction_id { get; set; }
 

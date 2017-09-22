@@ -18,7 +18,7 @@ namespace OSS.PaySdk.Wx.Pay
 {
     public class WxPayRefundApi:WxPayBaseApi
     {
-        public WxPayRefundApi(WxPayCenterConfig config) : base(config)
+        public WxPayRefundApi(WxPayCenterConfig config=null) : base(config)
         {
         }
 
@@ -56,7 +56,7 @@ namespace OSS.PaySdk.Wx.Pay
         /// </summary>
         /// <param name="refundReq"></param>
         /// <returns></returns>
-        public async Task<WxPayGetRefundResp> GetRefundAsync(WxPayRefundReq refundReq)
+        public async Task<WxPayGetRefundResp> QueryRefundAsync(WxPayRefundReq refundReq)
         {
             var dics = refundReq.GetDics();
             var url = string.Concat(m_ApiUrl, "/pay/refundquery");

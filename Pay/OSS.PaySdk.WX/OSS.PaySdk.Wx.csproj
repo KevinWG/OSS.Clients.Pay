@@ -9,13 +9,13 @@
     <PackageIconUrl>http://img1.static.osscoder.com/logo.jpg</PackageIconUrl>
     <PackageProjectUrl>https://github.com/KevinWG/OSS.PaySdk/tree/master/Pay/OSS.PaySdk.Wx</PackageProjectUrl>
     <RepositoryUrl>https://github.com/KevinWG/OSS.PaySdk</RepositoryUrl>
-    <PackageReleaseNotes>添加获取【唤起支付端所需参数】的方法</PackageReleaseNotes>
+    <PackageReleaseNotes>优化参数相关</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <AssemblyVersion>1.1.5.1</AssemblyVersion>
+    <AssemblyVersion>1.1.5.2</AssemblyVersion>
     <FileVersion>1.1.5.1</FileVersion>
     <Copyright>OSSCoder</Copyright>
     <PackageLicenseUrl>https://github.com/KevinWG/OSS.PaySdk/blob/master/LICENSE</PackageLicenseUrl>
-    <Version>1.1.5.1</Version>
+    <Version>1.1.5.2</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
