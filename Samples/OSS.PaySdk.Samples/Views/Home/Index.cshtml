@@ -1,68 +1,8 @@
-﻿@{
-    ViewData["Title"] = "支付用例站点";
+﻿
+@{
+    ViewData["Title"] = "Index";
 }
 
-<div class="jumbotron">
-    <div class="container">
-        <div class="row text-center">
-            <div class="col-xs-12 col-sm-8 " style="padding-top: 30px;">
-                <h2>PayCenter</h2>
-                <div style="margin-bottom: 25px;">
-                    支付中心，主要包含：公众号支付，扫码支付，App支付，公众号支付，优惠券，红包，企业付款等接口
-                </div>
-                <div>
-                    <a href="https://github.com/KevinWG/OSS.PayCenter" class="btn btn-success" target="_blank">
-                        Source Code
-                    </a>
-                </div>
-            </div>
-            <div class="hidden-xs col-sm-4 text-center">
-                <div class="wx-qr-container">
-                    <div><img src="~/images/wx_qr_code.jpg" /></div>
-                    <div class="wx-qr-desp"> 关注OSSCoder公众号</div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div>
+    <a href="/wxpay/index">微信支付测试</a>
 </div>
-
-
-<div class="visible-xs-block row text-center">
-    <div class="wx-qr-container">
-        <div><img src="~/images/wx_qr_code.jpg" /></div>
-        <div class="wx-qr-desp"> 关注OSSCoder公众号</div>
-    </div>
-</div>
-
-
-<div class="container content">
-  
-    <div class="row">
-        <div class="page-header">
-            <h2>微信支付</h2>
-        </div>
-        <div>
-      
-            <div>支付方式：</div>
-            <ul>
-                <li>
-                    <a asp-controller="HPay" asp-action="index">公众号支付</a>
-                </li>
-                @*<li>公众号支付</li>
-                <li>公众号支付</li>
-                <li>公众号支付</li>*@
-            </ul>
-            @*<br/>
-    <div>支付工具</div>
-     <ul>
-         <li>公众号支付</li>
-         <li>公众号支付</li>
-     </ul>*@
-        </div>
-    </div>
-
-
-</div>
-
-
-
