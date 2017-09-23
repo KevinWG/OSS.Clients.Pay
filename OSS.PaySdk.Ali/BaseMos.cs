@@ -145,11 +145,6 @@ namespace OSS.PaySdk.Ali
         //public string SignType { get; set; } = "RSA2";
         
         /// <summary>
-        ///  应用来源  用户自定义
-        /// </summary>
-        public string AppSource { get; set; }
-        
-        /// <summary>
         ///   应用Id
         /// </summary>
         public string AppId { get; set; }

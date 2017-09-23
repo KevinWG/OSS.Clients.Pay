@@ -14,7 +14,6 @@ namespace OSS.PaySdk.Tests.ZFB
 
         protected static ZPayConfig config { get; set; } = new ZPayConfig()
         {
-            AppSource = "1",
             AppId = "2016080300153582",
             AppPrivateKey = privateKey,
             AppPublicKey = publicKey
