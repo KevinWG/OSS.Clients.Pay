@@ -11,11 +11,11 @@
     <RepositoryUrl>https://github.com/KevinWG/OSS.PaySdk</RepositoryUrl>
     <PackageReleaseNotes>优化参数相关</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <AssemblyVersion>1.1.5.2</AssemblyVersion>
-    <FileVersion>1.1.5.1</FileVersion>
+    <AssemblyVersion>1.1.5.3</AssemblyVersion>
+    <FileVersion>1.1.5.3</FileVersion>
     <Copyright>OSSCoder</Copyright>
     <PackageLicenseUrl>https://github.com/KevinWG/OSS.PaySdk/blob/master/LICENSE</PackageLicenseUrl>
-    <Version>1.1.5.2</Version>
+    <Version>1.1.5.3</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -27,8 +27,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OSS.Common" Version="1.2.3.9" />
-    <PackageReference Include="OSS.Http" Version="2.3.3" />
+    <PackageReference Include="OSS.Common" Version="1.2.3.10" />
+    <PackageReference Include="OSS.Http" Version="2.3.5" />
     <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
   </ItemGroup>
 
