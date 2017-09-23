@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Pay\OSS.PaySdk.Ali\OSS.PaySdk.Ali.csproj" />
-    <ProjectReference Include="..\..\Pay\OSS.PaySdk.WX\OSS.PaySdk.Wx.csproj" />
+    <ProjectReference Include="..\..\OSS.PaySdk.Ali\OSS.PaySdk.Ali.csproj" />
+    <ProjectReference Include="..\..\OSS.PaySdk.WX\OSS.PaySdk.Wx.csproj" />
   </ItemGroup>
 
 </Project>

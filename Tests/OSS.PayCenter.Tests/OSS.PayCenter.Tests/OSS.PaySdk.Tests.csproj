@@ -149,12 +149,12 @@
     <None Include="WX\cert\apiclient_cert.p12" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Pay\OSS.PaySdk.Ali\OSS.PaySdk.Ali.csproj">
-      <Project>{45156072-bba4-4b01-be57-bf2379633e27}</Project>
+    <ProjectReference Include="..\..\..\OSS.PaySdk.Ali\OSS.PaySdk.Ali.csproj">
+      <Project>{8b5aca11-e3d7-4005-8ced-7969620795d0}</Project>
       <Name>OSS.PaySdk.Ali</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Pay\OSS.PaySdk.WX\OSS.PaySdk.Wx.csproj">
-      <Project>{6b836011-7c01-434d-8c26-bd362d8f297c}</Project>
+    <ProjectReference Include="..\..\..\OSS.PaySdk.WX\OSS.PaySdk.Wx.csproj">
+      <Project>{5f00f598-4eec-492b-a456-ede14fe58b25}</Project>
       <Name>OSS.PaySdk.Wx</Name>
     </ProjectReference>
   </ItemGroup>
