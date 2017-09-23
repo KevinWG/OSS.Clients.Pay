@@ -22,7 +22,7 @@ namespace OSS.PaySdk.Samples.Controllers
             return View();
         }
 
-        private static readonly string _callBackDomain = "http://pay.comps.univteam.com";
+        private static readonly string _callBackDomain = "你的当前域名";
         private static readonly WxPayTradeApi _api = new WxPayTradeApi();
 
         public async Task<IActionResult> GetJsPayInfo(string orderId)
