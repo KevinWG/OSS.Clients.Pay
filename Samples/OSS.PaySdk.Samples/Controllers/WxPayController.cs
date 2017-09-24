@@ -13,12 +13,6 @@ namespace OSS.PaySdk.Samples.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            //var config = new WxPayCenterConfig();
-            //config.SetCertificata = (handler, cert) =>
-            //{
-            //    handler.ServerCertificateCustomValidationCallback = (msg, c, chain, sslErrors) => true;
-            //    handler.ClientCertificates.Add(cert);
-            //};
             return View();
         }
 
@@ -27,18 +21,7 @@ namespace OSS.PaySdk.Samples.Controllers
 
         public async Task<IActionResult> GetJsPayInfo(string orderId)
         {
-            var order = new WxAddPayUniOrderReq
-            {
-                notify_url = string.Concat(_callBackDomain, "/wxpay/receive"),
-                body = "OSSPay-测试商品",
-                device_info = "WEB",
-                openid = "oldRAw-Wu4eOD5CVPWeWVDOvhRbo",
-                out_trade_no = orderId,
-
-                spbill_create_ip = "114.242.25.208",
-                total_fee = 1,
-                trade_type = "JSAPI"
-            };
+            var order = GetUniorder(orderId, "JSAPI");
 
             var orderRes = await _api.AddUniOrderAsync(order);
             if (!orderRes.IsSuccess()) return Json(orderRes);
@@ -46,9 +29,18 @@ namespace OSS.PaySdk.Samples.Controllers
             var jsPara = _api.GetJsClientParaResp(orderRes.prepay_id);
             return Json(jsPara);
         }
+
         public async Task<IActionResult> GetScanPayInfo(string orderId)
         {
-            var order = new WxAddPayUniOrderReq
+            WxAddPayUniOrderReq order = GetUniorder(orderId, "NATIVE");
+
+            var orderRes = await _api.AddUniOrderAsync(order);
+            return Json(orderRes);
+        }
+
+        private static WxAddPayUniOrderReq GetUniorder(string orderId,string tradeType)
+        {
+            return new WxAddPayUniOrderReq
             {
                 notify_url = string.Concat(_callBackDomain, "/wxpay/receive"),
                 body = "OSSPay-测试商品",
@@ -58,11 +50,8 @@ namespace OSS.PaySdk.Samples.Controllers
 
                 spbill_create_ip = "114.242.25.208",
                 total_fee = 1,
-                trade_type = "NATIVE"
+                trade_type = tradeType
             };
-
-            var orderRes = await _api.AddUniOrderAsync(order);
-            return Json(orderRes);
         }
 
         public IActionResult receive()
