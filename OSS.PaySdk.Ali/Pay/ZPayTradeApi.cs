@@ -28,10 +28,10 @@ namespace OSS.PaySdk.Ali.Pay
         }
 
 
-        #region 发起手动线下收款 （手动扫码
+        #region 二维码支付下单
 
         /// <summary>
-        /// 预下单（扫码支付 - 用户扫商家二维码）
+        /// 预下单（用户扫码付款 - 用户扫商家二维码）
         /// </summary>
         /// <param name="payReq"></param>
         public async Task<ZAddPreTradeResp> AddPreTradeAsync(ZAddPreTradeReq payReq)
@@ -43,7 +43,7 @@ namespace OSS.PaySdk.Ali.Pay
         }
 
         /// <summary>
-        ///   线下预下单（条码支付- 商家扫用户二维码、读取声波发起支付）
+        ///   预下单（商家扫码收款 - 商家扫用户二维码、读取声波发起支付）
         /// </summary>
         /// <param name="payReq"></param>
         public async Task<ZAddPayTradeResp> AddPayTradeAsync(ZAddPayTradeReq payReq)
@@ -59,6 +59,9 @@ namespace OSS.PaySdk.Ali.Pay
 
         #region 发起客户端收款（自动唤起
 
+
+
+
         /// <summary>
         /// 获取客户端App唤起支付请求内容
         /// </summary>
@@ -70,6 +73,20 @@ namespace OSS.PaySdk.Ali.Pay
             return !dicsRes.IsSuccess() 
                 ? dicsRes.ConvertToResultOnly<string>() 
                 : new ResultMo<string>(ConvertDicToEncodeReqBody(dicsRes.data));
+        }
+
+
+        /// <summary>
+        /// 获取客户端Wap唤起支付请求内容
+        /// </summary>
+        /// <param name="req"></param>
+        public ResultMo<string> GetWapTradeContent(ZAddWapTradeReq req)
+        {
+            const string apiMethod = "alipay.trade.wap.pay";
+            var dicsRes = GetReqBodyDics(apiMethod, req);
+            return !dicsRes.IsSuccess()
+                ? dicsRes.ConvertToResultOnly<string>()
+                : new ResultMo<string>(BuildFormHtml(dicsRes.data));
         }
 
         /// <summary>
@@ -87,7 +104,7 @@ namespace OSS.PaySdk.Ali.Pay
 
         private  string BuildFormHtml(IDictionary<string, string> dics)
         {
-            StringBuilder sbHtml = new StringBuilder();
+            var sbHtml = new StringBuilder();
             sbHtml.Append("<form id='alipaysubmit' name='alipaysubmit' action='" + m_ApiUrl + "?charset=" + ApiConfig.Charset +
                  "' method='POST'>");
             foreach (KeyValuePair<string, string> temp in dics)
@@ -135,8 +152,6 @@ namespace OSS.PaySdk.Ali.Pay
         }
 
         #endregion
-
-
 
         #region  获取对账单下载地址
 

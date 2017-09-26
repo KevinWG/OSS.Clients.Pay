@@ -239,9 +239,9 @@ namespace OSS.PaySdk.Ali
                 SetDefaultPropertyFormat(dirs, "return_url", req.GetReturnUrl());
 
                 SetDefaultPropertyFormat(dirs, "sign_type", "RSA2");
-                dirs.Add("timestamp", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                 SetDefaultPropertyFormat(dirs, "format", ApiConfig.Format);
                 SetDefaultPropertyFormat(dirs, "version", ApiConfig.Version);
+                SetDefaultPropertyFormat(dirs, "timestamp", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
                 SetDefaultPropertyFormat(dirs, "biz_content",
                     JsonConvert.SerializeObject(req, Formatting.None, new JsonSerializerSettings()
@@ -251,8 +251,8 @@ namespace OSS.PaySdk.Ali
 
                     }));
 
-                if (req.auth_token != null)
-                    SetDefaultPropertyFormat(dirs, "app_auth_token", req.auth_token.app_auth_token);
+                if (req.app_auth_token != null)
+                    SetDefaultPropertyFormat(dirs, "app_auth_token", req.app_auth_token.app_auth_token);
 
                 //  签名
                 var signContent = string.Join("&", dirs.Select(d => string.Concat(d.Key, "=", d.Value)));
@@ -269,9 +269,8 @@ namespace OSS.PaySdk.Ali
 
         private static void SetDefaultPropertyFormat(IDictionary<string, string> dirs, string key, string value)
         {
-            if (!dirs.ContainsKey(key)
-                && !string.IsNullOrEmpty(value))
-                dirs.Add(key, value);
+            if (!string.IsNullOrEmpty(value))
+                dirs[key] = value;
         }
 
         /// <summary>

@@ -32,12 +32,18 @@ namespace OSS.PaySdk.Ali.Pay.Mos
         ///    String 可空 长度(40)  针对用户授权接口，获取用户相关数据时，用于标识用户授权关系
         /// </summary>  
         public string auth_token { get; set; }
+        /// <summary>   
+        ///    String 可空 长度(40)  添加该参数后在h5支付收银台会出现返回按钮，
+        /// 可用于用户付款中途退出并返回到该参数指定的商户网站地址。
+        /// 注：该参数对支付宝钱包标准收银台下的跳转不生效。
+        /// </summary>  
+        public string quit_url { get; set; }
     }
 
     /// <summary>
     /// 客户端发起支付请求实体
     /// </summary>
-    public class ZAddAppTradeReq : ZPayBaseReq
+    public class ZAddAppTradeReq : ZAddPayTradeBaseReq
     {
         public ZAddAppTradeReq(string notifyUrl)
         {
@@ -45,39 +51,12 @@ namespace OSS.PaySdk.Ali.Pay.Mos
         }
 
         /// <summary>   
-        ///    String 可空 长度(128)  对一笔交易的具体描述信息。如果是多种商品，请将商品描述字符串累加传给body。 16G
+        ///    String 必填 长度(64)  销售产品码
+        /// App固定值：QUICK_MSECURITY_PAY
+        /// Wap 固定值：QUICK_WAP_WAY
+        /// 商家和支付宝签约的产品码
         /// </summary>  
-        public string body { get; set; }
-
-        /// <summary>   
-        ///    String 必填 长度(256)  商品的标题/交易标题/订单标题/订单关键字等。
-        /// </summary>  
-        public string subject { get; set; }
-
-        /// <summary>   
-        ///    String 必填 长度(64)  商户网站唯一订单号
-        /// </summary>  
-        public string out_trade_no { get; set; }
-
-        /// <summary>   
-        ///    String 可空 长度(6)  设置未付款支付宝交易的超时时间，一旦超时，该笔交易就会自动被关闭。当用户进入支付宝收银台页面（不包括登录页面），会触发即刻创建支付宝交易，此时开始计时。取值范围：1m～15d。m-分钟，h-小时，d-天，1c-当天（1c-当天的情况下，无论交易何时创建，都在0点关闭）。 如 1.5h，可转换为 90m。 90m
-        /// </summary>  
-        public string timeout_express { get; set; }
-
-        /// <summary>   
-        ///    String 必填 长度(9)  订单总金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000]
-        /// </summary>  
-        public decimal total_amount { get; set; }
-
-        /// <summary>   
-        ///    String 可空 长度(16)  收款支付宝用户ID。 2088102147948060
-        /// </summary>  
-        public string seller_id { get; set; }
-
-        /// <summary>   
-        ///    String 必填 长度(64)  销售产品码，商家和支付宝签约的产品码，为固定值QUICK_MSECURITY_PAY
-        /// </summary>  
-        public string product_code { get; set; }
+        public string product_code { get; set; } 
 
         /// <summary>   
         ///    String 可空 长度(2)  商品主类型：0—虚拟类商品，1—实物类商品，注：虚拟类商品不支持使用花呗渠道
@@ -111,13 +90,11 @@ namespace OSS.PaySdk.Ali.Pay.Mos
         /// </summary>  
         public string disable_pay_channels { get; set; }
 
-        /// <summary>   
-        ///    String 可空 长度(32)  商户门店编号
-        /// </summary>  
-        public string store_id { get; set; }
     }
 
-
+    /// <summary>
+    /// 主动唤起支付时的扩展参数
+    /// </summary>
     public class ZClientTradeExtendParaMo
     {
         /// <summary>   
@@ -134,5 +111,15 @@ namespace OSS.PaySdk.Ali.Pay.Mos
         ///    String 可空 长度(128)  账务备注，注：该字段显示在离线账单的账务备注中
         /// </summary>  
         public string TRANS_MEMO { get; set; }
+
+        /// <summary>   
+        ///    String 可选 长度(5)  使用花呗分期要进行的分期数
+        /// </summary>  
+        public string hb_fq_num { get; set; }
+
+        /// <summary>   
+        ///    String 可选 长度(3)  使用花呗分期需要卖家承担的手续费比例的百分值，传入100代表100%
+        /// </summary>  
+        public string hb_fq_seller_percent { get; set; }
     }
 }
