@@ -26,11 +26,9 @@ namespace OSS.PaySdk.Ali.Pay
         public ZPayTradeApi(ZPayConfig config = null) : base(config)
         {
         }
-
-
+        
         #region 二维码支付下单
-
-
+        
         /// <summary>
         /// 下单（支付宝内部JS唤起支付
         /// </summary>
@@ -84,8 +82,7 @@ namespace OSS.PaySdk.Ali.Pay
                 ? dicsRes.ConvertToResultOnly<string>() 
                 : new ResultMo<string>(ConvertDicToEncodeReqBody(dicsRes.data));
         }
-
-
+        
         /// <summary>
         /// 获取PC端转到支付宝收银台请求内容
         /// </summary>
