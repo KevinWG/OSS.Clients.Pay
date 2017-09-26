@@ -16,6 +16,44 @@ using System.Collections.Generic;
 
 namespace OSS.PaySdk.Ali.Pay.Mos
 {
+    /// <summary>
+    ///  预下单实体（支付宝内JS唤起支付）
+    /// </summary>
+    public class ZAddOfficialTradeReq : ZAddPreTradeReq
+    {
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="notifyUrl">通知回调地址</param>
+        public ZAddOfficialTradeReq(string notifyUrl) : base(notifyUrl)
+        {
+        }
+
+        /// <summary>   
+        ///    String 特殊可选 长度(28) 买家的支付宝唯一用户号（2088开头的16位纯数字）
+        /// </summary>  
+        public decimal buyer_id { get; set; }
+    }
+
+
+
+    /// <summary>
+    /// 预下单响应实体
+    /// </summary>
+    public class ZAddOfficialTradeResp : ZPayBaseResp
+    {
+        /// <summary>   
+        ///    String 必填 长度(64)  商户的订单号
+        /// </summary>  
+        public string out_trade_no { get; set; }
+
+        /// <summary>   
+        ///    String 必填 长度(64)  支付宝交易号
+        /// </summary>  
+        public string trade_no { get; set; }
+    }
+
+
 
     /// <summary>
     ///  预下单，用户扫码付款

@@ -21,6 +21,17 @@ namespace OSS.PaySdk.Ali.Pay.Mos
     public class ZAddPageTradeReq : ZAddPayTradeBaseReq
     {
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="returnUrl">支付后的跳转地址</param>
+        /// <param name="notifyUrl">支付后的异步通知地址</param>
+        public ZAddPageTradeReq(string returnUrl, string notifyUrl) 
+        {
+            return_url = returnUrl;
+            notify_url = notifyUrl;
+        }
+
         /// <summary>   
         ///    String 必填 长度(64)
         ///   销售产品码，固定值：FAST_INSTANT_TRADE_PAY 
