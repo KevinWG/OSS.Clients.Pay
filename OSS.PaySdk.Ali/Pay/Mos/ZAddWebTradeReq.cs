@@ -18,7 +18,7 @@ namespace OSS.PaySdk.Ali.Pay.Mos
     /// <summary>
     ///  PC网站跳转支付宝收银台的支付请求实体
     /// </summary>
-    public class ZAddWebTradeReq : ZAddPayTradeBaseReq
+    public class ZAddPageTradeReq : ZAddPayTradeBaseReq
     {
 
         /// <summary>   

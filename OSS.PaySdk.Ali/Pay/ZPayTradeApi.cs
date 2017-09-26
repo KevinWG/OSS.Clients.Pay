@@ -77,12 +77,12 @@ namespace OSS.PaySdk.Ali.Pay
 
 
         /// <summary>
-        /// 获取客户端Wap唤起支付请求内容
+        /// 获取PC端转到支付宝收银台请求内容
         /// </summary>
         /// <param name="req"></param>
-        public ResultMo<string> GetWapTradeContent(ZAddWapTradeReq req)
+        public ResultMo<string> GetPageTradeContent(ZAddPageTradeReq req)
         {
-            const string apiMethod = "alipay.trade.wap.pay";
+            const string apiMethod = "alipay.trade.page.pay";
             var dicsRes = GetReqBodyDics(apiMethod, req);
             return !dicsRes.IsSuccess()
                 ? dicsRes.ConvertToResultOnly<string>()
