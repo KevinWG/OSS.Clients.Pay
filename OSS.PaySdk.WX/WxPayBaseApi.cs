@@ -210,8 +210,7 @@ namespace OSS.PaySdk.Wx
         /// <returns></returns>
         public string GetCallBackReturnXml(ResultMo res)
         {
-            return
-                $"<xml><return_code><![CDATA[{(res.IsSuccess() ? "SUCCESS" : "FAIL")}]]></return_code><return_msg><![CDATA[{res.msg}]]></return_msg></xml>";
+            return string.Format($"<xml><return_code><![CDATA[{ (res.IsSuccess() ? "SUCCESS" : "FAIL")}]]></return_code><return_msg><![CDATA[{ res.msg}]]></return_msg></xml>");
         }
         #endregion
 
