@@ -236,7 +236,7 @@ namespace OSS.PaySdk.Ali.Pay.Mos
         /// <summary>   
         ///    订单金额 Number(9,2) 长度(否)  本次交易支付的订单金额，单位为人民币（元）
         /// </summary>  
-        public string total_amount { get; set; }
+        public decimal total_amount { get; set; }
 
         /// <summary>   
         ///    实收金额 Number(9,2) 长度(否)  商家在交易中实际收到的款项，单位为元

@@ -247,8 +247,7 @@ namespace OSS.PaySdk.Ali
                     JsonConvert.SerializeObject(req, Formatting.None, new JsonSerializerSettings()
                     {
                         NullValueHandling = NullValueHandling.Ignore,
-                        DefaultValueHandling = DefaultValueHandling.Ignore,
-
+                        DefaultValueHandling = DefaultValueHandling.Ignore
                     }));
 
                 if (req.app_auth_token != null)

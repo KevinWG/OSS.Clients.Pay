@@ -21,6 +21,9 @@ using OSS.PaySdk.Ali.Pay.Mos;
 
 namespace OSS.PaySdk.Ali.Pay
 {
+    /// <summary>
+    ///  支付相关接口
+    /// </summary>
     public class ZPayTradeApi : ZPayBaseApi
     {
         public ZPayTradeApi(ZPayConfig config = null) : base(config)
@@ -29,18 +32,6 @@ namespace OSS.PaySdk.Ali.Pay
         
         #region 二维码支付下单
         
-        /// <summary>
-        /// 下单（支付宝内部JS唤起支付
-        /// </summary>
-        /// <param name="payReq"></param>
-        public async Task<ZAddOfficialTradeResp> AddOfficialTradeAsync(ZAddOfficialTradeReq payReq)
-        {
-            const string respColumnName = "alipay_trade_create_response";
-            const string apiMethod = "alipay.trade.create";
-
-            return await PostApiAsync<ZAddOfficialTradeReq, ZAddOfficialTradeResp>(apiMethod, respColumnName, payReq);
-        }
-
         /// <summary>
         /// 预下单（用户扫码付款 - 用户扫商家二维码）
         /// </summary>
@@ -64,12 +55,24 @@ namespace OSS.PaySdk.Ali.Pay
 
             return await PostApiAsync<ZAddPayTradeReq, ZAddPayTradeResp>(apiMethod, respColumnName, payReq);
         }
-        
+
         #endregion
 
 
         #region 发起客户端收款（自动唤起
-        
+
+        /// <summary>
+        /// 下单（支付宝内部JS唤起支付
+        /// </summary>
+        /// <param name="payReq"></param>
+        public async Task<ZAddOfficialTradeResp> GetOfficialTradeAsync(ZAddOfficialTradeReq payReq)
+        {
+            const string respColumnName = "alipay_trade_create_response";
+            const string apiMethod = "alipay.trade.create";
+
+            return await PostApiAsync<ZAddOfficialTradeReq, ZAddOfficialTradeResp>(apiMethod, respColumnName, payReq);
+        }
+
         /// <summary>
         /// 获取客户端App唤起支付请求内容
         /// </summary>
