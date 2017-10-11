@@ -21,6 +21,7 @@ namespace OSS.PaySdk.Ali.Pay.Mos
     public class ZAddPageTradeReq : ZAddPayTradeBaseReq
     {
 
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -30,6 +31,8 @@ namespace OSS.PaySdk.Ali.Pay.Mos
         {
             return_url = returnUrl;
             notify_url = notifyUrl;
+            product_code = "FAST_INSTANT_TRADE_PAY";
+            qr_pay_mode = 2;
         }
 
         /// <summary>   
@@ -54,10 +57,10 @@ namespace OSS.PaySdk.Ali.Pay.Mos
         public ZClientTradeExtendParaMo extend_params { get; set; }
 
         /// <summary>   
-        ///    String 可选 长度(64) 商品主类型：0—虚拟类商品，1—实物类商品
+        ///    int 可选 长度(64) 商品主类型：0—虚拟类商品，1—实物类商品
         /// 注：虚拟类商品不支持使用花呗渠道
         /// </summary>  
-        public string goods_type { get; set; }
+        public int goods_type { get; set; }
 
 
         /// <summary>   
@@ -79,16 +82,17 @@ namespace OSS.PaySdk.Ali.Pay.Mos
         public string auth_token { get; set; }
 
         /// <summary>   
-        ///    String 可选 长度(64) PC扫码支付的方式，支持前置模式和跳转模式。
+        ///   默认跳转方式  可选 长度(64) PC扫码支付的方式，支持前置模式和跳转模式。
         /// 前置模式是将二维码前置到商户的订单确认页的模式。需要商户在自己的页面中以iframe方式请求支付宝页面。具体分为以下几种：
         /// 0：订单码-简约前置模式，对应iframe宽度不能小于600px，高度不能小于300px；
         /// 1：订单码-前置模式，对应iframe宽度不能小于300px，高度不能小于600px；
         /// 3：订单码-迷你前置模式，对应iframe宽度不能小于75px，高度不能小于75px；
         /// 4：订单码-可定义宽度的嵌入式二维码，商户可根据需要设定二维码的大小。
+        /// 
         /// 跳转模式下，用户的扫码界面是由支付宝生成的，不在商户的域名下。
         /// 2：订单码-跳转模式
         /// </summary>  
-        public string qr_pay_mode { get; set; }
+        public int qr_pay_mode { get; set; }
 
         /// <summary>   
         ///    String 可选 长度(64)商户自定义二维码宽度

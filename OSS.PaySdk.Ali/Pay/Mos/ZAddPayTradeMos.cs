@@ -154,9 +154,6 @@ namespace OSS.PaySdk.Ali.Pay.Mos
         public string real_amount { get; set; }
     }
 
-    #region  基类部分
-
-    #endregion
 
     /// <summary>
     ///  支付宝异步通知回调

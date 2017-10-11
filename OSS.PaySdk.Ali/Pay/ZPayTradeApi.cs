@@ -11,6 +11,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -114,6 +115,8 @@ namespace OSS.PaySdk.Ali.Pay
 
         private  string BuildFormHtml(IDictionary<string, string> dics)
         {
+            var formId = DateTime.Now.ToUtcSeconds();
+
             var sbHtml = new StringBuilder();
             sbHtml.Append("<form id='alipaysubmit' name='alipaysubmit' action='" + m_ApiUrl + "?charset=" + ApiConfig.Charset +
                  "' method='POST'>");
