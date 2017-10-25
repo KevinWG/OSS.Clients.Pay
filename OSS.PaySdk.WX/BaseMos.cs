@@ -122,11 +122,11 @@ namespace OSS.PaySdk.Wx
         ///    错误代码描述 可空 String(128) 错误信息描述
         /// </summary>  
         public string err_code_des { get; set; }
-        
+
         /// <summary>
         ///   响应对象的xml实体
         /// </summary>
-        public XmlDocument RespXml { get; set; }
+        protected internal XmlDocument RespXml { get; set; }
 
         #region  处理结果字典赋值
 

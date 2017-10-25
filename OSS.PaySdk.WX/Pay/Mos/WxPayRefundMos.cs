@@ -144,7 +144,7 @@ namespace OSS.PaySdk.Wx.Pay.Mos
         /// <summary>   
         ///    现金支付金额 必填 Int 现金支付金额，单位为分，只能为整数，详见支付金额
         /// </summary>  
-        public string cash_fee { get; set; }
+        public int cash_fee { get; set; }
 
         /// <summary>   
         ///    现金支付币种 可空 String(16) 货币类型，符合ISO 4217标准的三位字母代码，默认人民币：CNY，其他值列表详见货币类型
@@ -189,22 +189,21 @@ namespace OSS.PaySdk.Wx.Pay.Mos
             settlement_total_fee = this["settlement_total_fee"].ToInt32();
 
             fee_type = this["fee_type"];
-            cash_fee = this["cash_fee"];
+            cash_fee = this["cash_fee"].ToInt32();
             cash_fee_type = this["cash_fee_type"];
             cash_refund_fee = this["cash_refund_fee"];
             coupon_refund_fee = this["coupon_refund_fee"];
 
             coupon_refund_count = this["coupon_refund_count"].ToInt32();
-            if (coupon_refund_count > 0)
+            if (coupon_refund_count <= 0) return;
+
+            refund_coupons = new List<WxPayOrderCouponMo>(coupon_refund_count);
+            for (var i = 0; i < coupon_refund_count; i++)
             {
-                refund_coupons = new List<WxPayOrderCouponMo>(coupon_refund_count);
-                for (int i = 0; i < coupon_refund_count; i++)
-                {
-                    var coupon = new WxPayOrderCouponMo();
-                    coupon.coupon_fee = this["coupon_refund_fee_" + i].ToInt32();
-                    coupon.coupon_id = this["coupon_refund_id_" + i];
-                    coupon.coupon_type = this["coupon_type_" + i];
-                }
+                var coupon = new WxPayOrderCouponMo();
+                coupon.coupon_fee = this["coupon_refund_fee_" + i].ToInt32();
+                coupon.coupon_id = this["coupon_refund_id_" + i];
+                coupon.coupon_type = this["coupon_type_" + i];
             }
         }
     }

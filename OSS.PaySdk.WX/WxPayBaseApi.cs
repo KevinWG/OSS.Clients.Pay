@@ -293,7 +293,7 @@ namespace OSS.PaySdk.Wx
             {
                 ServerCertificateCustomValidationCallback = (msg, c, chain, sslErrors) => sslErrors == SslPolicyErrors.None
             };
-
+            LogUtil.Info($"证书路径{ApiConfig.CertPath}");
             var cert = new X509Certificate2(ApiConfig.CertPath, ApiConfig.CertPassword);
             reqHandler.ClientCertificates.Add(cert);
             
