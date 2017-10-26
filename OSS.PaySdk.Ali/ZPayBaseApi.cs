@@ -81,12 +81,16 @@ namespace OSS.PaySdk.Ali
             try
             {
                 request.AddressUrl = string.Concat(m_ApiUrl, "?charset=", ApiConfig.Charset);
-
-                var contentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded")
+                
+                request.RequestSet = r =>
                 {
-                    CharSet = ApiConfig.Charset
+                    if (r.Content == null) return;
+                    var contentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded")
+                    {
+                        CharSet = ApiConfig.Charset
+                    };
+                    r.Content.Headers.ContentType = contentType;
                 };
-                request.RequestSet = message => message.Content.Headers.ContentType = contentType;
 
                 var resp = await request.RestSend();
                 if (resp.IsSuccessStatusCode)
