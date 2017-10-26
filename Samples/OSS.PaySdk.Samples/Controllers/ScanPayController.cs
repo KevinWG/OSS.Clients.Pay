@@ -19,15 +19,15 @@ namespace OSS.PaySdk.Samples.Controllers
         [HttpPost]
         public async Task<IActionResult> ZPay(PayOrderMo order)
         {
-            string orderNum = DateTime.Now.ToString("yyyyMMddHHmmss");
-
-            var payReq = new ZAddPreTradeReq("http://test.pay.osscoder.com/base/ZCallBack");
-
-            payReq.body = order.order_name;
-            payReq.out_trade_no = orderNum;
-            payReq.total_amount = order.order_price;
-            payReq.subject = order.order_name;
-
+            var orderNum = DateTime.Now.ToString("yyyyMMddHHmmss");
+            var payReq = new ZAddPreTradeReq
+            {
+                notify_url = "http://test.pay.osscoder.com/base/ZCallBack",
+                body = order.order_name,
+                out_trade_no = orderNum,
+                total_amount = order.order_price,
+                subject = order.order_name
+            };
             var res =await zPayApi.AddPrePayTradeAsync(payReq);
             return Json(res);
         }
