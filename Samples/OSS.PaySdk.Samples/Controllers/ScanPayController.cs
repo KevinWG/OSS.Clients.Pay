@@ -28,7 +28,7 @@ namespace OSS.PaySdk.Samples.Controllers
             payReq.total_amount = order.order_price;
             payReq.subject = order.order_name;
 
-            var res =await zPayApi.AddPreTradeAsync(payReq);
+            var res =await zPayApi.AddPrePayTradeAsync(payReq);
             return Json(res);
         }
 

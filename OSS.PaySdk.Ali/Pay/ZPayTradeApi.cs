@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OSS.Common.ComModels;
+using OSS.Common.ComModels.Enums;
 using OSS.Common.Extention;
 using OSS.PaySdk.Ali.Pay.Mos;
 
@@ -189,6 +190,10 @@ namespace OSS.PaySdk.Ali.Pay
         /// <returns></returns>
         public ResultMo CheckCallBackSign(IDictionary<string, string> formDics)
         {
+            if (formDics.ContainsKey("sign"))
+            {
+                return new ResultMo(ResultTypes.ParaError,"未发现sign参数");
+            }
             var sign = formDics["sign"];
             //var signType = formDics["sign_type"];
 

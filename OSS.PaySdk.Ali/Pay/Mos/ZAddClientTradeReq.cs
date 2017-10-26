@@ -11,21 +11,24 @@
 
 #endregion
 
+using Newtonsoft.Json;
+
 namespace OSS.PaySdk.Ali.Pay.Mos
 {
     /// <summary>
     ///  wap页面发起的支付请求实体
+    ///  return_url 和 notify_url 需要同时赋值
     /// </summary>
     public class ZAddWapTradeReq : ZAddAppTradeReq
     {
         /// <summary>
-        /// 构造函数
+        ///   回调通知地址
         /// </summary>
-        /// <param name="returnUrl">支付后的跳转地址</param>
-        /// <param name="notifyUrl">支付后的异步通知地址</param>
-        public ZAddWapTradeReq(string returnUrl,string notifyUrl) : base(notifyUrl)
+        [JsonIgnore]
+        public string return_url
         {
-            return_url = returnUrl;
+            get => returnUrl;
+            set => returnUrl = value;
         }
 
         /// <summary>   
@@ -45,11 +48,6 @@ namespace OSS.PaySdk.Ali.Pay.Mos
     /// </summary>
     public class ZAddAppTradeReq : ZAddPayTradeBaseReq
     {
-        public ZAddAppTradeReq(string notifyUrl)
-        {
-            notify_url = notifyUrl;
-        }
-
         /// <summary>   
         ///    String 必填 长度(64)  销售产品码
         /// App固定值：QUICK_MSECURITY_PAY
@@ -83,9 +81,7 @@ namespace OSS.PaySdk.Ali.Pay.Mos
         ///   渠道说明详见：https://doc.open.alipay.com/doc2/detail.htm?treeId=203&articleId=105463&docType=1
         /// </summary>  
         public string disable_pay_channels { get; set; }
-
-
-
+        
         /// <summary>   
         ///    String 可空 长度(512)  公用回传参数【赋值时需要UrlEncode】，如果请求时传递了该参数，则返回给商户时会回传该参数,支付宝会在异步通知时将该参数原样返回。
         /// 本参数必须进行UrlEncode之后才可以发送给支付宝

@@ -22,14 +22,6 @@ namespace OSS.PaySdk.Ali.Pay.Mos
     public class ZAddPayTradeReq : ZAddPreTradeReq
     {
         /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="notifyUrl">通知回调地址</param>
-        public ZAddPayTradeReq(string notifyUrl) : base(notifyUrl)
-        {
-        }
-
-        /// <summary>
         ///    String 必须 长度(32)  支付场景 声波支付，取值：wave_code bar_code,wave_code
         /// </summary>  
         public string scene { get; set; }

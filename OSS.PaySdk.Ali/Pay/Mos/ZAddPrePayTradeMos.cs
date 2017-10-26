@@ -13,6 +13,7 @@
 #endregion
 
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace OSS.PaySdk.Ali.Pay.Mos
 {
@@ -21,13 +22,6 @@ namespace OSS.PaySdk.Ali.Pay.Mos
     /// </summary>
     public class ZAddOfficialTradeReq : ZAddPreTradeReq
     {
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="notifyUrl">通知回调地址</param>
-        public ZAddOfficialTradeReq(string notifyUrl) : base(notifyUrl)
-        {
-        }
 
         /// <summary>   
         ///    String 特殊可选 长度(28) 买家的支付宝唯一用户号（2088开头的16位纯数字）
@@ -60,15 +54,6 @@ namespace OSS.PaySdk.Ali.Pay.Mos
     /// </summary>
     public class ZAddPreTradeReq : ZAddPayTradeBaseReq
     {
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="notifyUrl">通知回调地址</param>
-        public ZAddPreTradeReq(string notifyUrl)
-        {
-            notify_url = notifyUrl;
-        }
-
         /// <summary>   
         ///    Price 可选 长度(11)  参与优惠计算的金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000]。 8.88
         /// </summary>  
@@ -128,7 +113,16 @@ namespace OSS.PaySdk.Ali.Pay.Mos
     ///  统一收单的基类
     /// </summary>
     public class ZAddPayTradeBaseReq : ZPayBaseReq
-    {
+    { 
+        /// <summary>
+        ///   回调通知地址
+        /// </summary>
+        [JsonIgnore]
+        public string notify_url
+        {
+            get => notifyUrl;
+            set => notifyUrl = value;
+        }
         /// <summary>   
         ///    String 必填 长度(64)  商户网站唯一订单号
         /// </summary>  

@@ -12,25 +12,34 @@
 #endregion
 
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace OSS.PaySdk.Ali.Pay.Mos
 {
     /// <summary>
     ///  PC网站跳转支付宝收银台的支付请求实体
+    ///  return_url 和 notify_url 需要同时赋值
     /// </summary>
     public class ZAddPageTradeReq : ZAddPayTradeBaseReq
     {
         /// <summary>
         /// 构造函数
+        ///  return_url 和 notify_url 需要同时赋值
         /// </summary>
-        /// <param name="returnUrl">支付后的跳转地址</param>
-        /// <param name="notifyUrl">支付后的异步通知地址</param>
-        public ZAddPageTradeReq(string returnUrl, string notifyUrl) 
+        public ZAddPageTradeReq() 
         {
-            return_url = returnUrl;
-            notify_url = notifyUrl;
             product_code = "FAST_INSTANT_TRADE_PAY";
             qr_pay_mode = 2;
+        }
+
+        /// <summary>
+        ///   回调通知地址
+        /// </summary>
+        [JsonIgnore]
+        public string return_url
+        {
+            get => returnUrl;
+            set => returnUrl = value;
         }
 
         /// <summary>   
