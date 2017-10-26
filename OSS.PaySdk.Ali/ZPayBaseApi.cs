@@ -62,7 +62,7 @@ namespace OSS.PaySdk.Ali
         /// <summary>
         /// 支付宝api接口地址
         /// </summary>
-        protected const string m_ApiUrl = "https://openapi.alipaydev.com/gateway.do";
+        protected const string m_ApiUrl = "https://openapi.alipay.com/gateway.do";
 
 
         /// <summary>
