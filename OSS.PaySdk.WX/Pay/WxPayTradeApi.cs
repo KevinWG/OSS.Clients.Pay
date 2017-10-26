@@ -56,6 +56,9 @@ namespace OSS.PaySdk.Wx.Pay
         /// <returns></returns>
         public async Task<WxAddPayOrderResp> AddUniOrderAsync(WxAddPayUniOrderReq order)
         {
+            if (string.IsNullOrEmpty(order.notify_url))
+                order.notify_url = ApiConfig.NotifyUrl;
+        
             var dics = order.GetDics();
             var addressUrl = string.Concat(m_ApiUrl, "/pay/unifiedorder");
 

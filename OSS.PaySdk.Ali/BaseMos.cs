@@ -132,6 +132,10 @@ namespace OSS.PaySdk.Ali
         ///    String 必填 长度(3)  调用的接口版本，固定为：1.0
         /// </summary>  
         public string Version { get; set; } = "1.0";
-
+        
+        /// <summary>
+        ///  如果接口参数中没有传值，则默认使用此值
+        /// </summary>
+        public string NotifyUrl { get; set; }
     }
 }

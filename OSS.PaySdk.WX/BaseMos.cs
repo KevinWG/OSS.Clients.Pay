@@ -212,5 +212,10 @@ namespace OSS.PaySdk.Wx
         ///  证书密码
         /// </summary>
         public string CertPassword { get; set; }
+        
+        /// <summary>
+        ///  如果接口参数中没有传值，则默认使用此值
+        /// </summary>
+        public string NotifyUrl { get; set; }
     }
 }
