@@ -20,8 +20,6 @@ namespace OSS.PaySdk.Ali.Pay.Mos
     /// </summary>
     public class ZAddPageTradeReq : ZAddPayTradeBaseReq
     {
-
-
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -45,12 +43,7 @@ namespace OSS.PaySdk.Ali.Pay.Mos
         ///    String 可选 长度(64) 绝对超时时间，格式为yyyy-MM-dd HH:mm。 注：1）以支付宝系统时间为准；2）如果和timeout_express参数同时传入，以time_expire为准
         /// </summary>  
         public List<ZPayTradeGoodDetailMo> goods_detail { get; set; }
-
-        /// <summary>   
-        ///    String 可选 长度(64) 公用回传参数，如果请求时传递了该参数，则返回给商户时会回传该参数。支付宝会在异步通知时将该参数原样返回。本参数必须进行UrlEncode之后才可以发送给支付宝
-        /// </summary>  
-        public string passback_params { get; set; }
-
+        
         /// <summary>   
         ///    String 可选 长度(64)
         /// </summary>  
@@ -99,6 +92,12 @@ namespace OSS.PaySdk.Ali.Pay.Mos
         /// 注：qr_pay_mode=4时该参数生效
         /// </summary>  
         public string qrcode_width { get; set; }
+        
+        /// <summary>   
+        ///    String 可空 长度(512)  公用回传参数【赋值时需要UrlEncode】，如果请求时传递了该参数，则返回给商户时会回传该参数,支付宝会在异步通知时将该参数原样返回。
+        /// 本参数必须进行UrlEncode之后才可以发送给支付宝
+        /// </summary>  
+        public string passback_params { get; set; }
     }
 
 

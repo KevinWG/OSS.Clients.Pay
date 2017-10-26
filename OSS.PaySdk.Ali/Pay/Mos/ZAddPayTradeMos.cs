@@ -299,5 +299,13 @@ namespace OSS.PaySdk.Ali.Pay.Mos
         ///    支付金额信息 String(512) 长度(否)  支付成功的各个渠道金额信息，详见资金明细信息说明
         /// </summary>  
         public string fund_bill_list { get; set; }
+
+
+        /// <summary>   
+        ///    String 可空 长度(512)  如果请求时传递了该参数，则返回给商户时会回传该参数
+		///      当面付没有此参数
+        /// 本参数必须进行UrlEncode之后才可以发送给支付宝
+        /// </summary>  
+        public string passback_params { get; set; }
     }
 }

@@ -166,7 +166,6 @@ namespace OSS.PaySdk.Ali.Pay.Mos
         ///  如 1.5h，可转换为 90m。 90m
         /// </summary>  
         public string timeout_express { get; set; }
-
     }
     
     /// <summary>
