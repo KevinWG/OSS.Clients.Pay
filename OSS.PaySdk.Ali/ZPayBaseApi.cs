@@ -284,6 +284,12 @@ namespace OSS.PaySdk.Ali
 
         #endregion
 
+
+        /// <inheritdoc />
+        protected override ZPayConfig GetDefaultConfig()
+        {
+            return ZPayConfigProvider.DefaultConfig;
+        }
     }
 
 }
