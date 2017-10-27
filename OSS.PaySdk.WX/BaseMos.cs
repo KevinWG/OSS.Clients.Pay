@@ -192,6 +192,17 @@ namespace OSS.PaySdk.Wx
         /// </summary>
         public string MchId { get; set; }
 
+
+        /// <summary>
+        /// 【非必填】 微信分配的子商户公众账号ID
+        /// </summary>
+        public string sub_appid { get; set; }
+
+        /// <summary>
+        /// 微信支付分配的子商户号
+        /// </summary>
+        public string sub_mch_id { get; set; }
+        
         /// <summary>
         /// AppSecret 值
         /// </summary>
