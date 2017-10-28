@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="OSS.Common" Version="1.2.5" />
+    <PackageReference Include="OSS.Common" Version="1.2.5.5" />
     <PackageReference Include="OSS.Http" Version="2.3.8" />
     <PackageReference Include="System.Security.Cryptography.Csp" Version="4.3.0" />
   </ItemGroup>
