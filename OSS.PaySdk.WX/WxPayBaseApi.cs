@@ -14,7 +14,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
@@ -165,28 +164,31 @@ namespace OSS.PaySdk.Wx
         ///  补充完善 字典sign签名
         ///     因为AppId的参数名称在不同接口中不同，所以不放在这里补充
         /// </summary>
-        /// <param name="xmlDirs"></param>
         protected internal void CompleteDicSign(SortedDictionary<string, object> xmlDirs)
         {
+            // 设置服务商子商户号信息 
+            if (!string.IsNullOrEmpty(ApiConfig.sub_mch_id))
+            {
+                if (!string.IsNullOrEmpty(ApiConfig.sub_appid))
+                    xmlDirs.Add("sub_appid", ApiConfig.sub_appid);
+
+                xmlDirs.Add("sub_mch_id", ApiConfig.sub_mch_id);
+            }
+
             var encStr = GetSignContent(xmlDirs);
             var sign = GetSign(encStr);
             xmlDirs.Add("sign", sign);
         }
 
-        /// <summary>
-        /// 生成签名,统一方法
-        /// </summary>
+        /// <summary> 生成签名,统一方法 </summary>
         /// <param name="encStr">不含key的参与签名串</param>
         /// <returns></returns>
         protected string GetSign(string encStr)
         {
             return Md5.EncryptHexString(string.Concat(encStr, "&key=", ApiConfig.Key)).ToUpper();
         }
-        /// <summary>
-        ///  获取签名内容字符串
-        /// </summary>
-        /// <param name="xmlDirs"></param>
-        /// <returns></returns>
+        
+        /// <summary> 获取签名内容字符串</summary>
         protected static string GetSignContent(SortedDictionary<string, object> xmlDirs)
         {
             var sb = new StringBuilder();
@@ -203,19 +205,13 @@ namespace OSS.PaySdk.Wx
             return encStr;
         }
 
-        /// <summary>
-        ///   接受微信支付通知后需要返回的信息
-        /// </summary>
-        /// <param name="res"></param>
-        /// <returns></returns>
+        /// <summary>   接受微信支付通知后需要返回的信息 </summary>
         public string GetCallBackReturnXml(ResultMo res)
         {
             return string.Format($"<xml><return_code><![CDATA[{ (res.IsSuccess() ? "SUCCESS" : "FAIL")}]]></return_code><return_msg><![CDATA[{ res.msg}]]></return_msg></xml>");
         }
         #endregion
-
-
-
+        
         #region  全局错误处理
 
         /// <summary>

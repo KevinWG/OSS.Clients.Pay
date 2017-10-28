@@ -73,6 +73,17 @@ namespace OSS.PaySdk.Wx
         ///    商户号 必填 String(32) 调用接口提交的商户号
         /// </summary>  
         public string mch_id { get; set; }
+        
+        /// <summary>   
+        ///   微信分配的子商户公众账号ID
+        /// </summary>  
+        public string sub_appid { get; set; }
+
+        /// <summary>   
+        ///   微信支付分配的子商户号
+        /// </summary>  
+        public string sub_mch_id { get; set; }
+
 
         /// <summary>   
         ///    随机字符串 必填 String(32) 微信返回的随机字符串
@@ -142,9 +153,12 @@ namespace OSS.PaySdk.Wx
 
             return_code = this["return_code"];
             return_msg = this["return_msg"];
+            nonce_str = this["nonce_str"];
+
             appid = this["appid"];
             mch_id = this["mch_id"];
-            nonce_str = this["nonce_str"];
+            sub_appid = this["sub_appid"];
+            sub_mch_id = this["sub_mch_id"];
 
             sign = this["sign"];
             result_code = this["result_code"];

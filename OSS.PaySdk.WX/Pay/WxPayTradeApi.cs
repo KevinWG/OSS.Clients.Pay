@@ -104,6 +104,7 @@ namespace OSS.PaySdk.Wx.Pay
                 ["package"] = jsPara.package,
                 ["signType"] = jsPara.sign_type
             };
+            
             jsPara.sign = GetSign(GetSignContent(dics));
 
             return jsPara;
