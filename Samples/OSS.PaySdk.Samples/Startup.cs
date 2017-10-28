@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace OSS.PayCenter.Samples
+namespace OSS.PaySdk.Samples
 {
     public class Startup
     {
@@ -25,6 +25,7 @@ namespace OSS.PayCenter.Samples
         {
             // Add framework services.
             services.AddMvc();
+            RegisterPayConfig();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +52,21 @@ namespace OSS.PayCenter.Samples
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private static void RegisterPayConfig()
+        {
+            //WxPayConfigProvider.DefaultConfig = new WxPayCenterConfig
+            //{
+            //    AppId = "XXXX"
+            //    //.....
+            //};
+
+            //ZPayConfigProvider.DefaultConfig = new ZPayConfig()
+            //{
+            //    AppId = "XXX",
+            //    //....
+            //};
         }
     }
 }

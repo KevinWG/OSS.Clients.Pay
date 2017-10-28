@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Univ.CompPay.Sample.Controllers
+namespace OSS.PaySdk.Samples.Controllers
 {
     public class HomeController : Controller
     {

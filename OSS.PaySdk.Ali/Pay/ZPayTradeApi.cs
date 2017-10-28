@@ -59,8 +59,7 @@ namespace OSS.PaySdk.Ali.Pay
         }
 
         #endregion
-
-
+        
         #region 发起客户端收款（自动唤起
 
         /// <summary>
