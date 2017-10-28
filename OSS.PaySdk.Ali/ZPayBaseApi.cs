@@ -46,6 +46,8 @@ namespace OSS.PaySdk.Ali
         {
         }
         
+        private ZPayRsaAssist _rsaAssist;
+
         /// <summary>
         ///  加密对象提供者
         ///     为了同时满足多租户多线程上下文配置， 所以这里静态线程变量赋值，如果不存在则创建
@@ -54,7 +56,13 @@ namespace OSS.PaySdk.Ali
         /// <returns></returns>
         private ZPayRsaAssist GenerateRsaAssist(ZPayConfig config)
         {
-            return new ZPayRsaAssist(config.AppPrivateKey, config.AppPublicKey, config.Charset);
+            if (ConfigMode==ConfigProviderMode.Context)
+                return new ZPayRsaAssist(config.AppPrivateKey, config.AppPublicKey, config.Charset);
+           
+            if (_rsaAssist==null)
+                return _rsaAssist= new ZPayRsaAssist(config.AppPrivateKey, config.AppPublicKey, config.Charset);
+            
+            return _rsaAssist;
         }
 
         #endregion
