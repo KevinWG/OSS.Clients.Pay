@@ -288,25 +288,22 @@ namespace OSS.PaySdk.Wx
         /// <returns></returns>
         protected internal HttpClient GetCertHttpClient()
         {
-            if( (ConfigMode==ConfigProviderMode.Instance
-                ||ConfigMode==ConfigProviderMode.Default)
-                && _client != null)
+            if(ConfigMode!=ConfigProviderMode.Context && _client != null)
                 return _client;
+
    
             var reqHandler = new HttpClientHandler
             {
                 ServerCertificateCustomValidationCallback = (msg, c, chain, sslErrors) => sslErrors == SslPolicyErrors.None
             };
-
             var cert = new X509Certificate2(ApiConfig.CertPath, ApiConfig.CertPassword);
             reqHandler.ClientCertificates.Add(cert);
+
             
-            if (ConfigMode != ConfigProviderMode.Instance 
-                && ConfigMode != ConfigProviderMode.Default)
+            if (ConfigMode==ConfigProviderMode.Context)
                 return new HttpClient(reqHandler);
 
-            _client = new HttpClient(reqHandler);
-            return _client;
+            return _client = new HttpClient(reqHandler);
         }
         
         /// <inheritdoc />
