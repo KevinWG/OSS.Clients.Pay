@@ -83,7 +83,7 @@ namespace OSS.PaySdk.Ali.Pay.Mos
         /// <summary>   
         ///    Price 必须 长度(9)  需要退款的金额，该金额不能大于订单金额,单位为元，支持两位小数
         /// </summary>  
-        public string refund_amount { get; set; }
+        public decimal refund_amount { get; set; }
 
         /// <summary>   
         ///    String 可选 长度(256)  退款的原因说明
