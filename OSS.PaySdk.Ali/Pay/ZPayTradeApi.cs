@@ -28,6 +28,7 @@ namespace OSS.PaySdk.Ali.Pay
     /// </summary>
     public class ZPayTradeApi : ZPayBaseApi
     {
+        /// <inheritdoc />
         public ZPayTradeApi(ZPayConfig config = null) : base(config)
         {
         }
@@ -68,6 +69,9 @@ namespace OSS.PaySdk.Ali.Pay
         /// <param name="payReq"></param>
         public async Task<ZAddOfficialTradeResp> GetOfficialTradeAsync(ZAddOfficialTradeReq payReq)
         {
+            if (string.IsNullOrEmpty(payReq.notify_url))
+                payReq.notify_url = ApiConfig.NotifyUrl;
+
             const string respColumnName = "alipay_trade_create_response";
             const string apiMethod = "alipay.trade.create";
 
@@ -80,8 +84,12 @@ namespace OSS.PaySdk.Ali.Pay
         /// <param name="req"></param>
         public ResultMo<string> GetAppTradeContent(ZAddAppTradeReq req)
         {
+            if (string.IsNullOrEmpty(req.notify_url))
+                req.notify_url = ApiConfig.NotifyUrl;
+
             const string apiMethod = "alipay.trade.app.pay";
             var dicsRes = GetReqBodyDics(apiMethod, req);
+
             return !dicsRes.IsSuccess() 
                 ? dicsRes.ConvertToResultOnly<string>() 
                 : new ResultMo<string>(ConvertDicToEncodeReqBody(dicsRes.data));
@@ -93,8 +101,12 @@ namespace OSS.PaySdk.Ali.Pay
         /// <param name="req"></param>
         public ResultMo<string> GetPageTradeContent(ZAddPageTradeReq req)
         {
+            if (string.IsNullOrEmpty(req.notify_url))
+                req.notify_url = ApiConfig.NotifyUrl;
+
             const string apiMethod = "alipay.trade.page.pay";
             var dicsRes = GetReqBodyDics(apiMethod, req);
+
             return !dicsRes.IsSuccess()
                 ? dicsRes.ConvertToResultOnly<string>()
                 : new ResultMo<string>(BuildFormHtml(dicsRes.data));
@@ -106,8 +118,12 @@ namespace OSS.PaySdk.Ali.Pay
         /// <param name="req"></param>
         public ResultMo<string> GetWapTradeContent(ZAddWapTradeReq req)
         {
+            if (string.IsNullOrEmpty(req.notify_url))
+                req.notify_url = ApiConfig.NotifyUrl;
+
             const string apiMethod = "alipay.trade.wap.pay";
             var dicsRes = GetReqBodyDics(apiMethod, req);
+
             return !dicsRes.IsSuccess() 
                 ? dicsRes.ConvertToResultOnly<string>() 
                 : new ResultMo<string>(BuildFormHtml(dicsRes.data));
@@ -118,8 +134,7 @@ namespace OSS.PaySdk.Ali.Pay
             var formId = DateTime.Now.ToUtcSeconds();
 
             var sbHtml = new StringBuilder();
-            sbHtml.Append("<form id='alipaysubmit' name='alipaysubmit' action='" + m_ApiUrl + "?charset=" + ApiConfig.Charset +
-                 "' method='POST'>");
+            sbHtml.Append($"<form id='{formId}' name='alipaysubmit' action='{m_ApiUrl}?charset={ApiConfig.Charset}' method='POST'>");
             foreach (KeyValuePair<string, string> temp in dics)
             {
                 sbHtml.Append($"<input  name='{temp.Key}' value='{temp.Value}'/>");
@@ -128,7 +143,7 @@ namespace OSS.PaySdk.Ali.Pay
             sbHtml.Append("<input type='submit' value='submit' style='display:none;'></form>");
 
             //表单实现自动提交
-            sbHtml.Append("<script>document.forms['alipaysubmit'].submit();</script>");
+            sbHtml.Append($"<script>document.forms['{formId}'].submit();</script>");
             return sbHtml.ToString();
         }
 

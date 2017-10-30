@@ -87,14 +87,16 @@ namespace OSS.PaySdk.Tests.ZFB
         [TestMethod]
         public void AddPreTradeTest()
         {
-            var payReq = new ZAddPreTradeReq("http://pay.sample.osscoder.com")
+            var payReq = new ZAddPreTradeReq()
             {
                 out_trade_no = "20170328125923",
                 body = "测试商品",
                 subject = "测试",
-                total_amount = 0.01M
+                total_amount = 0.01M,
+
+                notify_url = "http://你的接收地址"
             };
-            var res = m_Api.AddPreTradeAsync(payReq).WaitResult();
+            var res = m_Api.AddPrePayTradeAsync(payReq).WaitResult();
             var result = res.IsSuccess();
 
         }
