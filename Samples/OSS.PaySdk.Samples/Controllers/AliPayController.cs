@@ -98,11 +98,18 @@ namespace OSS.PaySdk.Samples.Controllers
         /// <summary>
         /// 退款接口
         /// </summary>
-        /// <param name="req"></param>
+        /// <param name="orderId"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> refund([FromBody]ZPayRefundReq req)
+        public async Task<IActionResult> refund(string orderId)
         {
+            var req = new ZPayRefundReq
+            {
+                out_trade_no = orderId,
+                out_request_no = orderId,
+                refund_amount = 0.01m
+            };
+            
             var refundRes = await _refundApi.RefunPayAsync(req);
 
             return Json(refundRes);

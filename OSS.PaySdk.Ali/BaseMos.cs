@@ -54,7 +54,7 @@ namespace OSS.PaySdk.Ali
         /// </summary>  
         public string code
         {
-            get { return _code; }
+            get => _code;
             set
             {
                 _code = value;

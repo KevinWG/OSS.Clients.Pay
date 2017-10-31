@@ -207,14 +207,8 @@ namespace OSS.PaySdk.Ali.SysTools
 
         private static RSACryptoServiceProvider CreateRsaProviderFromPrivateKey(string strKey)
         {
-            byte[] data = null;
-            //读取带
-            //ata = Encoding.Default.GetBytes(strKey);
-            data = Convert.FromBase64String(strKey);
-            //data = GetPem("RSA PRIVATE KEY", data);
-
-            var rsa = DecodeRSAPrivateKey(data);
-            return rsa;
+            var data = Convert.FromBase64String(strKey);
+            return DecodeRSAPrivateKey(data);
         }
 
         private static RSACryptoServiceProvider DecodeRSAPrivateKey(byte[] privkey)
@@ -269,12 +263,8 @@ namespace OSS.PaySdk.Ali.SysTools
 
                 elems = GetIntegerSize(binr);
                 var IQ = binr.ReadBytes(elems);
-
-
-                // ------- create RSACryptoServiceProvider instance and initialize with public key -----
-                var CspParameters = new CspParameters();
-                CspParameters.Flags = CspProviderFlags.UseMachineKeyStore;
-
+                
+                var CspParameters = new CspParameters {Flags = CspProviderFlags.UseMachineKeyStore};
                 const int bitLen = 2048;
 
                 var rsaParams = new RSAParameters
@@ -295,14 +285,8 @@ namespace OSS.PaySdk.Ali.SysTools
             }
             finally
             {
-                if (binr!=null)
-                {
-                    binr.Dispose();
-                }
-                if (mem!=null)
-                {
-                    mem.Dispose();
-                }
+                binr.Dispose();
+                mem.Dispose();
             }
         }
         private static int GetIntegerSize(BinaryReader binr)

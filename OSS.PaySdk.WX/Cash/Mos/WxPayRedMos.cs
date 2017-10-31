@@ -265,7 +265,7 @@ namespace OSS.PaySdk.Wx.Cash.Mos
         /// <summary>   
         ///    红包退款金额 可空 Int 红包退款金额
         /// </summary>  
-        public string refund_amount { get; set; }
+        public int refund_amount { get; set; }
 
         /// <summary>   
         ///    祝福语 可空 String(128) 祝福语
@@ -306,7 +306,7 @@ namespace OSS.PaySdk.Wx.Cash.Mos
             send_time = this["send_time"];
             refund_time = this["refund_time"];
 
-            refund_amount = this["refund_amount"];
+            refund_amount = this["refund_amount"].ToInt32();
             wishing = this["wishing"];
             remark = this["remark"];
             act_name = this["act_name"];
