@@ -79,7 +79,6 @@ namespace OSS.PaySdk.Ali
         ///    String 可空 长度(-)  业务返回码描述,详见文档
         /// </summary>  
         public string sub_msg { get; set; }
-        
     }
     
     /// <summary>
@@ -108,11 +107,11 @@ namespace OSS.PaySdk.Ali
         /// </summary>
         public string Charset { get; set; } = "UTF-8";
 
-        ///// <summary>
-        /////   商户生成签名字符串所使用的签名算法类型，目前支持RSA2和RSA，推荐使用RSA2
-        ///// </summary>
-        //public string SignType { get; set; } = "RSA2";
-        
+        /// <summary>
+        ///   商户生成签名字符串所使用的签名算法类型，只提供 RSA2,不再支持RSA
+        /// </summary>
+        public string SignType { get; } = "RSA2";
+
         /// <summary>
         ///   应用Id
         /// </summary>

@@ -23,12 +23,10 @@ namespace OSS.PaySdk.Ali.SysTools
     /// </summary>
     public class ZPayRsaAssist
     {
-
         internal string AppId { get; set; }
 
-        private readonly RSACryptoServiceProvider m_PublicRsa;
-        private readonly RSACryptoServiceProvider m_PrivateRsa ;
-        //private readonly string m_SignType;
+        private readonly RSA m_PublicRsa;
+        private readonly RSA m_PrivateRsa;
         private readonly string m_Charset;
 
         /// <summary>
@@ -41,7 +39,7 @@ namespace OSS.PaySdk.Ali.SysTools
         {
             m_PublicRsa = CreateRsaProviderFromPublicKey(publicKeyPem);
             m_PrivateRsa = CreateRsaProviderFromPrivateKey(privateKeyPem);
-            //m_SignType = signType;
+
             m_Charset = charset;
         }
 
@@ -78,7 +76,7 @@ namespace OSS.PaySdk.Ali.SysTools
 
         #region 通过公钥创建Rsa对象
 
-        private static RSACryptoServiceProvider CreateRsaProviderFromPublicKey(string publicKeyString)
+        private static RSA CreateRsaProviderFromPublicKey(string publicKeyString)
         {
             // encoded OID sequence for  PKCS #1 rsaEncryption szOID_RSA_RSA = "1.2.840.113549.1.1.1"
             byte[] SeqOID = { 0x30, 0x0D, 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x01, 0x05, 0x00 };
@@ -141,7 +139,7 @@ namespace OSS.PaySdk.Ali.SysTools
 
                     twobytes = binr.ReadUInt16();
 
-                    byte lowbyte=0x00;
+                    byte lowbyte;
                     byte highbyte = 0x00;
 
                     switch (twobytes)
@@ -161,7 +159,7 @@ namespace OSS.PaySdk.Ali.SysTools
 
                     var firstbyte = binr.PeekChar();
                     if (firstbyte == 0x00)
-                    {   //if first byte (highest order) of modulus is zero, don't include it
+                    {   
                         binr.ReadByte();    //skip this null byte
                         modsize -= 1;   //reduce modulus buffer size by 1
                     }
@@ -171,14 +169,13 @@ namespace OSS.PaySdk.Ali.SysTools
                         return null;
                     var expbytes = (int)binr.ReadByte();        // should only need one byte for actual exponent data (for all useful values)
                     var exponent = binr.ReadBytes(expbytes);
-
-                    // ------- create RSACryptoServiceProvider instance and initialize with public key -----
+                    
                     var rsaKeyInfo = new RSAParameters
                     {
                         Modulus = modulus,
                         Exponent = exponent
                     };
-                    var rsa = new RSACryptoServiceProvider();
+                    var rsa = RSA.Create();
                     rsa.ImportParameters(rsaKeyInfo);
 
                     return rsa;
@@ -205,17 +202,16 @@ namespace OSS.PaySdk.Ali.SysTools
 
         #region 通过私钥创建Rsa对象
 
-        private static RSACryptoServiceProvider CreateRsaProviderFromPrivateKey(string strKey)
+        private static RSA CreateRsaProviderFromPrivateKey(string strKey)
         {
             var data = Convert.FromBase64String(strKey);
             return DecodeRSAPrivateKey(data);
         }
 
-        private static RSACryptoServiceProvider DecodeRSAPrivateKey(byte[] privkey)
+        private static RSA DecodeRSAPrivateKey(byte[] privkey)
         {
-            // --------- Set up stream to decode the asn.1 encoded RSA private key ------
             var mem = new MemoryStream(privkey);
-            var binr = new BinaryReader(mem);  //wrap Memory Stream with BinaryReader for easy reading
+            var binr = new BinaryReader(mem);  
             try
             {
                 var twobytes = binr.ReadUInt16();
@@ -234,53 +230,40 @@ namespace OSS.PaySdk.Ali.SysTools
                 twobytes = binr.ReadUInt16();
                 if (twobytes != 0x0102) //version number
                     return null;
+
                 var bt = binr.ReadByte();
                 if (bt != 0x00)
                     return null;
 
+                var rsaParams = new RSAParameters();
 
-                //------ all private key components are Integer sequences ----
                 var elems = GetIntegerSize(binr);
-                var modulus = binr.ReadBytes(elems);
+                rsaParams.Modulus = binr.ReadBytes(elems);
 
                 elems = GetIntegerSize(binr);
-                var E = binr.ReadBytes(elems);
+                rsaParams.Exponent = binr.ReadBytes(elems);
 
                 elems = GetIntegerSize(binr);
-                var D = binr.ReadBytes(elems);
+                rsaParams.D = binr.ReadBytes(elems);
 
                 elems = GetIntegerSize(binr);
-                var P = binr.ReadBytes(elems);
+                rsaParams.P = binr.ReadBytes(elems);
 
                 elems = GetIntegerSize(binr);
-                var Q = binr.ReadBytes(elems);
+                rsaParams.Q = binr.ReadBytes(elems);
 
                 elems = GetIntegerSize(binr);
-                var DP = binr.ReadBytes(elems);
+                rsaParams.DP = binr.ReadBytes(elems);
 
                 elems = GetIntegerSize(binr);
-                var DQ = binr.ReadBytes(elems);
+                rsaParams.DQ = binr.ReadBytes(elems);
 
                 elems = GetIntegerSize(binr);
-                var IQ = binr.ReadBytes(elems);
-                
-                var CspParameters = new CspParameters {Flags = CspProviderFlags.UseMachineKeyStore};
-                const int bitLen = 2048;
+                rsaParams.InverseQ = binr.ReadBytes(elems);
 
-                var rsaParams = new RSAParameters
-                {
-                    Modulus = modulus,
-                    Exponent = E,
-                    D = D,
-                    P = P,
-                    Q = Q,
-                    DP = DP,
-                    DQ = DQ,
-                    InverseQ = IQ
-                };
-
-                var rsa = new RSACryptoServiceProvider(bitLen, CspParameters);
+                var rsa = RSA.Create();
                 rsa.ImportParameters(rsaParams);
+
                 return rsa;
             }
             finally
