@@ -17,7 +17,7 @@ namespace OSS.PaySdk.Tests.WX
             AppId = "wx2428e34e0e7dc6ef",
             MchId = "1233410002",
             Key = "e10adc3849ba56abbe56e056f20f883e",
-            AppSecret = "51c56b886b5be869567dd389b3e5d1d6",
+            //AppSecret = "51c56b886b5be869567dd389b3e5d1d6",
 
             CertPassword = "1233410002",
             CertPath = "cert/apiclient_cert.p12"
