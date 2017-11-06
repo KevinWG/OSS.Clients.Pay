@@ -20,22 +20,7 @@ namespace OSS.PaySdk.Wx.Coupon
     {
         #region  初始化构造函数，全局错误处理
 
-        static WxPayCouponApi()
-        {
-            RegisteErrorCode("USER_AL_GET_COUPON", "你已领取过该代金券");
-            RegisteErrorCode("NETWORK ERROR", "网络环境不佳，请重试");
-            RegisteErrorCode("AL_STOCK_OVER", "活动已结束");
-            RegisteErrorCode("FREQ_OVER_LIMIT", "超过发放频率限制");
-            RegisteErrorCode("COUPON_STOCK_ID_EMPTY", "批次ID为空");
-
-            RegisteErrorCode("CODE_2_ID_ERR", "商户id有误");
-            RegisteErrorCode("OPEN_ID_EMPTY", "用户openid为空");
-            RegisteErrorCode("STOCK_IS_NOT_VALID", "抱歉，该代金券已失效");
-            RegisteErrorCode("COUPON_NOT_FOUND", "券没有查找成功");
-            RegisteErrorCode("COUPON_STOCK_ID_NOT_VALID", "批次id不正确");
-
-            RegisteErrorCode("COUPON_STOCK_NOT_FOUND", "批次信息不存在");
-        }
+      
 
         public WxPayCouponApi(WxPayCenterConfig config = null) : base(config)
         {

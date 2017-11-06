@@ -29,15 +29,6 @@ namespace OSS.PaySdk.Wx.Pay
     /// </summary>
     public class WxPayTradeApi : WxPayBaseApi
     {
-        #region   全局错误码注册
-
-        static WxPayTradeApi()
-        {
-            RegisteErrorCode("ORDERNOTEXIST", "此交易订单号不存在");
-        }
-
-        #endregion
-        
         /// <summary>
         /// 构造函数
         /// </summary>

@@ -66,11 +66,6 @@ namespace OSS.PaySdk.Ali
         }
 
         /// <summary>   
-        ///    String 必填 长度(-)  网关返回码描述,详见文档 Failed
-        /// </summary>  
-        public string msg { get; set; }
-
-        /// <summary>   
         ///    String 可空 长度(-)  业务返回码,详见文档
         /// </summary>  
         public string sub_code { get; set; }

@@ -22,20 +22,7 @@ namespace OSS.PaySdk.Wx.Cash
 {
     public class WxPayRedApi : WxPayBaseApi
     {
-        #region  构造函数 ,全局错误处理
-
-        static WxPayRedApi()
-        {
-            RegisteErrorCode("SENDNUM_LIMIT", "该用户今日领取红包个数超过限制,如有需要、请在微信支付商户平台【api安全】中重新配置 【每日同一用户领取本商户红包不允许超过的个数】。");
-            RegisteErrorCode("FREQ_LIMIT", "请对请求做频率控制");
-            RegisteErrorCode("OPENID_ERROR", "Openid错误");
-            RegisteErrorCode("SECOND_OVER_LIMITED", "企业红包的按分钟发放受限");
-
-            RegisteErrorCode("DAY_ OVER_LIMITED", "企业红包的按天日发放受限");
-            RegisteErrorCode("MONEY_LIMIT", "红包金额发放限制");
-            RegisteErrorCode("SEND_FAILED", "红包发放失败,请更换单号再重试");
-            RegisteErrorCode("PROCESSING", "请求已受理，请稍后使用原单号查询发放结果");
-        }
+        #region  构造函数 
 
         /// <summary>
         /// 构造函数

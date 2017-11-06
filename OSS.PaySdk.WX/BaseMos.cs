@@ -105,24 +105,11 @@ namespace OSS.PaySdk.Wx
         ///    返回信息 可空 String(128) 返回信息，如非空，为错误原因签名失败
         /// </summary>  
         public string return_msg { get; set; }
-
-        private string _resultCode = string.Empty;
-
+        
         /// <summary>   
         ///    业务结果 必填 String(16) SUCCESS/FAIL
         /// </summary>  
-        public string result_code
-        {
-            get => _resultCode;
-            set
-            {
-                _resultCode = value;
-                if (_resultCode.ToUpper() != "SUCCESS")
-                {
-                    ret = -1;
-                }
-            }
-        }
+        public string result_code { get; set; }
 
         /// <summary>   
         ///    错误代码 可空 String(32) 详细参见下文错误列表

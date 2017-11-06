@@ -12,7 +12,6 @@
 #endregion
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Security;
@@ -86,8 +85,18 @@ namespace OSS.PaySdk.Wx
             catch (Exception ex)
             {
                 var errorKey = LogUtil.Error(string.Concat("基类请求出错，错误信息：", ex.Message), "RestCommon", ModuleNames.PayCenter);
-                t = new T() { ret = -1, msg = string.Concat("当前请求出错，错误码：", errorKey) };
+                t = new T { ret = -1, msg = string.Concat("当前请求出错，错误码：", errorKey) };
             }
+
+            if (t == null || !t.IsSuccess())
+                return t ?? new T {ret = (int) ResultTypes.ObjectNull, msg = "未发现结果信息！"};
+            
+            if (t.return_code.ToUpper() == "SUCCESS" 
+                && t.result_code.ToUpper() == "SUCCESS")
+                return t;
+  
+            t.ret = -1;
+            t.msg = string.Concat(t.return_msg, t.err_code_des);
             return t;
         }
 
@@ -102,31 +111,18 @@ namespace OSS.PaySdk.Wx
             XmlDocument resultXml = null;
             var dics = SysUtil.ChangXmlToDir(contentStr, ref resultXml);
 
+            if (!dics.ContainsKey("sign"))
+                return new T{ret = (int)ResultTypes.ParaError,msg = "当前结果签名信息不存在！"};
+
             var t = new T {RespXml = resultXml};
             t.FromResContent(dics);
+            
+            var signStr = GetSign(GetSignContent(dics));
+            if (signStr == t.sign)
+                return t;
 
-            if (dics.ContainsKey("sign"))
-            {
-                var signStr = GetSign(GetSignContent(dics));
-
-                if (signStr != t.sign)
-                {
-                    t.ret = (int)ResultTypes.ParaError;
-                    t.msg = "返回的结果签名（sign）不匹配";
-                }
-            }
-
-            if (t.return_code.ToUpper() != "SUCCESS")
-            {
-                //通信结果处理，这个微信做的其实没意义，脱裤子放屁
-                t.ret = -1;
-                t.msg = t.return_msg;
-            }
-            else if (!t.IsSuccess())
-            {
-                //  请求数据结果处理
-                t.msg = GetErrMsg(t.err_code?.ToUpper());
-            }
+            t.ret = (int)ResultTypes.ParaError;
+            t.msg = "返回的结果签名（sign）不匹配";
 
             return t;
         }
@@ -210,70 +206,6 @@ namespace OSS.PaySdk.Wx
         {
             return string.Format($"<xml><return_code><![CDATA[{ (res.IsSuccess() ? "SUCCESS" : "FAIL")}]]></return_code><return_msg><![CDATA[{ res.msg}]]></return_msg></xml>");
         }
-        #endregion
-        
-        #region  全局错误处理
-
-        /// <summary>
-        /// 基本错误信息字典，基类中继续完善
-        /// </summary>
-        protected static ConcurrentDictionary<string, string> m_DicErrMsg = new ConcurrentDictionary<string, string>();
-
-        static WxPayBaseApi()
-        {
-            InitailGlobalErrorCode();
-        }
-
-
-        private static void InitailGlobalErrorCode()
-        {
-            #region 错误基本信息
-
-            m_DicErrMsg.TryAdd("NOAUTH", "商户无此接口权限 ");
-            m_DicErrMsg.TryAdd("NOTENOUGH", "余额不足");
-            m_DicErrMsg.TryAdd("ORDERPAID", "商户订单已支付 ");
-            m_DicErrMsg.TryAdd("ORDERCLOSED", "订单已关闭 ");
-            m_DicErrMsg.TryAdd("SYSTEMERROR", "商户系统接口错误");
-
-            m_DicErrMsg.TryAdd("APPID_NOT_EXIST", "APPID不存在 ");
-            m_DicErrMsg.TryAdd("MCHID_NOT_EXIST", "MCHID不存在 ");
-            m_DicErrMsg.TryAdd("APPID_MCHID_NOT_MATCH", "appid和mch_id不匹配 ");
-            m_DicErrMsg.TryAdd("LACK_PARAMS", "缺少参数");
-            m_DicErrMsg.TryAdd("OUT_TRADE_NO_USED", "商户订单号重复 ");
-
-            m_DicErrMsg.TryAdd("SIGNERROR", "签名错误 参数签名结果不正确  ");
-            m_DicErrMsg.TryAdd("XML_FORMAT_ERROR", "XML格式错误 ");
-            m_DicErrMsg.TryAdd("REQUIRE_POST_METHOD", "请使用post方法 ");
-            m_DicErrMsg.TryAdd("POST_DATA_EMPTY", "post数据为空 ");
-            m_DicErrMsg.TryAdd("NOT_UTF8", "编码格式错误 ");
-
-            RegisteErrorCode("PARAM_ERROR", "参数错误 请求参数未按指引进行填写");
-            RegisteErrorCode("CA_ERROR 证书有误", "确认证书正确，或者联系商户平台更新证书");
-            RegisteErrorCode("CA_VERIFY_FAILED", "证书验证失败  检查证书是否正确");
-            RegisteErrorCode("REQ_PARAM_XML_ERR", "输入参数xml格式有误 检查入参的xml格式是否正确");
-            RegisteErrorCode("MCH_ID_EMPTY", "商户ID为空 确保商户id正确传入");
-
-            RegisteErrorCode("ERR_VERIFY_SSL_SERIAL", "获取客户端证书序列号失败!检查证书是否正确");
-            RegisteErrorCode("ERR_VERIFY_SSL_SN", "获取客户端证书特征名称(DN)域失败!检查证书是否正确");
-            RegisteErrorCode("NETWORKERROR", "网络环境不佳,请重试");
-            #endregion
-        }
-
-        /// <summary>
-        /// 注册错误码
-        /// </summary>
-        /// <param name="code"></param>
-        /// <param name="message"></param>
-        protected static void RegisteErrorCode(string code, string message) => m_DicErrMsg.TryAdd(code, message);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="errCode"></param>
-        /// <returns></returns>
-        protected static string GetErrMsg(string errCode)
-            => m_DicErrMsg.ContainsKey(errCode) ? m_DicErrMsg[errCode] : string.Empty;
-
         #endregion
         
         private HttpClient _client;
