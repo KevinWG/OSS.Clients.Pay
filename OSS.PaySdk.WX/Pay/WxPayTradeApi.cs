@@ -73,7 +73,7 @@ namespace OSS.PaySdk.Wx.Pay
         }
 
         /// <summary>
-        ///  获取js唤起客户端参数
+        ///  获取js和小程序唤起客户端参数
         /// </summary>
         /// <param name="prepayId">预支付交易Id</param>
         /// <returns></returns>
@@ -123,8 +123,8 @@ namespace OSS.PaySdk.Wx.Pay
             {
                 ["appid"] = appPara.app_id,
                 ["partnerid"] = appPara.mch_id,
-                ["timeStamp"] = appPara.time_stamp,
-                ["nonceStr"] = appPara.nonce,
+                ["timestamp"] = appPara.time_stamp,
+                ["noncestr"] = appPara.nonce,
                 ["package"] = appPara.package,
 
                 ["prepayid"] = appPara.prepay_id
