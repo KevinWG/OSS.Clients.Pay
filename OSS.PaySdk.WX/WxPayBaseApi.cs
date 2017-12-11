@@ -226,7 +226,6 @@ namespace OSS.PaySdk.Wx
             };
             var cert = new X509Certificate2(ApiConfig.CertPath, ApiConfig.CertPassword);
             reqHandler.ClientCertificates.Add(cert);
-
             
             if (ConfigMode==ConfigProviderMode.Context)
                 return new HttpClient(reqHandler);
