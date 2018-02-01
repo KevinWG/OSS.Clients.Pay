@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using OSS.Http.Mos;
 using OSS.PaySdk.Wx.Cash.Mos;
@@ -41,10 +42,12 @@ namespace OSS.PaySdk.Wx.Cash
 
             CompleteDicSign(dics);
 
-            var req = new OsHttpRequest();
-            req.HttpMothed = HttpMothed.POST;
-            req.AddressUrl = addressUrl;
-            req.CustomBody = dics.ProduceXml();
+            var req = new OsHttpRequest
+            {
+                HttpMethod = HttpMethod.Post,
+                AddressUrl = addressUrl,
+                CustomBody = dics.ProduceXml()
+            };
 
             return await RestCommonAsync<WxPayTransferCashResp>(req, null, GetCertHttpClient());
         }

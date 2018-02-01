@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using OSS.Common.ComModels;
 using OSS.Common.ComModels.Enums;
@@ -291,7 +292,7 @@ namespace OSS.PaySdk.Wx.Pay
 
             var req = new OsHttpRequest
             {
-                HttpMothed = HttpMothed.POST,
+                HttpMethod = HttpMethod.Post,
                 AddressUrl = string.Concat(m_ApiUrl, "/pay/downloadbill"),
                 CustomBody = dics.ProduceXml()
             };

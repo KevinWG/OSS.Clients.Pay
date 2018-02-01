@@ -161,7 +161,7 @@ namespace OSS.PaySdk.Ali
 
             var reqHttp = new OsHttpRequest
             {
-                HttpMothed = HttpMothed.POST,
+                HttpMethod = HttpMethod.Post,
                 CustomBody = ConvertDicToEncodeReqBody(contentDirs.data)
             };
             

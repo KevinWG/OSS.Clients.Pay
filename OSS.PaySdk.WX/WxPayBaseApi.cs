@@ -148,7 +148,7 @@ namespace OSS.PaySdk.Wx
 
             var req = new OsHttpRequest
             {
-                HttpMothed = HttpMothed.POST,
+                HttpMethod = HttpMethod.Post,
                 AddressUrl = addressUrl,
                 CustomBody = xmlDirs.ProduceXml()
             };

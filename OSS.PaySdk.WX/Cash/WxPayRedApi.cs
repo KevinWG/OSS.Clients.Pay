@@ -11,8 +11,8 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using OSS.Http.Mos;
 using OSS.PaySdk.Wx.Cash.Mos;
@@ -76,10 +76,12 @@ namespace OSS.PaySdk.Wx.Cash
 
             CompleteDicSign(xmlDirs);
 
-            var req = new OsHttpRequest();
-            req.HttpMothed = HttpMothed.POST;
-            req.AddressUrl = addressUrl;
-            req.CustomBody = xmlDirs.ProduceXml();
+            var req = new OsHttpRequest
+            {
+                HttpMethod = HttpMethod.Post,
+                AddressUrl = addressUrl,
+                CustomBody = xmlDirs.ProduceXml()
+            };
 
             return await RestCommonAsync<T>(req, null, GetCertHttpClient());
         }
