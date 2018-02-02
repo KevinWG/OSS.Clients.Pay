@@ -326,41 +326,42 @@ namespace OSS.PaySdk.Wx.Pay.Mos
             refund_account = this["refund_account"];
             refund_count = this["refund_count"].ToInt32();
 
-            if (refund_count>0)
+            if (refund_count <= 0)
+                return;
+
+            refund_items=new List<WxPayRefundItemMo>(refund_count);
+            for (var i = 0; i < refund_count; i++)
             {
-                var refundItems=new List<WxPayRefundItemMo>(refund_count);
-                for (int i = 0; i < refund_count; i++)
+                var item = new WxPayRefundItemMo
                 {
-                    var item = new WxPayRefundItemMo();
-                    item.out_refund_no = this["out_refund_no_" + i];
-                    item.refund_id = this["refund_id_" + i];
-                    item.refund_channel = this["refund_channel_" + i];
-                    item.settlement_refund_fee = this["settlement_refund_fee_" + i].ToInt32();
-                    item.coupon_type = this["coupon_type_" + i];
+                    out_refund_no = this["out_refund_no_" + i],
+                    refund_id = this["refund_id_" + i],
+                    refund_channel = this["refund_channel_" + i],
+                    settlement_refund_fee = this["settlement_refund_fee_" + i].ToInt32(),
+                    coupon_type = this["coupon_type_" + i],
 
-                    item.coupon_refund_fee = this["coupon_refund_fee_" + i].ToInt32();
-                    item.coupon_refund_count = this["coupon_refund_count_" + i].ToInt32();
-                    item.refund_status = this["refund_status_" + i];
-                    item.refund_recv_accout = this["refund_recv_accout_" + i];
-                    if (item.coupon_refund_count>0)
+                    coupon_refund_fee = this["coupon_refund_fee_" + i].ToInt32(),
+                    coupon_refund_count = this["coupon_refund_count_" + i].ToInt32(),
+                    refund_status = this["refund_status_" + i],
+                    refund_recv_accout = this["refund_recv_accout_" + i]
+                };
+
+                if (item.coupon_refund_count>0)
+                {
+                    var refundCouponItems = new List<WxPayRefundCouponItemMo>(item.coupon_refund_count);
+                    for (var j = 0; j < item.coupon_refund_count; j++)
                     {
-                        var refundCouponItems = new List<WxPayRefundCouponItemMo>(item.coupon_refund_count);
-                        for (int j = 0; j < item.coupon_refund_count; j++)
-                        {
-                            var couponItem = new WxPayRefundCouponItemMo();
+                        var couponItem = new WxPayRefundCouponItemMo();
 
-                            couponItem.coupon_refund_fee = this[$"coupon_refund_fee_{i}_{j}"].ToInt32();
-                            couponItem.coupon_refund_id = this[$"coupon_refund_id_{i}_{j}"];
+                        couponItem.coupon_refund_fee = this[$"coupon_refund_fee_{i}_{j}"].ToInt32();
+                        couponItem.coupon_refund_id = this[$"coupon_refund_id_{i}_{j}"];
 
-                            refundCouponItems.Add(couponItem);
-                        }
-                        item.coupons = refundCouponItems;
+                        refundCouponItems.Add(couponItem);
                     }
-                    refundItems.Add(item);
+                    item.coupons = refundCouponItems;
                 }
-                refund_items = refundItems;
+                refund_items.Add(item);
             }
-
         }
     }
 
