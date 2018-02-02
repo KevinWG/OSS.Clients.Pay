@@ -356,6 +356,7 @@ namespace OSS.PaySdk.Wx.Pay.Mos
                         }
                         item.coupons = refundCouponItems;
                     }
+                    refundItems.Add(item);
                 }
                 refund_items = refundItems;
             }
