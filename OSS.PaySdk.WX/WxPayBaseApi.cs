@@ -220,10 +220,17 @@ namespace OSS.PaySdk.Wx
                 return _client;
 
    
+#if NETFW
+            var reqHandler = new WebRequestHandler()
+            {
+                ServerCertificateValidationCallback = (msg, c, chain, sslErrors) => sslErrors == SslPolicyErrors.None
+            };
+#else
             var reqHandler = new HttpClientHandler
             {
                 ServerCertificateCustomValidationCallback = (msg, c, chain, sslErrors) => sslErrors == SslPolicyErrors.None
             };
+#endif
             var cert = new X509Certificate2(ApiConfig.CertPath, ApiConfig.CertPassword);
             reqHandler.ClientCertificates.Add(cert);
             
