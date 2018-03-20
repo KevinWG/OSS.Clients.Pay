@@ -27,6 +27,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
     <PackageReference Include="OSS.Common" Version="1.2.7.10" />
     <PackageReference Include="OSS.Http" Version="2.5.0" />
     <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
