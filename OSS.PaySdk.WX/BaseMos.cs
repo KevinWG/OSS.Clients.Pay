@@ -203,11 +203,11 @@ namespace OSS.PaySdk.Wx
         /// 微信支付分配的子商户号
         /// </summary>
         public string sub_mch_id { get; set; }
-        
-        ///// <summary>
-        ///// AppSecret 值
-        ///// </summary>
-        //public string AppSecret { get; set; }
+
+        /// <summary>
+        /// AppSecret 值
+        /// </summary>
+        public string AppSecret { get; set; }
 
         /// <summary>
         /// 参与加密的key值
