@@ -23,7 +23,11 @@ namespace OSS.PaySdk.Wx.Cash
 {
     public class WxPayCashApi:WxPayBaseApi
     {
-        public WxPayCashApi(WxPayCenterConfig config) : base(config)
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="config">配置信息，如果这里为空，请在程序入口处 设置WxPayBaseApi.DefaultConfig的值</param>
+        public WxPayCashApi(WxPayCenterConfig config = null) : base(config)
         {
         }
 
