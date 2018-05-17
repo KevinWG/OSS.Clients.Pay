@@ -91,7 +91,7 @@ namespace OSS.PaySdk.Ali.Pay
             var dicsRes = GetReqBodyDics(apiMethod, req);
 
             return !dicsRes.IsSuccess() 
-                ? dicsRes.ConvertToResultOnly<string>() 
+                ? dicsRes.ConvertToResult<string>() 
                 : new ResultMo<string>(ConvertDicToEncodeReqBody(dicsRes.data));
         }
         
@@ -108,7 +108,7 @@ namespace OSS.PaySdk.Ali.Pay
             var dicsRes = GetReqBodyDics(apiMethod, req);
 
             return !dicsRes.IsSuccess()
-                ? dicsRes.ConvertToResultOnly<string>()
+                ? dicsRes.ConvertToResult<string>()
                 : new ResultMo<string>(BuildFormHtml(dicsRes.data));
         }
 
@@ -125,7 +125,7 @@ namespace OSS.PaySdk.Ali.Pay
             var dicsRes = GetReqBodyDics(apiMethod, req);
 
             return !dicsRes.IsSuccess() 
-                ? dicsRes.ConvertToResultOnly<string>() 
+                ? dicsRes.ConvertToResult<string>() 
                 : new ResultMo<string>(BuildFormHtml(dicsRes.data));
         }
 

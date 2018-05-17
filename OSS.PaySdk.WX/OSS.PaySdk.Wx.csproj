@@ -9,13 +9,13 @@
     <PackageIconUrl>http://img1.static.osscoder.com/logo.jpg</PackageIconUrl>
     <PackageProjectUrl>https://github.com/KevinWG/OSS.PaySdk/tree/master/Pay/OSS.PaySdk.Wx</PackageProjectUrl>
     <RepositoryUrl>https://github.com/KevinWG/OSS.PaySdk</RepositoryUrl>
-    <PackageReleaseNotes>优化退款实体详细内容</PackageReleaseNotes>
+    <PackageReleaseNotes>升级Common类库</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <AssemblyVersion>1.2.0.1</AssemblyVersion>
-    <FileVersion>1.2.0.1</FileVersion>
+    <AssemblyVersion>1.2.0.2</AssemblyVersion>
+    <FileVersion>1.2.0.2</FileVersion>
     <Copyright>OSSCoder</Copyright>
     <PackageLicenseUrl>https://github.com/KevinWG/OSS.PaySdk/blob/master/LICENSE</PackageLicenseUrl>
-    <Version>1.2.0.1</Version>
+    <Version>1.2.0.2</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -27,7 +27,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OSS.Common" Version="1.2.7.10" />
+    <PackageReference Include="OSS.Common" Version="1.3.2.2" />
     <PackageReference Include="OSS.Http" Version="2.5.0" />
     <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
   </ItemGroup>

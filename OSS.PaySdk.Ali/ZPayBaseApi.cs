@@ -157,7 +157,7 @@ namespace OSS.PaySdk.Ali
         {
             var contentDirs = GetReqBodyDics(apiMethod, req);
             if (!contentDirs.IsSuccess())
-                return contentDirs.ConvertToResult<TResp>();
+                return contentDirs.ConvertToResultInherit<TResp>();
 
             var reqHttp = new OsHttpRequest
             {
