@@ -9,13 +9,13 @@
     <PackageIconUrl>http://img1.static.osscoder.com/logo.jpg</PackageIconUrl>
     <PackageProjectUrl>https://github.com/KevinWG/OSS.PaySdk/tree/master/Pay/OSS.PaySdk.Wx</PackageProjectUrl>
     <RepositoryUrl>https://github.com/KevinWG/OSS.PaySdk</RepositoryUrl>
-    <PackageReleaseNotes>升级Common类库</PackageReleaseNotes>
+    <PackageReleaseNotes>修复微信XXE漏洞</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <AssemblyVersion>1.2.0.2</AssemblyVersion>
-    <FileVersion>1.2.0.2</FileVersion>
+    <AssemblyVersion>1.2.0.3</AssemblyVersion>
+    <FileVersion>1.2.0.3</FileVersion>
     <Copyright>OSSCoder</Copyright>
     <PackageLicenseUrl>https://github.com/KevinWG/OSS.PaySdk/blob/master/LICENSE</PackageLicenseUrl>
-    <Version>1.2.0.2</Version>
+    <Version>1.2.0.3</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

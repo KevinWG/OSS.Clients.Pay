@@ -72,7 +72,8 @@ namespace OSS.PaySdk.Wx.SysTools
             }
             var dirs = new SortedDictionary<string, object>();
 
-            xmlDoc = new XmlDocument();
+            xmlDoc = new XmlDocument {XmlResolver = null};
+
             xmlDoc.LoadXml(xmlStr);
             var xmlNode = xmlDoc.FirstChild;
             var nodes = xmlNode.ChildNodes;
