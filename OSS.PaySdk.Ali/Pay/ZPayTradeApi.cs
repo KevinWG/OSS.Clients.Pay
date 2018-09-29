@@ -131,7 +131,7 @@ namespace OSS.PaySdk.Ali.Pay
 
         private  string BuildFormHtml(IDictionary<string, string> dics)
         {
-            var formId = DateTime.Now.ToUtcSeconds();
+            var formId =$"alipay{DateTime.Now.ToUtcSeconds()}" ;
 
             var sbHtml = new StringBuilder();
             sbHtml.Append($"<form id='{formId}' name='alipaysubmit' action='{m_ApiUrl}?charset={ApiConfig.Charset}' method='POST'>");
