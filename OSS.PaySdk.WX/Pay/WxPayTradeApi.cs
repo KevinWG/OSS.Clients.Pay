@@ -191,7 +191,7 @@ namespace OSS.PaySdk.Wx.Pay
                 ["long_url"] = long_url
             };
 
-            return await PostApiAsync<WxPayGetShortUrlResp>(url, dics, null, null,
+            return await PostApiAsync<WxPayGetShortUrlResp>(url, dics, null, false,true,
                 d => d["long_url"] = d["long_url"].UrlEncode());
         }
 

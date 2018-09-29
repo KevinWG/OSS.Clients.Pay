@@ -53,7 +53,7 @@ namespace OSS.PaySdk.Wx.Cash
                 CustomBody = dics.ProduceXml()
             };
 
-            return await RestCommonAsync<WxPayTransferCashResp>(req, null, GetCertHttpClient());
+            return await RestCommonAsync<WxPayTransferCashResp>(req, null, true,false);
         }
 
 
@@ -72,7 +72,7 @@ namespace OSS.PaySdk.Wx.Cash
                 ["partner_trade_no"] = partner_trade_no
             };
 
-            return await PostApiAsync<WxPayGetTransferCashResp>(urlStr, dics,null,GetCertHttpClient());
+            return await PostApiAsync<WxPayGetTransferCashResp>(urlStr, dics,null, true,false);
         }
     }
 }

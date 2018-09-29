@@ -83,7 +83,7 @@ namespace OSS.PaySdk.Wx.Cash
                 CustomBody = xmlDirs.ProduceXml()
             };
 
-            return await RestCommonAsync<T>(req, null, GetCertHttpClient());
+            return await RestCommonAsync<T>(req, null, true);
         }
         #endregion
 
@@ -104,7 +104,7 @@ namespace OSS.PaySdk.Wx.Cash
                 ["bill_type"] = bill_type
             };
 
-            return await PostApiAsync<WxPayQueryRedResp>(urlStr, dics,null,GetCertHttpClient());
+            return await PostApiAsync<WxPayQueryRedResp>(urlStr, dics,null, true);
         }
     }
 }

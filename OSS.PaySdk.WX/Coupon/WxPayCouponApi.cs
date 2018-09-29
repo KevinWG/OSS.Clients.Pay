@@ -37,7 +37,7 @@ namespace OSS.PaySdk.Wx.Coupon
         {
             var urlStr = string.Concat(m_ApiUrl, "/mmpaymkttransfers/send_coupon");
 
-            return await PostApiAsync<WxPaySendConpouResp>(urlStr, conpouReq.GetDics(), null, GetCertHttpClient());
+            return await PostApiAsync<WxPaySendConpouResp>(urlStr, conpouReq.GetDics(), null, true);
         }
 
         /// <summary>

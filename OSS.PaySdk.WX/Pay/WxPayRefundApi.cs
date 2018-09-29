@@ -31,9 +31,9 @@ namespace OSS.PaySdk.Wx.Pay
         {
             var dics = refundReq.GetDics();
             var url = string.Concat(m_ApiUrl, "/secapi/pay/refund");
-            var certClient = GetCertHttpClient();
+     
 
-            return await PostApiAsync<WxPayRefundResp>(url, dics, null, certClient);
+            return await PostApiAsync<WxPayRefundResp>(url, dics, null, true);
         }
 
 
@@ -84,7 +84,7 @@ namespace OSS.PaySdk.Wx.Pay
             dics["out_trade_no"] = out_trade_no;
             dics["transaction_id"] = transaction_id;
 
-            return await PostApiAsync<WxPayResverOrderResp>(addressUrl, dics,null, GetCertHttpClient());
+            return await PostApiAsync<WxPayResverOrderResp>(addressUrl, dics,null, true);
         }
 
         #endregion
