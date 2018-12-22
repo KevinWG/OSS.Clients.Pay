@@ -33,13 +33,13 @@ namespace OSS.PaySdk.Wx
     /// <summary>
     ///  微信支付基类
     /// </summary>
-    public abstract class WxPayBaseApi:BaseConfigProvider<WxPayCenterConfig,WxPayBaseApi>
+    public abstract class WxPayBaseApi : BaseConfigProvider<WxPayCenterConfig, WxPayBaseApi>
     {
         /// <summary>
         /// 微信api接口地址
         /// </summary>
         protected const string m_ApiUrl = "https://api.mch.weixin.qq.com";
-     
+
         #region  处理基本配置
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace OSS.PaySdk.Wx
         /// <param name="checkSign">是否检查返回签名，个别接口没有</param>
         /// <returns>实体类型</returns>
         protected async Task<T> RestCommonAsync<T>(OsHttpRequest request,
-            Func<HttpResponseMessage, Task<T>> funcFormat = null, bool needCert = false, bool checkSign=true)
+            Func<HttpResponseMessage, Task<T>> funcFormat = null, bool needCert = false, bool checkSign = true)
             where T : WxPayBaseResp, new()
         {
             var t = default(T);
@@ -87,19 +87,10 @@ namespace OSS.PaySdk.Wx
             }
             catch (Exception ex)
             {
-                var errorKey = LogUtil.Error(string.Concat("基类请求出错，错误信息：", ex.Message), "RestCommon", ModuleNames.PayCenter);
-                t = new T { ret = -1, msg = string.Concat("当前请求出错，错误码：", errorKey) };
+                LogUtil.Error(string.Concat("基类请求出错，错误信息：", ex.Message), "RestCommon", ModuleNames.PayCenter);
+                t = new T {ret = (int) ResultTypes.InnerError, msg = "微信支付请求失败"};
             }
 
-            if (t == null || !t.IsSuccess())
-                return t ?? new T {ret = (int) ResultTypes.ObjectNull, msg = "未发现结果信息！"};
-            
-            if (t.return_code.ToUpper() == "SUCCESS" 
-                && t.result_code.ToUpper() == "SUCCESS")
-                return t;
-  
-            t.ret = -1;
-            t.msg = string.Concat(t.return_msg, t.err_code_des);
             return t;
         }
 
@@ -115,21 +106,30 @@ namespace OSS.PaySdk.Wx
             XmlDocument resultXml = null;
             var dics = SysUtil.ChangXmlToDir(contentStr, ref resultXml);
 
-            var t = new T { RespXml = resultXml };
+            var t = new T {RespXml = resultXml};
+            t.FromResContent(dics);
+
+
+            if (t.return_code.ToUpper() != "SUCCESS"
+                || t.result_code.ToUpper() != "SUCCESS")
+            {
+                t.ret = (int) ResultTypes.ObjectStateError;
+                t.msg = string.Concat(t.return_msg, t.err_code_des);
+                return t;
+            }
 
             if (checkSign)
             {
-                if (!dics.ContainsKey("sign"))
-                    return new T {ret = (int) ResultTypes.ParaError, msg = "当前结果签名信息不存在！"};
-                
-                var signN = GetSign(GetSignContent(dics));
-                if (signN != dics["sign"].ToString())
-                    return new T {ret = (int) ResultTypes.ParaError, msg = "返回签名出现错误！"};
+                var sign = dics["sign"]?.ToString();
+                if (string.IsNullOrEmpty(sign) || sign != GetSign(GetSignContent(dics)))
+                {
+                    t.ret = (int) ResultTypes.ParaError;
+                    t.msg = "返回签名信息校验不正确！";
+                }
             }
-
-            t.FromResContent(dics);
             return t;
         }
+
 
         /// <summary>
         ///   post 支付接口相关请求
@@ -143,8 +143,8 @@ namespace OSS.PaySdk.Wx
         /// <param name="checkSign">是否需要检查返回Sign</param>
         /// <returns></returns>
         protected async Task<T> PostApiAsync<T>(string addressUrl, SortedDictionary<string, object> xmlDirs,
-            Func<HttpResponseMessage, Task<T>> funcFormat = null,bool needCert=false, bool checkSign = true,
-            Action<SortedDictionary<string, object>> dirformat=null) where T : WxPayBaseResp, new()
+            Func<HttpResponseMessage, Task<T>> funcFormat = null, bool needCert = false, bool checkSign = true,
+            Action<SortedDictionary<string, object>> dirformat = null) where T : WxPayBaseResp, new()
         {
             xmlDirs.Add("appid", ApiConfig.AppId);
             xmlDirs.Add("mch_id", ApiConfig.MchId);
@@ -189,7 +189,7 @@ namespace OSS.PaySdk.Wx
         {
             return Md5.EncryptHexString(string.Concat(encStr, "&key=", ApiConfig.Key)).ToUpper();
         }
-        
+
         /// <summary> 获取签名内容字符串</summary>
         protected static string GetSignContent(SortedDictionary<string, object> xmlDirs)
         {
@@ -210,10 +210,12 @@ namespace OSS.PaySdk.Wx
         /// <summary>   接受微信支付通知后需要返回的信息 </summary>
         public string GetCallBackReturnXml(ResultMo res)
         {
-            return string.Format($"<xml><return_code><![CDATA[{ (res.IsSuccess() ? "SUCCESS" : "FAIL")}]]></return_code><return_msg><![CDATA[{ res.msg}]]></return_msg></xml>");
+            return string.Format(
+                $"<xml><return_code><![CDATA[{(res.IsSuccess() ? "SUCCESS" : "FAIL")}]]></return_code><return_msg><![CDATA[{res.msg}]]></return_msg></xml>");
         }
+
         #endregion
-        
+
         private HttpClient _client;
 
         /// <summary>
@@ -223,31 +225,32 @@ namespace OSS.PaySdk.Wx
         /// <returns></returns>
         protected internal HttpClient GetCertHttpClient(bool needCert)
         {
-            var cusClient = WxPayConfigProvider.HttpClientProvider?.Invoke(ApiConfig,needCert);
+            var cusClient = WxPayConfigProvider.HttpClientProvider?.Invoke(ApiConfig, needCert);
             if (cusClient != null)
                 return cusClient;
 
             if (!needCert)
-                return null;// 返回NULL 由底层控件自己补充默认Client
-            
+                return null; // 返回NULL 由底层控件自己补充默认Client
 
-            if(ConfigMode!=ConfigProviderMode.Context && _client != null)
+
+            if (ConfigMode != ConfigProviderMode.Context && _client != null)
                 return _client;
 
             var reqHandler = new HttpClientHandler
             {
-                ServerCertificateCustomValidationCallback = (msg, c, chain, sslErrors) => sslErrors == SslPolicyErrors.None
+                ServerCertificateCustomValidationCallback =
+                    (msg, c, chain, sslErrors) => sslErrors == SslPolicyErrors.None
             };
 
             var cert = new X509Certificate2(ApiConfig.CertPath, ApiConfig.CertPassword);
             reqHandler.ClientCertificates.Add(cert);
-            
-            if (ConfigMode==ConfigProviderMode.Context)
+
+            if (ConfigMode == ConfigProviderMode.Context)
                 return new HttpClient(reqHandler);
 
             return _client = new HttpClient(reqHandler);
         }
-        
+
         /// <inheritdoc />
         protected override WxPayCenterConfig GetDefaultConfig()
         {

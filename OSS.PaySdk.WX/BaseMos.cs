@@ -151,7 +151,8 @@ namespace OSS.PaySdk.Wx
             result_code = this["result_code"];
             err_code = this["err_code"];
             err_code_des = this["err_code_des"];
-
+            
+            
             FormatPropertiesFromMsg();
         }
 
