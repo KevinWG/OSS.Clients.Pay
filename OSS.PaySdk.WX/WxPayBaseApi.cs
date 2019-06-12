@@ -33,7 +33,7 @@ namespace OSS.PaySdk.Wx
     /// <summary>
     ///  微信支付基类
     /// </summary>
-    public abstract class WxPayBaseApi : BaseConfigProvider<WxPayCenterConfig, WxPayBaseApi>
+    public abstract class WxPayBaseApi : BaseApiConfigProvider<WxPayCenterConfig>
     {
         /// <summary>
         /// 微信api接口地址

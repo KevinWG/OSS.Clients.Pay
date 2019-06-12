@@ -30,13 +30,13 @@ namespace OSS.PaySdk.Ali
         /// </summary>
         public static ZPayConfig DefaultConfig { get; set; }
 
-        /// <summary>
-        /// 设置上下文配置信息
-        /// </summary>
-        /// <param name="config"></param>
-        public static void SetContextConfig(ZPayConfig config)
-        {
-            ZPayBaseApi.SetContextConfig(config);
-        }
+        ///// <summary>
+        ///// 设置上下文配置信息
+        ///// </summary>
+        ///// <param name="config"></param>
+        //public static void SetContextConfig(ZPayConfig config)
+        //{
+        //    ZPayBaseApi.SetContextConfig(config);
+        //}
     }
 }

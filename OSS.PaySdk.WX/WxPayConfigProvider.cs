@@ -33,14 +33,14 @@ namespace OSS.PaySdk.Wx
         /// </summary>
         public static WxPayCenterConfig DefaultConfig { get; set; }
 
-        /// <summary>
-        /// 设置上下文配置信息
-        /// </summary>
-        /// <param name="config"></param>
-        public static void SetContextConfig(WxPayCenterConfig config)
-        {
-            WxPayBaseApi.SetContextConfig(config);
-        }
+        ///// <summary>
+        ///// 设置上下文配置信息
+        ///// </summary>
+        ///// <param name="config"></param>
+        //public static void SetContextConfig(WxPayCenterConfig config)
+        //{
+        //    WxPayBaseApi.SetContextConfig(config);
+        //}
 
 
         /// <summary>
