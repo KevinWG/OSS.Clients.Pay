@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using OSS.Common.ComModels;
 using OSS.Common.ComModels.Enums;
 using OSS.Common.Extention;
+using OSS.Common.Resp;
 using OSS.PaySdk.Ali.Pay.Mos;
 
 namespace OSS.PaySdk.Ali.Pay
@@ -82,7 +83,7 @@ namespace OSS.PaySdk.Ali.Pay
         /// 获取客户端App唤起支付请求内容
         /// </summary>
         /// <param name="req"></param>
-        public ResultMo<string> GetAppTradeContent(ZAddAppTradeReq req)
+        public Resp<string> GetAppTradeContent(ZAddAppTradeReq req)
         {
             if (string.IsNullOrEmpty(req.notify_url))
                 req.notify_url = ApiConfig.NotifyUrl;
@@ -91,15 +92,15 @@ namespace OSS.PaySdk.Ali.Pay
             var dicsRes = GetReqBodyDics(apiMethod, req);
 
             return !dicsRes.IsSuccess() 
-                ? dicsRes.ConvertToResult<string>() 
-                : new ResultMo<string>(ConvertDicToEncodeReqBody(dicsRes.data));
+                ? new Resp<string>().WithResp(dicsRes) 
+                : new Resp<string>(ConvertDicToEncodeReqBody(dicsRes.data));
         }
         
         /// <summary>
         /// 获取PC端转到支付宝收银台请求内容
         /// </summary>
         /// <param name="req"></param>
-        public ResultMo<string> GetPageTradeContent(ZAddPageTradeReq req)
+        public Resp<string> GetPageTradeContent(ZAddPageTradeReq req)
         {
             if (string.IsNullOrEmpty(req.notify_url))
                 req.notify_url = ApiConfig.NotifyUrl;
@@ -108,15 +109,15 @@ namespace OSS.PaySdk.Ali.Pay
             var dicsRes = GetReqBodyDics(apiMethod, req);
 
             return !dicsRes.IsSuccess()
-                ? dicsRes.ConvertToResult<string>()
-                : new ResultMo<string>(BuildFormHtml(dicsRes.data));
+                ? new Resp<string>().WithResp(dicsRes)
+                : new Resp<string>(BuildFormHtml(dicsRes.data));
         }
 
         /// <summary>
         /// 获取客户端Wap唤起支付请求内容
         /// </summary>
         /// <param name="req"></param>
-        public ResultMo<string> GetWapTradeContent(ZAddWapTradeReq req)
+        public Resp<string> GetWapTradeContent(ZAddWapTradeReq req)
         {
             if (string.IsNullOrEmpty(req.notify_url))
                 req.notify_url = ApiConfig.NotifyUrl;
@@ -125,8 +126,8 @@ namespace OSS.PaySdk.Ali.Pay
             var dicsRes = GetReqBodyDics(apiMethod, req);
 
             return !dicsRes.IsSuccess() 
-                ? dicsRes.ConvertToResult<string>() 
-                : new ResultMo<string>(BuildFormHtml(dicsRes.data));
+                ? new Resp<string>().WithResp(dicsRes)
+                : new Resp<string>(BuildFormHtml(dicsRes.data));
         }
 
         private  string BuildFormHtml(IDictionary<string, string> dics)
@@ -202,11 +203,11 @@ namespace OSS.PaySdk.Ali.Pay
         /// </summary>
         /// <param name="formDics">表单的字典值</param>
         /// <returns></returns>
-        public ResultMo CheckCallBackSign(IDictionary<string, string> formDics)
+        public Resp CheckCallBackSign(IDictionary<string, string> formDics)
         {
             if (!formDics.ContainsKey("sign"))
             {
-                return new ResultMo(ResultTypes.ParaError,"未发现sign参数");
+                return new Resp().WithResp( RespTypes.ParaError, "未发现sign参数");
             }
             var sign = formDics["sign"];
             //var signType = formDics["sign_type"];
@@ -218,7 +219,7 @@ namespace OSS.PaySdk.Ali.Pay
 
             var checkContent = string.Join("&", sortDics.Select(d => string.Concat(d.Key, "=", d.Value.UrlDecode())));
 
-            var result = new ResultMo();
+            var result = new Resp();
             CheckSign(checkContent, sign, result);
             return result;
         }

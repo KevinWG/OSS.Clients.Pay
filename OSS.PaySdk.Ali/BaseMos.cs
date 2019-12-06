@@ -14,6 +14,7 @@
 
 using Newtonsoft.Json;
 using OSS.Common.ComModels;
+using OSS.Common.Resp;
 
 namespace OSS.PaySdk.Ali
 {
@@ -44,7 +45,7 @@ namespace OSS.PaySdk.Ali
     /// <summary>
     /// 基础响应实体
     /// </summary>
-    public class ZPayBaseResp:ResultMo
+    public class ZPayBaseResp:Resp
     {
 
         private string _code = string.Empty;

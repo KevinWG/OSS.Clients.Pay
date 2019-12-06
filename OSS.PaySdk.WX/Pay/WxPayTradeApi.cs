@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using OSS.Common.ComModels;
 using OSS.Common.ComModels.Enums;
 using OSS.Common.Extention;
+using OSS.Common.Resp;
 using OSS.Http.Extention;
 using OSS.Http.Mos;
 using OSS.PaySdk.Wx.Pay.Mos;
@@ -282,7 +283,7 @@ namespace OSS.PaySdk.Wx.Pay
         /// </summary>
         /// <param name="billReq"></param>
         /// <returns></returns>
-        public async Task<ResultMo<string>> DownloadBillAsync(WxPayDownloadBillReq billReq)
+        public async Task<Resp<string>> DownloadBillAsync(WxPayDownloadBillReq billReq)
         {
             var dics = billReq.GetDics();
 
@@ -298,11 +299,11 @@ namespace OSS.PaySdk.Wx.Pay
             };
 
             var response = await req.RestSend();
-            if (!response.IsSuccessStatusCode) return new ResultMo<string>() {ret = -1, msg = "当前请求出错！"};
+            if (!response.IsSuccessStatusCode) return new Resp<string>() {ret = -1, msg = "当前请求出错！"};
 
             var content = await response.Content.ReadAsStringAsync();
-            return content.StartsWith("<xml>") ? new ResultMo<string>(content) 
-                : new ResultMo<string>(ResultTypes.ObjectStateError, content);
+            return content.StartsWith("<xml>") ? new Resp<string>(content) 
+                : new Resp<string>().WithResp(RespTypes.ObjectStateError, content);
         }
 
         #endregion

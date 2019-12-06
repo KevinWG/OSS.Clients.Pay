@@ -4,6 +4,7 @@ using OSS.PaySdk.Wx.Pay;
 using OSS.PaySdk.Wx.Pay.Mos;
 using System.IO;
 using System.Threading.Tasks;
+using OSS.Common.Resp;
 
 namespace OSS.PaySdk.Samples.Controllers
 {
@@ -74,7 +75,7 @@ namespace OSS.PaySdk.Samples.Controllers
             }
             var wxPayRes = _api.DecryptPayResult(strPayResult);
             //  do something with wxPayRes
-            var returnXml = _api.GetCallBackReturnXml(new ResultMo());
+            var returnXml = _api.GetCallBackReturnXml(new Resp());
             return Content(returnXml);
         }
 

@@ -2,19 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.2.1</Version>
+    <Version>1.3</Version>
     <Authors>Kevin</Authors>
     <Company>OSSCoder</Company>
     <Product>OSS.PayCenter</Product>
     <Description>支付宝支付相关接口</Description>
     <PackageProjectUrl>https://github.com/KevinWG/OSS.PaySdk/tree/master/Pay/OSS.PaySdk.Ali</PackageProjectUrl>
-    <PackageIconUrl>http://img1.static.osscoder.com/logo.jpg</PackageIconUrl>
+    <PackageIconUrl>http://img1.osscore.cn/static/oss_net.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/KevinWG/OSS.PaySdk</RepositoryUrl>
-    <PackageReleaseNotes>完善底层基础设置</PackageReleaseNotes>
+    <PackageReleaseNotes>优化相关结果类型</PackageReleaseNotes>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://github.com/KevinWG/OSS.PaySdk/blob/master/LICENSE</PackageLicenseUrl>
-    <AssemblyVersion>1.2.1.0</AssemblyVersion>
-    <FileVersion>1.2.1.2</FileVersion>
+    <AssemblyVersion>1.3.0.0</AssemblyVersion>
+    <FileVersion>1.3.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -27,8 +27,8 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="OSS.Common" Version="1.3.5.16" />
-    <PackageReference Include="OSS.Http" Version="2.5.0.1" />
+    <PackageReference Include="OSS.Common" Version="2.1.2" />
+    <PackageReference Include="OSS.Http" Version="2.5.1" />
     <PackageReference Include="System.Security.Cryptography.Csp" Version="4.3.0" />
   </ItemGroup>
 

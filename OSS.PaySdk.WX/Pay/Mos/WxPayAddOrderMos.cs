@@ -12,6 +12,7 @@
 #endregion
 
 using OSS.Common.ComModels;
+using OSS.Common.Resp;
 
 namespace OSS.PaySdk.Wx.Pay.Mos
 {
@@ -222,7 +223,7 @@ namespace OSS.PaySdk.Wx.Pay.Mos
     /// <summary>
     ///  获取公众号和小程序唤起客户端需要的实体
     /// </summary>
-    public class WxGetJsClientParaResp : ResultMo
+    public class WxGetJsClientParaResp : Resp
     {
         /// <summary>
         ///  公众号id

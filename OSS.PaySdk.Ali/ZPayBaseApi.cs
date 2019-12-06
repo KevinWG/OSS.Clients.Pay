@@ -24,6 +24,7 @@ using OSS.Common.ComModels;
 using OSS.Common.Extention;
 using OSS.Common.Plugs;
 using OSS.Common.Plugs.LogPlug;
+using OSS.Common.Resp;
 using OSS.Http.Extention;
 using OSS.Http.Mos;
 using OSS.PaySdk.Ali.SysTools;
@@ -111,7 +112,7 @@ namespace OSS.PaySdk.Ali
                         if (resJsonObj == null)
                             return new T()
                             {
-                                ret = (int) ResultTypes.ObjectStateError,
+                                ret = (int) RespTypes.ObjectStateError,
                                 msg = "基础请求响应不正确，请检查地址或者网络是否正常！"
                             };
 
@@ -134,7 +135,7 @@ namespace OSS.PaySdk.Ali
                     ModuleNames.SocialCenter);
                 t = new T()
                 {
-                    ret = (int) ResultTypes.InnerError,
+                    ret = (int) RespTypes.InnerError,
                     msg = string.Concat("基类请求出错，请检查网络是否正常，错误码：", logCode)
                 };
             }
@@ -156,7 +157,7 @@ namespace OSS.PaySdk.Ali
         {
             var contentDirs = GetReqBodyDics(apiMethod, req);
             if (!contentDirs.IsSuccess())
-                return contentDirs.ConvertToResultInherit<TResp>();
+                return new TResp().WithResp(contentDirs);
 
             var reqHttp = new OsHttpRequest
             {
@@ -178,7 +179,7 @@ namespace OSS.PaySdk.Ali
         /// <param name="sign"></param>
         /// <param name="t"></param>
         protected void CheckSign<T>(string signContent, string sign, T t)
-            where T : ResultMo, new()
+            where T : Resp, new()
         {
             try
             {
@@ -196,12 +197,12 @@ namespace OSS.PaySdk.Ali
 
                 if (checkSignRes) return;
 
-                t.ret = (int) ResultTypes.UnAuthorize;
+                t.ret = (int) RespTypes.OperateFailed;
                 t.msg = "当前签名非法！";
             }
             catch (Exception e)
             {
-                t.ret = (int) ResultTypes.InnerError;
+                t.ret = (int) RespTypes.InnerError;
                 t.msg = "解密签名过程中出错，详情请查看日志";
                 LogUtil.Info(
                     $"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign}, 错误信息：{e.Message}",
@@ -237,7 +238,7 @@ namespace OSS.PaySdk.Ali
         /// <param name="method">接口方法名</param>
         /// <param name="req">请求实体</param>
         /// <returns>返回最终的内容</returns>
-        protected internal ResultMo<IDictionary<string, string>> GetReqBodyDics<T>(string method, T req)
+        protected internal Resp<IDictionary<string, string>> GetReqBodyDics<T>(string method, T req)
             where T : ZPayBaseReq
         {
             var dirs = new SortedDictionary<string, string>();
@@ -272,9 +273,9 @@ namespace OSS.PaySdk.Ali
             catch (Exception e)
             {
                 LogUtil.Error(string.Concat("处理签名字典出错，详细信息：", e.Message), "Z_GetReqBodyDics", ModuleNames.PayCenter);
-                return new ResultMo<IDictionary<string, string>>((int) ResultTypes.InnerError, "处理签名字典出错，详细信息请查看日志");
+                return new Resp<IDictionary<string, string>>().WithResp(RespTypes.InnerError, "处理签名字典出错，详细信息请查看日志");
             }
-            return new ResultMo<IDictionary<string, string>>(dirs);
+            return new Resp<IDictionary<string, string>>(dirs);
         }
 
         private static void SetDefaultPropertyFormat(IDictionary<string, string> dirs, string key, string value)

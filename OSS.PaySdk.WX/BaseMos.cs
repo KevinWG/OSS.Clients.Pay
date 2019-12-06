@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using System.Xml;
 using OSS.Common.ComModels;
+using OSS.Common.Resp;
 using OSS.PaySdk.Wx.SysTools;
 
 namespace OSS.PaySdk.Wx
@@ -62,7 +63,7 @@ namespace OSS.PaySdk.Wx
     /// <summary>
     ///   请求响应基类
     /// </summary>
-    public class WxPayBaseResp : ResultMo
+    public class WxPayBaseResp : Resp
     {
         /// <summary>   
         ///    公众账号ID 必填 String(32) 调用接口提交的公众账号ID

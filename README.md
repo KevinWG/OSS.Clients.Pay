@@ -58,7 +58,7 @@ public IActionResult receive()
     }
     var payRes = _api.DecryptTradeResult(strPayResult);
     // to do something with payRes
-    var returnXml = _api.GetCallBackReturnXml(new ResultMo());
+    var returnXml = _api.GetCallBackReturnXml(new Resp());
     return Content(returnXml);
 }
 ```

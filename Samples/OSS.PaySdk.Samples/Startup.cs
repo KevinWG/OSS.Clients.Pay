@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using OSS.PaySdk.Wx;
 
 namespace OSS.PaySdk.Samples
 {
@@ -56,11 +57,14 @@ namespace OSS.PaySdk.Samples
 
         private static void RegisterPayConfig()
         {
-            //WxPayConfigProvider.DefaultConfig = new WxPayCenterConfig
-            //{
-            //    AppId = "XXXX"
-            //    //.....
-            //};
+            WxPayConfigProvider.DefaultConfig = new WxPayCenterConfig
+            {
+                AppId = "wxc9180871227296c3",
+                Key = "WeChatConsultant20191106wefDiIne",
+                MchId = "1516403801",
+                NotifyUrl = "http://113.105.74.212/Wechat/WechatPayCallback"
+                //.....
+            };
 
             //ZPayConfigProvider.DefaultConfig = new ZPayConfig()
             //{

@@ -24,6 +24,7 @@ using OSS.Common.ComModels.Enums;
 using OSS.Common.Encrypt;
 using OSS.Common.Plugs;
 using OSS.Common.Plugs.LogPlug;
+using OSS.Common.Resp;
 using OSS.Http.Extention;
 using OSS.Http.Mos;
 using OSS.PaySdk.Wx.SysTools;
@@ -88,7 +89,7 @@ namespace OSS.PaySdk.Wx
             catch (Exception ex)
             {
                 LogUtil.Error(string.Concat("基类请求出错，错误信息：", ex.Message), "RestCommon", ModuleNames.PayCenter);
-                t = new T {ret = (int) ResultTypes.InnerError, msg = "微信支付请求失败"};
+                t = new T {ret = (int) RespTypes.InnerError, msg = "微信支付请求失败"};
             }
 
             return t;
@@ -113,7 +114,7 @@ namespace OSS.PaySdk.Wx
             if (t.return_code.ToUpper() != "SUCCESS"
                 || t.result_code.ToUpper() != "SUCCESS")
             {
-                t.ret = (int) ResultTypes.ObjectStateError;
+                t.ret = (int) RespTypes.ObjectStateError;
                 t.msg = string.Concat(t.return_msg, t.err_code_des);
                 return t;
             }
@@ -123,7 +124,7 @@ namespace OSS.PaySdk.Wx
                 var sign = dics["sign"]?.ToString();
                 if (string.IsNullOrEmpty(sign) || sign != GetSign(GetSignContent(dics)))
                 {
-                    t.ret = (int) ResultTypes.ParaError;
+                    t.ret = (int) RespTypes.ParaError;
                     t.msg = "返回签名信息校验不正确！";
                 }
             }
@@ -208,7 +209,7 @@ namespace OSS.PaySdk.Wx
         }
 
         /// <summary>   接受微信支付通知后需要返回的信息 </summary>
-        public string GetCallBackReturnXml(ResultMo res)
+        public string GetCallBackReturnXml(Resp res)
         {
             return string.Format(
                 $"<xml><return_code><![CDATA[{(res.IsSuccess() ? "SUCCESS" : "FAIL")}]]></return_code><return_msg><![CDATA[{res.msg}]]></return_msg></xml>");
