@@ -1,4 +1,4 @@
-﻿#region Copyright (C) 2017 Kevin (OSS开源作坊) 公众号：osscoder
+﻿#region Copyright (C) 2017 Kevin (OSS开源作坊) 公众号：osscore
 
 /***************************************************************************
 *　　	文件功能描述：微信支付模快 —— xml和dictionary 辅助转化类
@@ -16,9 +16,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 
-namespace OSS.PaySdk.Wx.SysTools
+namespace OSS.PaySdk.Wx.Helpers
 {
-    internal static class SysUtil
+    internal static class WxXmlHelper
     {
         /// <summary>
         ///  字典转到xml

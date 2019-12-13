@@ -1,4 +1,4 @@
-﻿#region Copyright (C) 2017 Kevin (OSS开源作坊) 公众号：osscoder
+﻿#region Copyright (C) 2017 Kevin (OSS开源作坊) 公众号：osscore
 
 /***************************************************************************
 *　　	文件功能描述：微信支付模快 —— 请求基类
@@ -20,14 +20,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using OSS.Common.ComModels;
-using OSS.Common.ComModels.Enums;
 using OSS.Common.Encrypt;
 using OSS.Common.Plugs;
 using OSS.Common.Plugs.LogPlug;
 using OSS.Common.Resp;
 using OSS.Http.Extention;
 using OSS.Http.Mos;
-using OSS.PaySdk.Wx.SysTools;
+using OSS.PaySdk.Wx.Helpers;
+using OSS.Tools.Log;
 
 namespace OSS.PaySdk.Wx
 {
@@ -88,7 +88,7 @@ namespace OSS.PaySdk.Wx
             }
             catch (Exception ex)
             {
-                LogUtil.Error(string.Concat("基类请求出错，错误信息：", ex.Message), "RestCommon", ModuleNames.PayCenter);
+                LogHelper.Error(string.Concat("基类请求出错，错误信息：", ex.Message), "RestCommon", WxPayConfigProvider.ModuleName);
                 t = new T {ret = (int) RespTypes.InnerError, msg = "微信支付请求失败"};
             }
 
@@ -105,7 +105,7 @@ namespace OSS.PaySdk.Wx
         protected T GetRespResult<T>(string contentStr, bool checkSign = true) where T : WxPayBaseResp, new()
         {
             XmlDocument resultXml = null;
-            var dics = SysUtil.ChangXmlToDir(contentStr, ref resultXml);
+            var dics = WxXmlHelper.ChangXmlToDir(contentStr, ref resultXml);
 
             var t = new T {RespXml = resultXml};
             t.FromResContent(dics);

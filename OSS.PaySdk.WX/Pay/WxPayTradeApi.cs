@@ -1,4 +1,4 @@
-﻿#region Copyright (C) 2017 Kevin (OSS开源作坊) 公众号：osscoder
+﻿#region Copyright (C) 2017 Kevin (OSS开源作坊) 公众号：osscore
 
 /***************************************************************************
 *　　	文件功能描述：微信支付模快 —— 支付交易模快
@@ -21,8 +21,8 @@ using OSS.Common.Extention;
 using OSS.Common.Resp;
 using OSS.Http.Extention;
 using OSS.Http.Mos;
+using OSS.PaySdk.Wx.Helpers;
 using OSS.PaySdk.Wx.Pay.Mos;
-using OSS.PaySdk.Wx.SysTools;
 
 namespace OSS.PaySdk.Wx.Pay
 {
@@ -85,7 +85,7 @@ namespace OSS.PaySdk.Wx.Pay
             {
                 app_id = ApiConfig.AppId,
                 time_stamp = DateTime.Now.ToLocalSeconds().ToString(),
-                nonce = SysUtil.GenerateNonceStr(),
+                nonce = WxXmlHelper.GenerateNonceStr(),
                 package = string.Concat("prepay_id=", prepayId)
             };
 
@@ -115,7 +115,7 @@ namespace OSS.PaySdk.Wx.Pay
                 app_id = ApiConfig.AppId,
                 mch_id = ApiConfig.MchId,
                 time_stamp = DateTime.Now.ToLocalSeconds().ToString(),
-                nonce = SysUtil.GenerateNonceStr(),
+                nonce = WxXmlHelper.GenerateNonceStr(),
                 prepay_id = prepayId,
 
                 package = "Sign=WXPay"
@@ -188,7 +188,7 @@ namespace OSS.PaySdk.Wx.Pay
 
             var dics = new SortedDictionary<string, object>
             {
-                ["nonce_str"] = SysUtil.GenerateNonceStr(),
+                ["nonce_str"] = WxXmlHelper.GenerateNonceStr(),
                 ["long_url"] = long_url
             };
 
@@ -207,7 +207,7 @@ namespace OSS.PaySdk.Wx.Pay
 
             var dics = new SortedDictionary<string, object>
             {
-                ["nonce_str"] = SysUtil.GenerateNonceStr(),
+                ["nonce_str"] = WxXmlHelper.GenerateNonceStr(),
                 ["auth_code"] = auth_code
             };
 
@@ -228,7 +228,7 @@ namespace OSS.PaySdk.Wx.Pay
             var dics = new SortedDictionary<string, object>
             {
                 ["time_stamp"] = DateTime.Now.ToLocalSeconds().ToString(),
-                ["nonce_str"] = SysUtil.GenerateNonceStr(),
+                ["nonce_str"] = WxXmlHelper.GenerateNonceStr(),
                 ["product_id"] = product_id,
                 ["appid"] = ApiConfig.AppId,
                 ["mch_id"] = ApiConfig.MchId

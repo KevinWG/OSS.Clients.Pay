@@ -1,4 +1,4 @@
-﻿#region Copyright (C) 2017 Kevin (OSS开源作坊) 公众号：osscoder
+﻿#region Copyright (C) 2017 Kevin (OSS开源作坊) 公众号：osscore
 
 /***************************************************************************
 *　　	文件功能描述：微信支付模快 —— 微信支付的配置信息
@@ -26,7 +26,7 @@ namespace OSS.PaySdk.Wx
         /// <summary>
         ///  模块名称
         /// </summary>
-        public static string ModuleName { get; set; } = ModuleNames.PayCenter;
+        public static string ModuleName { get; set; } = "oss_pay";
 
         /// <summary>
         ///  默认的Key配置信息

@@ -2,10 +2,10 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using OSS.Common.ComModels;
-using OSS.Common.ComModels.Enums;
 using OSS.Common.Extention;
 using OSS.Common.Plugs;
 using OSS.Common.Plugs.LogPlug;
+using OSS.Common.Resp;
 using OSS.PaySdk.Ali.Pay;
 using OSS.PaySdk.Ali.Pay.Mos;
 using OSS.PaySdk.Ali.SysTools;
@@ -48,7 +48,7 @@ namespace OSS.PaySdk.Tests.ZFB
             config.Charset);
 
         protected void CheckSign<T>(string signContent, string sign, T t)
-            where T : ResultMo, new()
+            where T : Resp, new()
         {
             try
             {

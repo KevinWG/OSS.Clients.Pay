@@ -1,5 +1,5 @@
 ﻿
-#region Copyright (C) 2017 Kevin (OSS开源作坊) 公众号：osscoder
+#region Copyright (C) 2017 Kevin (OSS开源作坊) 公众号：osscore
 
 /***************************************************************************
 *　　	文件功能描述：支付宝支付模快 —— 支付宝支付中心基类
@@ -22,12 +22,11 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OSS.Common.ComModels;
 using OSS.Common.Extention;
-using OSS.Common.Plugs;
-using OSS.Common.Plugs.LogPlug;
 using OSS.Common.Resp;
 using OSS.Http.Extention;
 using OSS.Http.Mos;
 using OSS.PaySdk.Ali.SysTools;
+using OSS.Tools.Log;
 
 namespace OSS.PaySdk.Ali
 {
@@ -131,8 +130,8 @@ namespace OSS.PaySdk.Ali
             }
             catch (Exception ex)
             {
-                var logCode = LogUtil.Error(string.Concat("基类请求出错，错误信息：", ex.Message), "Z_RestCommon",
-                    ModuleNames.SocialCenter);
+                var logCode = LogHelper.Error(string.Concat("基类请求出错，错误信息：", ex.Message), "Z_RestCommon",
+                    ZPayConfigProvider.ModuleName);
                 t = new T()
                 {
                     ret = (int) RespTypes.InnerError,
@@ -204,12 +203,9 @@ namespace OSS.PaySdk.Ali
             {
                 t.ret = (int) RespTypes.InnerError;
                 t.msg = "解密签名过程中出错，详情请查看日志";
-                LogUtil.Info(
+                LogHelper.Info(
                     $"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign}, 错误信息：{e.Message}",
-                    "CheckSign", ModuleNames.PayCenter);
-#if DEBUG
-                throw e;
-#endif
+                    "CheckSign", ZPayConfigProvider.ModuleName);
             }
         }
 
@@ -272,7 +268,7 @@ namespace OSS.PaySdk.Ali
             }
             catch (Exception e)
             {
-                LogUtil.Error(string.Concat("处理签名字典出错，详细信息：", e.Message), "Z_GetReqBodyDics", ModuleNames.PayCenter);
+                LogHelper.Error(string.Concat("处理签名字典出错，详细信息：", e.Message), "Z_GetReqBodyDics", ZPayConfigProvider.ModuleName);
                 return new Resp<IDictionary<string, string>>().WithResp(RespTypes.InnerError, "处理签名字典出错，详细信息请查看日志");
             }
             return new Resp<IDictionary<string, string>>(dirs);

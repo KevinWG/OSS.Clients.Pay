@@ -1,5 +1,5 @@
 ﻿
-#region Copyright (C) 2017 Kevin (OSS开源作坊) 公众号：osscoder
+#region Copyright (C) 2017 Kevin (OSS开源作坊) 公众号：osscore
 
 /***************************************************************************
 *　　	文件功能描述：微信支付模快 —— 实体基类
@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Xml;
 using OSS.Common.ComModels;
 using OSS.Common.Resp;
-using OSS.PaySdk.Wx.SysTools;
+using OSS.PaySdk.Wx.Helpers;
 
 namespace OSS.PaySdk.Wx
 {
@@ -29,7 +29,7 @@ namespace OSS.PaySdk.Wx
 
         public WxPayBaseReq()
         {
-            var nonceStr = SysUtil.GenerateNonceStr();
+            var nonceStr = WxXmlHelper.GenerateNonceStr();
             _dics["nonce_str"] = nonceStr;
         }
 

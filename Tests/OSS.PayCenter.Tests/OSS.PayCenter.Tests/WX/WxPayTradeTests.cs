@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OSS.Common.ComModels;
+using OSS.Common.Resp;
 using OSS.PaySdk.Wx;
 using OSS.PaySdk.Wx.Pay;
 using OSS.PaySdk.Wx.Pay.Mos;

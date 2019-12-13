@@ -1,4 +1,4 @@
-﻿#region Copyright (C) 2017 Kevin (OSS开源作坊) 公众号：osscoder
+﻿#region Copyright (C) 2017 Kevin (OSS开源作坊) 公众号：osscore
 
 /***************************************************************************
 *　　	文件功能描述：微信支付模快 —— 红包模块接口
@@ -16,7 +16,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using OSS.Http.Mos;
 using OSS.PaySdk.Wx.Cash.Mos;
-using OSS.PaySdk.Wx.SysTools;
+using OSS.PaySdk.Wx.Helpers;
 
 namespace OSS.PaySdk.Wx.Cash
 {
@@ -99,7 +99,7 @@ namespace OSS.PaySdk.Wx.Cash
 
             var dics = new SortedDictionary<string, object>
             {
-                ["nonce_str"] = SysUtil.GenerateNonceStr(),
+                ["nonce_str"] = WxXmlHelper.GenerateNonceStr(),
                 ["mch_billno"] = mch_billno,
                 ["bill_type"] = bill_type
             };
