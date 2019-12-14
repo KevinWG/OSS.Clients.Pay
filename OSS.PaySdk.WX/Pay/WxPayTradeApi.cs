@@ -15,14 +15,12 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using OSS.Common.ComModels;
-using OSS.Common.ComModels.Enums;
 using OSS.Common.Extention;
 using OSS.Common.Resp;
-using OSS.Http.Extention;
-using OSS.Http.Mos;
 using OSS.PaySdk.Wx.Helpers;
 using OSS.PaySdk.Wx.Pay.Mos;
+using OSS.Tools.Http.Extention;
+using OSS.Tools.Http.Mos;
 
 namespace OSS.PaySdk.Wx.Pay
 {

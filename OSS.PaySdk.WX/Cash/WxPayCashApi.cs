@@ -11,13 +11,12 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using OSS.Http.Mos;
 using OSS.PaySdk.Wx.Cash.Mos;
 using OSS.PaySdk.Wx.Helpers;
+using OSS.Tools.Http.Mos;
 
 namespace OSS.PaySdk.Wx.Cash
 {

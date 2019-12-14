@@ -21,12 +21,10 @@ using System.Threading.Tasks;
 using System.Xml;
 using OSS.Common.ComModels;
 using OSS.Common.Encrypt;
-using OSS.Common.Plugs;
-using OSS.Common.Plugs.LogPlug;
 using OSS.Common.Resp;
-using OSS.Http.Extention;
-using OSS.Http.Mos;
 using OSS.PaySdk.Wx.Helpers;
+using OSS.Tools.Http.Extention;
+using OSS.Tools.Http.Mos;
 using OSS.Tools.Log;
 
 namespace OSS.PaySdk.Wx
