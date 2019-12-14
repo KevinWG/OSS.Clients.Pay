@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using OSS.Common.ComModels;
-using OSS.PaySdk.Ali.Pay;
-using OSS.PaySdk.Ali.Pay.Mos;
+using OSS.Clients.Pay.Ali.Pay;
+using OSS.Clients.Pay.Ali.Pay.Mos;
+using OSS.Common.Resp;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 

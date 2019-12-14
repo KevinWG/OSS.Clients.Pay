@@ -7,8 +7,8 @@
 
 # OSS.PayCenter 使用
 ### 一. 安装使用
-      nuget下安装命令：**Install-Package OSS.PaySdk.Wx**	（微信支付
-      nuget下安装命令：**Install-Package OSS.PaySdk.Ali**	（支付宝支付
+      nuget下安装命令：**Install-Package OSS.Clients.Pay.WX**	（微信支付
+      nuget下安装命令：**Install-Package OSS.Clients.Pay.Ali**	（支付宝支付
 
 ### 二. 调用示例
 
@@ -16,7 +16,7 @@
 
 ```csharp
 // 声明配置
-private static WxPayCenterConfig config= new WxPayCenterConfig()
+private static WXPayCenterConfig config= new WXPayCenterConfig()
 {
     AppId = "xxxxxxxxxx",
     MchId = "xxxxxxxxxx",
@@ -27,11 +27,11 @@ private static WxPayCenterConfig config= new WxPayCenterConfig()
     CertPath = "cert/xxxxxxxxxx.p12"   
 };
 //  公众号调用示例
-private static WxPayTradeApi _api=new WxPayTradeApi(config);
+private static WXPayTradeApi _api=new WXPayTradeApi(config);
 
 public async Task<IActionResult> GetJsPayInfo()
 {
-    var order = new WxAddPayUniOrderReq
+    var order = new WXAddPayUniOrderReq
     {
         notify_url = "http://你的域名/wxpay/receive",
         body = "OSSCoder-测试商品",

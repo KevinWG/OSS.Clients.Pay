@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using OSS.PaySdk.Wx;
+using OSS.Clients.Pay.WX;
 
-namespace OSS.PaySdk.Samples
+namespace OSS.Clients.Pay.Samples
 {
     public class Startup
     {
@@ -57,7 +57,7 @@ namespace OSS.PaySdk.Samples
 
         private static void RegisterPayConfig()
         {
-            WxPayConfigProvider.DefaultConfig = new WxPayCenterConfig
+            WXPayConfigProvider.DefaultConfig = new WXPayCenterConfig
             {
                 AppId = "wxc9180871227296c3",
                 Key = "WeChatConsultant20191106wefDiIne",

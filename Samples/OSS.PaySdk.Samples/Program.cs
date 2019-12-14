@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
 
-namespace OSS.PaySdk.Samples
+namespace OSS.Clients.Pay.Samples
 {
     public class Program
     {

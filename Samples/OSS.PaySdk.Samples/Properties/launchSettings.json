@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "OSS.PaySdk.Samples": {
+    "OSS.Clients.Pay.Samples": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

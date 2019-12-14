@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OSS.PaySdk.Ali;
+using OSS.Clients.Pay.Ali;
 
 namespace OSS.PaySdk.Tests.ZFB
 {

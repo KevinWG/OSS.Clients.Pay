@@ -1,15 +1,15 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
+using OSS.Clients.Pay.Ali;
+using OSS.Clients.Pay.Ali.Helpers;
+using OSS.Clients.Pay.Ali.Pay;
+using OSS.Clients.Pay.Ali.Pay.Mos;
 using OSS.Common.ComModels;
 using OSS.Common.Extention;
 using OSS.Common.Plugs;
 using OSS.Common.Plugs.LogPlug;
 using OSS.Common.Resp;
-using OSS.PaySdk.Ali.Pay;
-using OSS.PaySdk.Ali.Pay.Mos;
-using OSS.PaySdk.Ali.SysTools;
-
 namespace OSS.PaySdk.Tests.ZFB
 {
     [TestClass]
@@ -43,7 +43,7 @@ namespace OSS.PaySdk.Tests.ZFB
             return signContent;
         }
 
-        private readonly ZPayRsaAssist m_RsaAssist = new ZPayRsaAssist(config.AppPrivateKey, config.AppPublicKey,
+        private readonly ZPayRsaHelper m_RsaAssist = new ZPayRsaHelper(config.AppPrivateKey, config.AppPublicKey,
          
             config.Charset);
 
@@ -75,7 +75,7 @@ namespace OSS.PaySdk.Tests.ZFB
                 t.ret = (int) ResultTypes.InnerError;
                 t.msg = "解密签名过程中出错，详情请查看日志";
                 LogUtil.Info($"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign},   错误信息：{e.Message}",
-                    "CheckSign", ModuleNames.PayCenter);
+                    "CheckSign", ZPayConfigProvider.ModuleName);
 #if DEBUG
                 throw e;
 #endif
