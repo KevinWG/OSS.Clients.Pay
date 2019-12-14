@@ -46,9 +46,6 @@ namespace OSS.PaySdk.Wx
         /// <summary>
         /// 自定义底层HttpClient的实现，不设置则使用默认实现
         ///   1. 如果是非证书请求，使用底层OSS.Http的默认实现
-        ///   2. 如果当前接口需要使用证书验证且配置为Instance模式，会在当前实例下使用单独 Httpclient
-        ///   3. 如果当前接口需要使用证书验证且配置为Context模式，每次接口请求都会创建新的 Httpclient
-        ///  
         ///   (配置信息，是否需要证书)： HttpClient
         /// </summary>
         public static Func<WxPayCenterConfig,bool, HttpClient>  HttpClientProvider { get; set; }

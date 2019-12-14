@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using OSS.Common.ComModels;
 using OSS.Common.Encrypt;
+using OSS.Common.Extention;
 using OSS.Common.Resp;
 using OSS.PaySdk.Wx.Helpers;
 using OSS.Tools.Http.Extention;
@@ -215,8 +216,6 @@ namespace OSS.PaySdk.Wx
 
         #endregion
 
-        private HttpClient _client;
-
         /// <summary>
         ///   获取设置了证书的HttpClient
         ///     如果是上下文配置模式，则每次都返回新值
@@ -231,25 +230,48 @@ namespace OSS.PaySdk.Wx
             if (!needCert)
                 return null; // 返回NULL 由底层控件自己补充默认Client
 
+            SetHandlerAndClient();
 
-            if (ConfigMode != ConfigProviderMode.Context && _client != null)
-                return _client;
-
-            var reqHandler = new HttpClientHandler
+            if (needCert)
             {
-                ServerCertificateCustomValidationCallback =
-                    (msg, c, chain, sslErrors) => sslErrors == SslPolicyErrors.None
-            };
+                if (!_certAppIdList.Contains(ApiConfig.AppId))
+                {
+                    _certAppIdList.Add(ApiConfig.AppId);
 
-            var cert = new X509Certificate2(ApiConfig.CertPath, ApiConfig.CertPassword);
-            reqHandler.ClientCertificates.Add(cert);
-
-            if (ConfigMode == ConfigProviderMode.Context)
-                return new HttpClient(reqHandler);
-
-            return _client = new HttpClient(reqHandler);
+                    var cert = new X509Certificate2(ApiConfig.CertPath, ApiConfig.CertPassword);
+                    _handler.ClientCertificates.Add(cert);
+                }
+            }
+            return _client;
         }
 
+        private static HttpClient _client;
+        private static HttpClientHandler _handler;
+        private static long _clientCreateTime = 0;
+        private static List<string> _certAppIdList=new List<string>();
+        private static object _lockObj=new object();
+
+        private static void SetHandlerAndClient()
+        {
+            //  两分钟创建一个新的请求
+            if (_handler == null || _clientCreateTime + 120 < DateTime.Now.ToUtcSeconds())
+            {
+                lock (_lockObj)
+                {
+                    if (_handler == null || _clientCreateTime + 180 < DateTime.Now.ToUtcSeconds())
+                    {
+                        _clientCreateTime = DateTime.Now.ToUtcSeconds();
+                        _handler = new HttpClientHandler
+                        {
+                            ServerCertificateCustomValidationCallback =
+                                (msg, c, chain, sslErrors) => sslErrors == SslPolicyErrors.None
+                        };
+
+                        _client = new HttpClient(_handler);
+                    }
+                }
+            }
+        }
         /// <inheritdoc />
         protected override WxPayCenterConfig GetDefaultConfig()
         {
