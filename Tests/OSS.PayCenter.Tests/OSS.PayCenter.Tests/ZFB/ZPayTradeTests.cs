@@ -10,7 +10,7 @@ using OSS.Common.Extention;
 using OSS.Common.Plugs;
 using OSS.Common.Plugs.LogPlug;
 using OSS.Common.Resp;
-namespace OSS.PaySdk.Tests.ZFB
+namespace OSS.Clients.Pay.Tests.ZFB
 {
     [TestClass]
     public class ZPayTradeTests : ZPayBaseTests

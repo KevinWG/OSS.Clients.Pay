@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OSS.Clients.Pay.Ali;
 
-namespace OSS.PaySdk.Tests.ZFB
+namespace OSS.Clients.Pay.Tests.ZFB
 {
     [TestClass]
     public class ZPayBaseTests

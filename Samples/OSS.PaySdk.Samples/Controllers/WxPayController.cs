@@ -5,7 +5,7 @@ using OSS.Clients.Pay.WX.Pay;
 using OSS.Clients.Pay.WX.Pay.Mos;
 using OSS.Common.Resp;
 
-namespace OSS.PaySdk.Samples.Controllers
+namespace OSS.Clients.Pay.Samples.Controllers
 {
     public class WXPayController : BaseController
     {

@@ -7,7 +7,7 @@ using OSS.Common.Resp;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace OSS.PaySdk.Samples.Controllers
+namespace OSS.Clients.Pay.Samples.Controllers
 {
     public class AliPayController : BaseController
     {

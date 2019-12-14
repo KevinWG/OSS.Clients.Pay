@@ -6,7 +6,7 @@ using OSS.Clients.Pay.WX.Pay;
 using OSS.Clients.Pay.WX.Pay.Mos;
 using OSS.Common.Resp;
 
-namespace OSS.PaySdk.Tests.WX
+namespace OSS.Clients.Pay.Tests.WX
 {
     [TestClass]
     public class WXPayTradeTests
