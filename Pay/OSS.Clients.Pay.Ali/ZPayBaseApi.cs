@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OSS.Clients.Pay.Ali.Helpers;
-using OSS.Common.ComModels;
+using OSS.Common.BasicImpls;
 using OSS.Common.Extention;
 using OSS.Common.Resp;
 using OSS.Tools.Http.Extention;
@@ -33,7 +33,7 @@ namespace OSS.Clients.Pay.Ali
     /// <summary>
     ///支付宝接口SDK基类
     /// </summary>
-    public abstract class ZPayBaseApi:BaseApiConfigProvider<ZPayConfig>
+    public abstract class ZPayBaseApi: BaseApiConfigProvider<ZPayConfig>
     {
         #region  配置信息部分
         

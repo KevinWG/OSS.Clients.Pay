@@ -8,11 +8,12 @@
     <Description>支付宝蚂蚁接口对接客户端SDK</Description>
     <Authors>OSSCore</Authors>
     <Company>OSSCore</Company>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="OSS.Common" Version="2.1.3.1" />
+    <PackageReference Include="OSS.Common" Version="2.2.0.1" />
     <PackageReference Include="OSS.Tools.Http" Version="1.0.1" />
     <PackageReference Include="OSS.Tools.Log" Version="1.1.1" />
   </ItemGroup>

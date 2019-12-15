@@ -20,7 +20,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using OSS.Clients.Pay.WX.Helpers;
-using OSS.Common.ComModels;
+using OSS.Common.BasicImpls;
 using OSS.Common.Encrypt;
 using OSS.Common.Extention;
 using OSS.Common.Resp;

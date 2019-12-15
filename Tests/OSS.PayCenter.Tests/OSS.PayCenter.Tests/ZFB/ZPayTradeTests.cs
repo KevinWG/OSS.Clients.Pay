@@ -10,6 +10,8 @@ using OSS.Common.Extention;
 using OSS.Common.Plugs;
 using OSS.Common.Plugs.LogPlug;
 using OSS.Common.Resp;
+using OSS.Tools.Log;
+
 namespace OSS.Clients.Pay.Tests.ZFB
 {
     [TestClass]
@@ -74,7 +76,7 @@ namespace OSS.Clients.Pay.Tests.ZFB
             {
                 t.ret = (int) ResultTypes.InnerError;
                 t.msg = "解密签名过程中出错，详情请查看日志";
-                LogUtil.Info($"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign},   错误信息：{e.Message}",
+                LogHelper.Info($"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign},   错误信息：{e.Message}",
                     "CheckSign", ZPayConfigProvider.ModuleName);
 #if DEBUG
                 throw e;
