@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using OSS.Clients.Pay.WX.Pay;
 using OSS.Clients.Pay.WX.Pay.Mos;
-using OSS.Common.Resp;
+using OSS.Common.BasicMos.Resp;
 
 namespace OSS.Clients.Pay.Samples.Controllers
 {

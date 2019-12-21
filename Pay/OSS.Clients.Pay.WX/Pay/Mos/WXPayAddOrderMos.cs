@@ -11,7 +11,7 @@
 
 #endregion
 
-using OSS.Common.Resp;
+using OSS.Common.BasicMos.Resp;
 
 namespace OSS.Clients.Pay.WX.Pay.Mos
 {

@@ -17,8 +17,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using OSS.Clients.Pay.WX.Helpers;
 using OSS.Clients.Pay.WX.Pay.Mos;
+using OSS.Common.BasicMos.Resp;
 using OSS.Common.Extention;
-using OSS.Common.Resp;
 using OSS.Tools.Http.Extention;
 using OSS.Tools.Http.Mos;
 
@@ -191,7 +191,7 @@ namespace OSS.Clients.Pay.WX.Pay
             };
 
             return await PostApiAsync<WXPayGetShortUrlResp>(url, dics, null, false,true,
-                d => d["long_url"] = d["long_url"].UrlEncode());
+                d => d["long_url"] = d["long_url"].ToString().UrlEncode());
         }
 
         /// <summary>

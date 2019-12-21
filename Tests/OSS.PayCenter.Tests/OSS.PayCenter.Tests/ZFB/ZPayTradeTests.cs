@@ -5,11 +5,8 @@ using OSS.Clients.Pay.Ali;
 using OSS.Clients.Pay.Ali.Helpers;
 using OSS.Clients.Pay.Ali.Pay;
 using OSS.Clients.Pay.Ali.Pay.Mos;
-using OSS.Common.ComModels;
+using OSS.Common.BasicMos.Resp;
 using OSS.Common.Extention;
-using OSS.Common.Plugs;
-using OSS.Common.Plugs.LogPlug;
-using OSS.Common.Resp;
 using OSS.Tools.Log;
 
 namespace OSS.Clients.Pay.Tests.ZFB
@@ -67,14 +64,14 @@ namespace OSS.Clients.Pay.Tests.ZFB
 
                     if (checkSignRes) return;
 
-                    t.ret = (int) ResultTypes.UnAuthorize;
+                    t.ret = (int) RespTypes.SignError;
                     t.msg = "当前签名非法！";
                 }
 
             }
             catch (Exception e)
             {
-                t.ret = (int) ResultTypes.InnerError;
+                t.ret = (int) RespTypes.InnerError;
                 t.msg = "解密签名过程中出错，详情请查看日志";
                 LogHelper.Info($"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign},   错误信息：{e.Message}",
                     "CheckSign", ZPayConfigProvider.ModuleName);

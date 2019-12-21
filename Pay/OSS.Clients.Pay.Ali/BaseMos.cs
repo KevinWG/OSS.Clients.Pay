@@ -13,7 +13,7 @@
 #endregion
 
 using Newtonsoft.Json;
-using OSS.Common.Resp;
+using OSS.Common.BasicMos.Resp;
 
 namespace OSS.Clients.Pay.Ali
 {

@@ -4,9 +4,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OSS.Clients.Pay.WX;
 using OSS.Clients.Pay.WX.Pay;
 using OSS.Clients.Pay.WX.Pay.Mos;
-using OSS.Common.Resp;
+using OSS.Common.BasicMos.Resp;
 
-namespace OSS.Clients.Pay.Tests.WX
+namespace OSS.PaySdk.Tests.WX
 {
     [TestClass]
     public class WXPayTradeTests

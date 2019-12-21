@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using OSS.Clients.Pay.Ali.Pay;
 using OSS.Clients.Pay.Ali.Pay.Mos;
-using OSS.Common.Resp;
+using OSS.Common.BasicMos.Resp;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
