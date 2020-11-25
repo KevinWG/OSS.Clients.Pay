@@ -1,4 +1,4 @@
-﻿namespace OSS.PaySdk.Samples.Models
+﻿namespace OSS.Clients.Pay.Samples.Models
 {
     public class PayOrderMo
     {

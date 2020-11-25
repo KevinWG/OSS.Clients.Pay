@@ -1,18 +1,18 @@
 ﻿using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OSS.Common.ComModels;
-using OSS.PaySdk.Wx;
-using OSS.PaySdk.Wx.Pay;
-using OSS.PaySdk.Wx.Pay.Mos;
+using OSS.Clients.Pay.WX;
+using OSS.Clients.Pay.WX.Pay;
+using OSS.Clients.Pay.WX.Pay.Mos;
+using OSS.Common.BasicMos.Resp;
 
 namespace OSS.PaySdk.Tests.WX
 {
     [TestClass]
-    public class WxPayTradeTests
+    public class WXPayTradeTests
     {
         // 声明配置
-        private static WxPayCenterConfig config= new WxPayCenterConfig()
+        private static WXPayCenterConfig config= new WXPayCenterConfig()
         {
             AppId = "wx2428e34e0e7dc6ef",
             MchId = "1233410002",
@@ -23,13 +23,13 @@ namespace OSS.PaySdk.Tests.WX
             CertPath = "cert/apiclient_cert.p12"
         };
         //  调用示例
-        private static WxPayTradeApi m_Api=new WxPayTradeApi(config);
+        private static WXPayTradeApi m_Api=new WXPayTradeApi(config);
         
 
         [TestMethod]
         public async Task AddUniOrderAsyncTest()
         {
-            var order = new WxAddPayUniOrderReq();
+            var order = new WXAddPayUniOrderReq();
 
             order.device_info = "WEB";
             order.body = "测试商品支付";
@@ -91,7 +91,7 @@ namespace OSS.PaySdk.Tests.WX
             //XmlDocument resultXml = null;
             //var dics = XmlDicHelper.ChangXmlToDir(res, ref resultXml);
 
-            //WxPayQueryRedResp t = new WxPayQueryRedResp();
+            //WXPayQueryRedResp t = new WXPayQueryRedResp();
             //t.RespXml = resultXml;
             //t.FromResContent(dics);
         }

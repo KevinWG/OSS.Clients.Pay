@@ -1,14 +1,14 @@
 # 快速了解
 	OSS支付SDK，主要打造微信支付，支付宝支付，以及其他银行支付接口标准库项目
 	此项目以标准库的形式提供服务，也就是可以同时支持.Net Framework(4.6及以上版本) 和 .Net Core
-如果有问题，也可以在公众号(osscoder)中提问:
+如果有问题，也可以在公众号(osscore)中提问:
 
-![osscoder](http://7xil4i.com1.z0.glb.clouddn.com/osscoder_icon.jpg)
+![osscore](http://7xil4i.com1.z0.glb.clouddn.com/osscore_icon.jpg)
 
 # OSS.PayCenter 使用
 ### 一. 安装使用
-      nuget下安装命令：**Install-Package OSS.PaySdk.Wx**	（微信支付
-      nuget下安装命令：**Install-Package OSS.PaySdk.Ali**	（支付宝支付
+      nuget下安装命令：**Install-Package OSS.Clients.Pay.WX**	（微信支付
+      nuget下安装命令：**Install-Package OSS.Clients.Pay.Ali**	（支付宝支付
 
 ### 二. 调用示例
 
@@ -16,7 +16,7 @@
 
 ```csharp
 // 声明配置
-private static WxPayCenterConfig config= new WxPayCenterConfig()
+private static WXPayCenterConfig config= new WXPayCenterConfig()
 {
     AppId = "xxxxxxxxxx",
     MchId = "xxxxxxxxxx",
@@ -27,11 +27,11 @@ private static WxPayCenterConfig config= new WxPayCenterConfig()
     CertPath = "cert/xxxxxxxxxx.p12"   
 };
 //  公众号调用示例
-private static WxPayTradeApi _api=new WxPayTradeApi(config);
+private static WXPayTradeApi _api=new WXPayTradeApi(config);
 
 public async Task<IActionResult> GetJsPayInfo()
 {
-    var order = new WxAddPayUniOrderReq
+    var order = new WXAddPayUniOrderReq
     {
         notify_url = "http://你的域名/wxpay/receive",
         body = "OSSCoder-测试商品",
@@ -58,7 +58,7 @@ public IActionResult receive()
     }
     var payRes = _api.DecryptTradeResult(strPayResult);
     // to do something with payRes
-    var returnXml = _api.GetCallBackReturnXml(new ResultMo());
+    var returnXml = _api.GetCallBackReturnXml(new Resp());
     return Content(returnXml);
 }
 ```
@@ -83,7 +83,7 @@ public async Task<IActionResult> ZPay(PayOrderMo order)
 {
     string orderNum = DateTime.Now.ToString("yyyyMMddHHmmss");
 
-    var payReq = new ZAddPreTradeReq("http://pay.sample.osscoder.com/base/ZCallBack");
+    var payReq = new ZAddPreTradeReq("http://pay.sample.osscore.com/base/ZCallBack");
 
     payReq.body = order.order_name;
     payReq.out_trade_no = orderNum;

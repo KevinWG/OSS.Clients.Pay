@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OSS.Common.ComModels;
-using OSS.PaySdk.Wx.Pay;
-using OSS.PaySdk.Wx.Pay.Mos;
 using System.IO;
 using System.Threading.Tasks;
+using OSS.Clients.Pay.WX.Pay;
+using OSS.Clients.Pay.WX.Pay.Mos;
+using OSS.Common.BasicMos.Resp;
 
-namespace OSS.PaySdk.Samples.Controllers
+namespace OSS.Clients.Pay.Samples.Controllers
 {
-    public class WxPayController : BaseController
+    public class WXPayController : BaseController
     {
         // GET: /<controller>/
         public IActionResult Index()
@@ -17,17 +17,17 @@ namespace OSS.PaySdk.Samples.Controllers
         }
         
 
-        public WxPayController()
+        public WXPayController()
         {
            // 上下文配置设置方式
-           // WxPayConfigProvider.SetContextConfig(new WxPayCenterConfig(){AppId = "XXXX"});
+           // WXPayConfigProvider.SetContextConfig(new WXPayCenterConfig(){AppId = "XXXX"});
         }
         // 声明配置设置方式
-        //private static readonly WxPayTradeApi _api = new WxPayTradeApi(new WxPayCenterConfig() { AppId = "XXX" });
+        //private static readonly WXPayTradeApi _api = new WXPayTradeApi(new WXPayCenterConfig() { AppId = "XXX" });
 
         private static readonly string _callBackDomain = "你的当前域名";
 
-        private static readonly WxPayTradeApi _api = new WxPayTradeApi();
+        private static readonly WXPayTradeApi _api = new WXPayTradeApi();
         //  获取扫码支付的二维码信息
         public async Task<IActionResult> GetScanPayInfo(string orderId)
         {
@@ -49,9 +49,9 @@ namespace OSS.PaySdk.Samples.Controllers
             return Json(jsPara);
         }
 
-        private static WxAddPayUniOrderReq GetUniorder(string orderId,string tradeType)
+        private static WXAddPayUniOrderReq GetUniorder(string orderId,string tradeType)
         {
-            return new WxAddPayUniOrderReq
+            return new WXAddPayUniOrderReq
             {
                 notify_url = string.Concat(_callBackDomain, "/wxpay/receive"),
                 body = "OSSPay-测试商品",
@@ -74,15 +74,15 @@ namespace OSS.PaySdk.Samples.Controllers
             }
             var wxPayRes = _api.DecryptPayResult(strPayResult);
             //  do something with wxPayRes
-            var returnXml = _api.GetCallBackReturnXml(new ResultMo());
+            var returnXml = _api.GetCallBackReturnXml(new Resp());
             return Content(returnXml);
         }
 
         //  退款示例
-        private static readonly WxPayRefundApi _refundApi = new WxPayRefundApi();
+        private static readonly WXPayRefundApi _refundApi = new WXPayRefundApi();
         public async Task<IActionResult> refund(string orderId)
         {
-            var refundRes = await _refundApi.RefundOrderAsync(new WxPayRefundReq()
+            var refundRes = await _refundApi.RefundOrderAsync(new WXPayRefundReq()
             {
                 out_trade_no = orderId,
                 total_fee = 1,

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageProjectUrl>https://github.com/KevinWG/OSS.Clients.Pay</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/KevinWG/OSS.Clients.Pay</RepositoryUrl>
+    <PackageIconUrl>http://img1.osscore.cn/static/oss_net.png</PackageIconUrl>
+    <Description>微信商户支付接口对接客户端SDK</Description>
+    <Authors>OSSCore</Authors>
+    <Version>1.1</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OSS.Common" Version="2.3.0" />
+    <PackageReference Include="OSS.Tools.Http" Version="1.0.1" />
+    <PackageReference Include="OSS.Tools.Log" Version="1.1.1" />
+  </ItemGroup>
+
+</Project>
