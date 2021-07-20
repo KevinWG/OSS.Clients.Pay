@@ -30,7 +30,7 @@ namespace OSS.Clients.Pay.Ali.Pay
         }
 
         /// <summary>
-        /// 统一预下单（收单）（扫码支付   -  用户扫商家二维码）
+        /// 
         /// </summary>
         /// <param name="refundReq"></param>
         public async Task<ZPayRefundResp> RefunPayAsync(ZPayRefundReq refundReq)
