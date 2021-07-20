@@ -73,7 +73,7 @@ namespace OSS.Clients.Pay.WX
             {
                 var client = GetCertHttpClient(needCert);
 
-                var resp = await request.RestSend(client);
+                var resp = await client.RestSend(request);
                 if (resp.IsSuccessStatusCode)
                 {
                     if (funcFormat != null)
@@ -265,7 +265,7 @@ namespace OSS.Clients.Pay.WX
                             ServerCertificateCustomValidationCallback =
                                 (msg, c, chain, sslErrors) => sslErrors == SslPolicyErrors.None
                         };
-
+                        _certAppIdList = new List<string>();
                         _client = new HttpClient(_handler);
                     }
                 }
