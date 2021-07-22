@@ -11,15 +11,21 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace OSS.Clients.Pay.Wechat.Basic
 {
-    public class NativePayReq
+    public class NativePayReq:BaseReq<NativePayReq, NativePayResp>
+    {
+        public NativePayReq() : base("/v3/pay/transactions/native", HttpMethod.Post)
+        {
+        }
+
+
+
+    }
+
+    public class NativePayResp : BaseResp
     {
 
     }

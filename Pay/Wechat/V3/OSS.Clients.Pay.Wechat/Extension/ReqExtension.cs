@@ -211,6 +211,7 @@ namespace OSS.Clients.Pay.Wechat
             where TResp : BaseResp
         {
             var paraDics = req.GetSendParaDics();
+
             if (paraDics == null)
             {
                 throw new ArgumentException("未能获取到当前请求需要的必要参数");
@@ -231,6 +232,20 @@ namespace OSS.Clients.Pay.Wechat
             var reqBody = string.Concat("{", segBody, "}");
             return new SendBodyResp(){body = reqBody};
         }
+
+
+        //private static void PrepareCommonPara(WechatPayConfig payConfig, Dictionary<string, string> paras)
+        //{
+        //    paras["appid"] = payConfig.app_id;
+        //    paras["mchid"] = payConfig.mch_id;
+
+
+        //    paras["sp_appid"] = payConfig.sub_app_id;
+        //    paras["mchid"] = payConfig.mch_id;
+        //    paras["mchid"] = payConfig.mch_id;
+
+        //    paras["mchid"] = payConfig.mch_id;
+        //}
 
         private static string GetReqContent_JsonSegment(Dictionary<string, string> dics)
         {

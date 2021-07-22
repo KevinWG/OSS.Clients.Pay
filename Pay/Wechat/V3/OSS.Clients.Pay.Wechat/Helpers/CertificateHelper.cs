@@ -122,12 +122,7 @@ namespace OSS.Clients.Pay.Wechat.Helpers
             var refreshDicRes = await RefreshCertsByConfig(payConfig);
             if (!refreshDicRes.IsSuccess())
             {
-                return new GetCertItemResp()
-                {
-                    code          = refreshDicRes.code,
-                    response_body = refreshDicRes.response_body,
-                    message       = refreshDicRes.message
-                };
+                return refreshDicRes.ToResp<GetCertItemResp>();
             }
 
             return new GetCertItemResp() { item = refreshDicRes.dics.Values.First() };
@@ -180,12 +175,7 @@ namespace OSS.Clients.Pay.Wechat.Helpers
             var refreshDicRes = await RefreshCertsByConfig(payConfig);
             if (!refreshDicRes.IsSuccess())
             {
-                return new GetCertItemResp()
-                {
-                    code          = refreshDicRes.code,
-                    response_body = refreshDicRes.response_body,
-                    message       = refreshDicRes.message
-                };
+                return refreshDicRes.ToResp<GetCertItemResp>();
             }
 
             var dics = refreshDicRes.dics;
@@ -194,7 +184,7 @@ namespace OSS.Clients.Pay.Wechat.Helpers
                 return new GetCertItemResp() { item = item };
             }
 
-            return new GetCertItemResp() { code = "Unknow", message = $"最新的微信平台公钥证书列表不存在证书（编号{serialNo}）" };
+            return new GetCertItemResp() { code = "Unknow", message = $"最新的微信平台公钥证书列表不存在证书（编号{serialNo}）",response_body = refreshDicRes.response_body};
         }
 
         #endregion

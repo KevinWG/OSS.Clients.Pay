@@ -11,17 +11,13 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using OSS.Common.BasicMos.Resp;
 
 namespace OSS.Clients.Pay.Wechat
 {
-
-
     /// <summary>
     ///  请求基类
     /// </summary>
@@ -53,10 +49,8 @@ namespace OSS.Clients.Pay.Wechat
         /// <summary>
         ///  支付信息
         /// </summary>
-        internal WechatPayConfig pay_config { get; set; }
-
+        protected internal WechatPayConfig pay_config { get; set; }
         
-
         /// <summary>
         ///  设置当前请求对应的支付配置信息
         ///     仅当前请求下有效，如果配置全局信息，请设置     WechatPayConfigProvider.config  
@@ -69,7 +63,27 @@ namespace OSS.Clients.Pay.Wechat
             return (TReq)this;
         }
 
-        #region 请求参数处理
+        #region 全局基础参数
+
+        protected bool IsSpPartner { get; }
+
+        /// <summary>
+        /// 如果是服务商
+        ///  设置服务下子子商户信息
+        /// </summary>
+        /// <param name="payConfig"></param>
+        /// <returns></returns>
+        public TReq SetSubMch(string subAppId,string subApp)
+        {
+            //pay_config = payConfig;
+            return (TReq)this;
+        }
+
+
+        #endregion
+
+
+        #region 业务请求参数处理
 
         private Dictionary<string, string> _paraDics;
         /// <summary>
@@ -91,12 +105,14 @@ namespace OSS.Clients.Pay.Wechat
         /// </summary>
         /// <param name="paraName"></param>
         /// <param name="value"></param>
-        protected void AddPara(string paraName, string value)
+        protected internal void AddPara(string paraName, string value)
         {
             if (_paraDics == null)
-            {
                 _paraDics = new Dictionary<string, string>();
-            }
+
+            if (string.IsNullOrEmpty(paraName) || string.IsNullOrEmpty(value))
+                return;
+
             _paraDics[paraName] = value;
         }
 
@@ -122,9 +138,7 @@ namespace OSS.Clients.Pay.Wechat
         protected virtual void PrepareSend()
         {
         }
-
-
-
+        
         internal Dictionary<string, string> GetSendParaDics()
         {
             PrepareSend();
