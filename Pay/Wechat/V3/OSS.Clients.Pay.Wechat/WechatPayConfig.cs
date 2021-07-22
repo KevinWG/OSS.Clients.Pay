@@ -18,7 +18,7 @@ namespace OSS.Clients.Pay.Wechat
         /// <summary>
         /// 公众号、移动应用、小程序AppId、企业微信CorpId。
         /// </summary>
-        public string appp_id { get; set; }
+        public string appp_id { get; set; } 
 
         /// <summary>
         /// 商户号、服务商户号

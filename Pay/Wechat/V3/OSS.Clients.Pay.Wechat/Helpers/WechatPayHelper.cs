@@ -11,9 +11,6 @@
 
 #endregion
 
-
-using OSS.Clients.Pay.Wechat.Basic.Certificate.Interface;
-using System;
 using System.Net.Http;
 
 namespace OSS.Clients.Pay.Wechat
@@ -21,24 +18,24 @@ namespace OSS.Clients.Pay.Wechat
     public static class WechatPayHelper
     {
         /// <summary>
-        ///  接口请求域名，默认生产环境：https://api.mch.weixin.qq.com
+        ///  支付配置信息
+        /// </summary>
+        public static WechatPayConfig pay_config { get; set; }
+
+        /// <summary>
+        ///   【可选】 接口请求域名，默认生产环境：https://api.mch.weixin.qq.com
         ///     如果需要测试，可自行修改为沙箱环境地址
         /// </summary>
         public static string api_domain { get; set; } = "https://api.mch.weixin.qq.com";
 
         /// <summary>
-        ///  支付配置信息
-        /// </summary>
-        public static WechatPayConfig pay_config { get; set; }
-        
-        /// <summary>
-        ///     自定义底层HttpClient的实现，不设置则使用默认实现
+        ///  【可选】 自定义底层HttpClient的实现，不设置则使用默认实现
         /// </summary>
         public static IHttpClientFactory httpclient_factory { get; set; }
 
         /// <summary>
-        ///  【可选参数】微信平台放公钥证书提供者
-        ///    系统默认实现懒加载（需要验签或者加密时加载内存中并缓存
+        ///  【可选】微信平台放公钥证书提供者
+        ///    系统默认实现懒加载（需要验签或者加密时加载内存中并缓存,微信解决方案参考：https://pay.weixin.qq.com/wiki/doc/apiv3/wechatpay/wechatpay5_0.shtml
         /// </summary>
         public static IWechatCertificateProvider WechatPublicCertificateProvider { get; set; }
     }

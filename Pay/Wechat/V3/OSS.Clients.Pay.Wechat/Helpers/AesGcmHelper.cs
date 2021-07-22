@@ -31,7 +31,8 @@ namespace OSS.Clients.Pay.Wechat.Helpers
         /// <param name="encryptedData">密文（Base64字符）</param>
         /// <param name="associatedData">(可能null)</param>
         /// <returns></returns>
-        static string AesGcmDecryptFromBase64(string key, string nonce, string encryptedData, string associatedData)
+        public static byte[] DecryptFromBase64(string key, string nonce, string encryptedData,
+            string associatedData)
         {
             var encryptedBytes = Convert.FromBase64String(encryptedData);
             var cipherBytes    = encryptedBytes[..^16]; //tag size is 16
@@ -44,7 +45,7 @@ namespace OSS.Clients.Pay.Wechat.Helpers
             using var cipher = new AesGcm(Encoding.UTF8.GetBytes(key));
 
             cipher.Decrypt(nonceBytes, cipherBytes, tag, decryptedData, associatedBytes);
-            return Encoding.UTF8.GetString(decryptedData);
+            return decryptedData;
         }
     }
 }

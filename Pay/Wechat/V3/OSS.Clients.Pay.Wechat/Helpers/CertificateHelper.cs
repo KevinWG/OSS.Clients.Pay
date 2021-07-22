@@ -14,9 +14,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading.Tasks;
+using OSS.Clients.Pay.Wechat.Basic;
+using OSS.Common.BasicMos.Resp;
+using OSS.Common.Extension;
 
 namespace OSS.Clients.Pay.Wechat.Helpers
 {
@@ -61,7 +66,9 @@ namespace OSS.Clients.Pay.Wechat.Helpers
 
             return pCert;
         }
-        private static Dictionary<string, MchPrivateCertificate> _mchCertDics = new Dictionary<string, MchPrivateCertificate>();
+
+        private static Dictionary<string, MchPrivateCertificate> _mchCertDics =
+            new Dictionary<string, MchPrivateCertificate>();
 
         private static MchPrivateCertificate GetCertificateInfo(string mchId, string certPath, string certPassword)
         {
@@ -78,10 +85,7 @@ namespace OSS.Clients.Pay.Wechat.Helpers
 
         #endregion
 
-
-
-
-
+        #region 微信公钥加密敏感信息
 
         /// <summary>
         /// 加密敏感信息
@@ -89,32 +93,158 @@ namespace OSS.Clients.Pay.Wechat.Helpers
         /// <param name="publicKeyRsa">商户平台公钥Rsa算法对象</param>
         /// <param name="data"></param>
         /// <returns></returns>
-        internal static string Encrypt(RSA publicKeyRsa, string data)
+        internal static string OAEPEncrypt(RSA publicKeyRsa, string data)
         {
-            return Convert.ToBase64String(publicKeyRsa.Encrypt(Encoding.UTF8.GetBytes(data), RSAEncryptionPadding.OaepSHA1));
+            return Convert.ToBase64String(publicKeyRsa.Encrypt(Encoding.UTF8.GetBytes(data),
+                RSAEncryptionPadding.OaepSHA1));
         }
 
-
-
-
-
-
-
-        internal static bool Verify(RSA publicKeyRsa, string data, string sign)
+        /// <summary>
+        ///  获取最新的公钥信息
+        /// </summary>
+        /// <param name="payConfig"></param>
+        /// <returns></returns>
+        internal static async Task<GetCertItemResp> GetLatestCertsByConfig(WechatPayConfig payConfig)
         {
-            return publicKeyRsa.VerifyData(Encoding.UTF8.GetBytes(data), Convert.FromBase64String(sign), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+            if (_wechatCertDics.TryGetValue(payConfig.mch_id, out var certDics))
+            {
+                var item     = certDics.Values.FirstOrDefault();
+                var timeLine = DateTime.Now.ToUtcSeconds();
+                if (item != null && item.effective_time < timeLine && item.expire_time > timeLine)
+                {
+                    return new GetCertItemResp()
+                    {
+                        item = item
+                    };
+                }
+            }
+
+            var refreshDicRes = await RefreshCertsByConfig(payConfig);
+            if (!refreshDicRes.IsSuccess())
+            {
+                return new GetCertItemResp()
+                {
+                    code          = refreshDicRes.code,
+                    response_body = refreshDicRes.response_body,
+                    message       = refreshDicRes.message
+                };
+            }
+
+            return new GetCertItemResp() { item = refreshDicRes.dics.Values.First() };
         }
 
+        #endregion
 
-        private static 
 
-        //public static bool Verify(WechatPayConfig payConfig, HttpResponseDetail detail)
-        //{
+        #region 微信公钥验签
 
-        //}
+        /// <summary>
+        ///  根据微信商户配置，验证结果签名
+        /// </summary>
+        /// <param name="payConfig"></param>
+        /// <param name="detail"></param>
+        /// <returns></returns>
+        public static async Task<BaseResp> Verify(WechatPayConfig payConfig, HttpResponseDetail detail)
+        {
+            var certRes = await GetCertsByConfigAndSNo(payConfig, detail.serial_num);
+            if (!certRes.IsSuccess())
+            {
+                return certRes;
+            }
 
+            var cert = certRes.item;
+
+            var verContent = $"{detail.timestamp}\n{detail.nonce}\n{detail.body}\n";
+            var isOk = cert.cert_public_key.VerifyData(Encoding.UTF8.GetBytes(verContent),
+                Convert.FromBase64String(detail.signature), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+
+            if (isOk)
+                return new BaseResp();
+            
+            var errRes = new BaseResp()
+            {
+                code          = RespTypes.SignError.ToString(),
+                message       = "验证微信支付结果签名失败!",
+                response_body = detail.body
+            };
+            errRes.ret = (int) RespTypes.SignError;
+            return errRes;
+        }
+
+        private static async Task<GetCertItemResp> GetCertsByConfigAndSNo(WechatPayConfig payConfig, string serialNo)
+        {
+            if (_wechatCertDics.TryGetValue(payConfig.mch_id, out var certDics)
+                && certDics.TryGetValue(serialNo, out var item))
+                return new GetCertItemResp() { item = item };
+
+            var refreshDicRes = await RefreshCertsByConfig(payConfig);
+            if (!refreshDicRes.IsSuccess())
+            {
+                return new GetCertItemResp()
+                {
+                    code          = refreshDicRes.code,
+                    response_body = refreshDicRes.response_body,
+                    message       = refreshDicRes.message
+                };
+            }
+
+            var dics = refreshDicRes.dics;
+            if (dics.TryGetValue(serialNo, out item))
+            {
+                return new GetCertItemResp() { item = item };
+            }
+
+            return new GetCertItemResp() { code = "Unknow", message = $"最新的微信平台公钥证书列表不存在证书（编号{serialNo}）" };
+        }
+
+        #endregion
+        
+
+        // <商户号，<证书编号，证书信息>> 
+        private static Dictionary<string, Dictionary<string, WechatCertificateItem>>
+            _wechatCertDics = new Dictionary<string, Dictionary<string, WechatCertificateItem>>();
+
+        // 刷新获取微信对应的最新公钥信息
+        private static async Task<RefreshCertDicResp> RefreshCertsByConfig(WechatPayConfig payConfig)
+        {
+            var certRes = await (
+                WechatPayHelper.WechatPublicCertificateProvider != null
+                    ? WechatPayHelper.WechatPublicCertificateProvider.GetCertificates(payConfig)
+                    : new WechatCertificateGetReq().SetContextConfig(payConfig).SendAsync()
+            );
+
+            if (!certRes.IsSuccess())
+                return new RefreshCertDicResp()
+                    {code = certRes.code, response_body = certRes.response_body, message = certRes.message};
+
+            var dics = certRes.data.Select(wcert =>
+            {
+                var encryptCertificate = wcert.encrypt_certificate;
+
+                if (encryptCertificate.algorithm != "AEAD_AES_256_GCM")
+                    throw new NotSupportedException($"微信支付返回平台加密证书使用了未提供的加解密算法{encryptCertificate.algorithm}!");
+
+                var certBytes = AesGcmHelper.DecryptFromBase64(payConfig.api_v3_Key, encryptCertificate.nonce,
+                    encryptCertificate.ciphertext, encryptCertificate.associated_data);
+
+                var cert = new WechatCertificateItem
+                {
+                    serial_no       = wcert.serial_no,
+                    effective_time  = DateTime.Parse(wcert.effective_time).ToUtcSeconds(),
+                    expire_time     = DateTime.Parse(wcert.expire_time).ToUtcSeconds(),
+                    cert_public_key = new X509Certificate2(certBytes).GetRSAPublicKey()
+                };
+                return cert;
+
+            }).OrderByDescending(c => c.effective_time).ToDictionary(c => c.serial_no, c => c);
+
+            _wechatCertDics[payConfig.mch_id] = dics;
+
+            return new RefreshCertDicResp() {dics = dics};
+        }
 
     }
+
 
 
     /// <summary>
@@ -138,5 +268,16 @@ namespace OSS.Clients.Pay.Wechat.Helpers
         /// </summary>
         public RSA private_key { get; }
         
+    }
+
+
+    internal class GetCertItemResp : BaseResp
+    {
+        public WechatCertificateItem item { get; set; }
+    }
+
+    internal class RefreshCertDicResp:BaseResp
+    {
+        public Dictionary<string, WechatCertificateItem> dics { get; set; }
     }
 }

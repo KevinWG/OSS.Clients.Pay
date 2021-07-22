@@ -17,7 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OSS.Clients.Pay.Wechat.Basic.Native
+namespace OSS.Clients.Pay.Wechat.Basic
 {
     public class NativePayReq
     {

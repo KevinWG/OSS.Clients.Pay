@@ -1,8 +1,11 @@
 ﻿
-namespace OSS.Clients.Pay.Wechat.Basic.Certificate.Interface
+using OSS.Clients.Pay.Wechat.Basic;
+using System.Threading.Tasks;
+
+namespace OSS.Clients.Pay.Wechat
 {
     public interface IWechatCertificateProvider
     {
-        WechatCertificateGetResp GetCertificates(WechatPayConfig payConfig);
+        Task<WechatCertificateGetResp> GetCertificates(WechatPayConfig payConfig);
     }
 }

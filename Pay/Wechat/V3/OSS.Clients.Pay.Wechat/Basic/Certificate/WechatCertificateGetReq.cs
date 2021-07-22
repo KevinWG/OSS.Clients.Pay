@@ -4,7 +4,8 @@ using System.Net.Http;
 
 namespace OSS.Clients.Pay.Wechat.Basic
 {
-    public class WechatCertificateGetReq : BaseReq
+
+    public class WechatCertificateGetReq : BaseReq<WechatCertificateGetReq,WechatCertificateGetResp>
     {
         public WechatCertificateGetReq() : base("/v3/certificates", HttpMethod.Get)
         {
@@ -15,18 +16,16 @@ namespace OSS.Clients.Pay.Wechat.Basic
     {
         public List<WechatCertificateEncrypt> data { get; set; }
     }
-
-
+    
     public class WechatCertificateEncrypt
     {
         public string serial_no { get; set; }
 
-        public DateTime effective_time { get; set; }
+        public string effective_time { get; set; }
 
-        public DateTime expire_time    { get; set; }
+        public string expire_time { get; set; }
 
         public CertificateEncryptDetail encrypt_certificate { get; set; }
-
     }
 
     public class CertificateEncryptDetail
