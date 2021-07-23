@@ -57,15 +57,6 @@ namespace OSS.Clients.Pay.Samples
 
         private static void RegisterPayConfig()
         {
-            WXPayConfigProvider.DefaultConfig = new WXPayCenterConfig
-            {
-                AppId = "wxc9180871227296c3",
-                Key = "WeChatConsultant20191106wefDiIne",
-                MchId = "1516403801",
-                NotifyUrl = "http://113.105.74.212/Wechat/WechatPayCallback"
-                //.....
-            };
-
             //ZPayConfigProvider.DefaultConfig = new ZPayConfig()
             //{
             //    AppId = "XXX",

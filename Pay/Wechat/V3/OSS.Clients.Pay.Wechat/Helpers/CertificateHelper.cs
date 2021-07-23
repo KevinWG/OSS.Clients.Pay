@@ -139,9 +139,10 @@ namespace OSS.Clients.Pay.Wechat.Helpers
         /// <param name="payConfig"></param>
         /// <param name="detail"></param>
         /// <returns></returns>
-        public static async Task<BaseResp> Verify(WechatPayConfig payConfig, HttpResponseDetail detail)
+        public static async Task<BaseResp> Verify(WechatPayConfig payConfig,string signature,
+            string serialNo,string body,string nonce,long timestamp)
         {
-            var certRes = await GetCertsByConfigAndSNo(payConfig, detail.serial_num);
+            var certRes = await GetCertsByConfigAndSNo(payConfig, serialNo);
             if (!certRes.IsSuccess())
             {
                 return certRes;
@@ -149,18 +150,18 @@ namespace OSS.Clients.Pay.Wechat.Helpers
 
             var cert = certRes.item;
 
-            var verContent = $"{detail.timestamp}\n{detail.nonce}\n{detail.body}\n";
+            var verContent = $"{timestamp}\n{nonce}\n{body}\n";
             var isOk = cert.cert_public_key.VerifyData(Encoding.UTF8.GetBytes(verContent),
-                Convert.FromBase64String(detail.signature), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+                Convert.FromBase64String(signature), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
 
             if (isOk)
                 return new BaseResp();
-            
+
             var errRes = new BaseResp()
             {
                 code          = RespTypes.SignError.ToString(),
                 message       = "验证微信支付结果签名失败!",
-                response_body = detail.body
+                response_body = body
             };
             errRes.ret = (int) RespTypes.SignError;
             return errRes;
@@ -204,8 +205,7 @@ namespace OSS.Clients.Pay.Wechat.Helpers
             );
 
             if (!certRes.IsSuccess())
-                return new RefreshCertDicResp()
-                    {code = certRes.code, response_body = certRes.response_body, message = certRes.message};
+                return certRes.ToResp<RefreshCertDicResp>();
 
             var dics = certRes.data.Select(wcert =>
             {
@@ -214,7 +214,7 @@ namespace OSS.Clients.Pay.Wechat.Helpers
                 if (encryptCertificate.algorithm != "AEAD_AES_256_GCM")
                     throw new NotSupportedException($"微信支付返回平台加密证书使用了未提供的加解密算法{encryptCertificate.algorithm}!");
 
-                var certBytes = AesGcmHelper.DecryptFromBase64(payConfig.api_v3_Key, encryptCertificate.nonce,
+                var certBytes = AesGcmHelper.DecryptFromBase64(payConfig.api_v3_key, encryptCertificate.nonce,
                     encryptCertificate.ciphertext, encryptCertificate.associated_data);
 
                 var cert = new WechatCertificateItem
@@ -228,7 +228,7 @@ namespace OSS.Clients.Pay.Wechat.Helpers
 
             }).OrderByDescending(c => c.effective_time).ToDictionary(c => c.serial_no, c => c);
 
-            _wechatCertDics[payConfig.mch_id] = dics;
+            _wechatCertDics[payConfig.mch_id] = dics??new Dictionary<string, WechatCertificateItem>();
 
             return new RefreshCertDicResp() {dics = dics};
         }

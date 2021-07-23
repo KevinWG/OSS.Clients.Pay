@@ -2,6 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+	  <Description>微信支付V3版接口</Description>
+    <PackageIconUrl>http://img1.osscore.cn/static/oss_net.png</PackageIconUrl>
+    <PackageReleaseNotes>添加支付通知相关实体和解密扩展</PackageReleaseNotes>
+    <Version>0.6</Version>
   </PropertyGroup>
 
   <ItemGroup>

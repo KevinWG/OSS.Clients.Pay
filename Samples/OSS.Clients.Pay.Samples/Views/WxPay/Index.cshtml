@@ -1,0 +1,158 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>商品信息</h2>
+
+<div class="container text-center">
+    <div class="row text-center">
+        <span class="col-md-2">
+            填写订单编号：
+        </span>    
+        <span class="col-md-3">
+            <input type="text" class="form-control" id="order-id" placeholder="订单编号">
+        </span>
+    </div>
+    
+    <br/>
+    <div class="col-md-6">
+        <div class="well">
+            公号支付 0.01 元（微信浏览器）
+        </div>
+
+        <div>
+            <span>
+                <button class="btn btn-success" id="btn-official-pay" type="button">唤起支付</button>
+            </span>
+            <span>
+                <button class="btn btn-success btn-refund-order" type="button">退款</button>
+            </span>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="well">
+            公号扫码支付 0.01 元
+        </div>
+        <div>
+            <span>
+                <button class="btn btn-success" id="btn-scan-pay" type="button">生成支付二维码</button>
+            </span>
+            <span>
+                <button class="btn btn-success btn-refund-order" type="button">退款</button>
+            </span>
+        </div>
+    </div>
+    
+</div>
+
+
+@section Scripts
+{
+    <script>
+        //  公号内部支付
+        $("#btn-official-pay").on("click",
+            function() {
+                var orderId = $("#order-id").val();
+                if (!orderId) {
+                    alert("请输入订单编号！");
+                    return;
+                }
+                
+                $.post("/wxpay/GetJsPayInfo?orderId=" + orderId)
+                    .done(function(addRes) {
+                        if (addRes.ret == 0) {
+
+                            WeixinJSBridge.invoke('getBrandWCPayRequest',
+                                {
+                                    "appId": addRes.app_id, //公众号名称，由商户传入     
+                                    "timeStamp": addRes.time_stamp, //时间戳，自1970年以来的秒数     
+                                    "nonceStr": addRes.nonce, //随机串     
+                                    "package": addRes.package,
+                                    "signType": addRes.sign_type, //微信签名方式：     
+                                    "paySign": addRes.sign //微信签名 
+                                },
+                                function(res) {
+                                    // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
+                                    if (res.err_msg == "get_brand_wcpay_request:ok") {
+                                        alert("支付成功！");
+                                    } else {
+                                        alert(" 支付被取消或者支付失败！");
+                                    }
+                                }
+                            );
+
+                        } else {
+                            alert("发起微信支付请求失败！");
+                        }
+
+                    });
+            });
+    </script>
+    <!-- PC 扫码支付 -->
+    
+    <script src="/js/jquery.qrcode.min.js"></script>
+    <script>
+        $("#btn-scan-pay").on("click",
+            function () {
+                var orderId = $("#order-id").val();
+                if (!orderId) {
+                    alert("请输入订单编号！");
+                    return;
+                }
+                $.post("/wxpay/GetScanPayInfo?orderId=" + orderId)
+                    .done(function(addRes) {
+                        if (addRes.ret == 0) {
+
+                            $("#btn-scan-pay").popover({
+                                container: 'body',
+                                html: true,
+                                title: "支付二维码",
+                                placement: "bottom",
+                                template: '<div class="popover" role="tooltip">' +
+                                    '<div class="arrow">' +
+                                    '</div>' +
+                                    '  <h3 class="popover-title"></h3>' +
+                                    '  <div class="popover-content" id="scan-qr-code">生成中....' +
+                                    '  </div>' +
+                                    '</div>'
+                            });
+                            $("#btn-scan-pay").popover('show');
+
+                            $('#scan-qr-code').qrcode({ width: 120, height: 120, text: addRes.code_url });
+
+
+                        } else {
+                            alert("发起微信支付请求失败！");
+                        }
+                    });
+            });
+    </script>
+    
+    <script>
+
+        $(".btn-refund-order").on("click",
+            function() {
+                var orderId = $("#order-id").val();
+                if (!orderId) {
+                    alert("请输入订单编号！");
+                    return;
+                }
+
+                $.post("/wxpay/refund?orderId=" + orderId)
+                    .done(function(addRes) {
+                        if (addRes.ret === 0) {
+
+                            console.info(addRes);
+
+                            alert("退款成功");
+                        } else {
+                            alert("发起微信支付请求失败！");
+                        }
+
+                    });
+
+
+            });
+    </script>
+}

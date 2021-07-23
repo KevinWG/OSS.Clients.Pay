@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
 using OSS.Clients.Pay.Wechat.Basic;
@@ -33,9 +34,7 @@ namespace OSS.Clients.Pay.Wechat
         /// <summary>
         /// 发送接口请求
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="req"></param>
-        /// <param name="funcFormat"></param>
         /// <returns></returns>
         public static Task<WechatCertificateGetResp> SendAsync(this WechatCertificateGetReq req)
         {
@@ -45,12 +44,12 @@ namespace OSS.Clients.Pay.Wechat
         /// <summary>
         /// 发送接口请求
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TReq"></typeparam>
+        /// <typeparam name="TResp"></typeparam>
         /// <param name="req"></param>
-        /// <param name="funcFormat"></param>
         /// <returns></returns>
-        public static Task<TResp> SendAsync<TReq,TResp>(this BaseReq<TReq, TResp> req)
-            where TReq : BaseReq<TReq, TResp>
+        public static Task<TResp> SendAsync<TReq,TResp>(this InternalBaseReq<TReq, TResp> req)
+            where TReq : InternalBaseReq<TReq, TResp>
             where TResp : BaseResp,new()
         {
             return SendAsync(req, (config,resp) => JsonFormat<TResp>(config, resp, true));
@@ -59,13 +58,12 @@ namespace OSS.Clients.Pay.Wechat
         /// <summary>
         /// 发送接口请求
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="req"></param>
         /// <param name="funcFormat"></param>
         /// <returns></returns>
-        public static async Task<TResp> SendAsync<TReq, TResp>(this BaseReq<TReq, TResp> req,
+        public static async Task<TResp> SendAsync<TReq, TResp>(this InternalBaseReq<TReq, TResp> req,
             Func<WechatPayConfig, HttpResponseDetail, Task<TResp>> funcFormat)
-            where TReq : BaseReq<TReq, TResp>
+            where TReq : InternalBaseReq<TReq, TResp>
             where TResp : BaseResp,new()
         {
             if (funcFormat == null)
@@ -78,12 +76,11 @@ namespace OSS.Clients.Pay.Wechat
             var reqBody = string.Empty;
             if (req.method != HttpMethod.Get)
             {
-                var bodyRes = await GetReqContent(req);
+                var bodyRes = await GetReqBody(req);
                 if (!bodyRes.IsSuccess())
                 {
                     return bodyRes.ToResp<TResp>();
                 }
-
                 reqBody = bodyRes.body;
             }
 
@@ -94,7 +91,7 @@ namespace OSS.Clients.Pay.Wechat
                     ? osHttpReq.RestSend()
                     : WechatPayHelper.httpclient_factory.CreateClient().RestSend(osHttpReq)
             );
-
+          
             var respDetail = await GetResponseDetail(resp);
             return await funcFormat(req.pay_config, respDetail);
         }
@@ -103,17 +100,20 @@ namespace OSS.Clients.Pay.Wechat
         #region 响应处理
 
         // Json 格式化处理
-        private static async Task<T> JsonFormat<T>(WechatPayConfig config, HttpResponseDetail respDetail, bool checkSign)
+        private static async Task<T> JsonFormat<T>(WechatPayConfig config, HttpResponseDetail respDetail,
+                                                   bool checkSign)
             where T : BaseResp, new()
         {
-            if (checkSign)
+            if (respDetail.IsSuccessStatusCode && checkSign)
             {
-                var vertifyRes = await CertificateHelper.Verify(config, respDetail);
-                if (!vertifyRes.IsSuccess())
+                var verifyRes = await CertificateHelper.Verify(config, respDetail.signature,
+                    respDetail.serial_no, respDetail.body,
+                    respDetail.nonce,respDetail.timestamp);
+
+                if (!verifyRes.IsSuccess())
                 {
-                    var res = new T {response_body = respDetail.body, code = vertifyRes.code, message = vertifyRes.message};
-                    res.ret = vertifyRes.ret;
-                    return res;
+                    verifyRes.request_id = respDetail.request_id;
+                    return verifyRes.ToResp<T>();
                 }
             }
             return JsonSerializer.Deserialize<T>(respDetail.body);
@@ -121,30 +121,28 @@ namespace OSS.Clients.Pay.Wechat
 
         private static async Task<HttpResponseDetail> GetResponseDetail(HttpResponseMessage response)
         {
-            var body       = string.Empty;
-            var statusCode = response.StatusCode;
-           
-            response.Headers.TryGetValues("Request-ID", out var requestId);
-            response.Headers.TryGetValues("Wechatpay-Nonce", out var nonce);
-            response.Headers.TryGetValues("Wechatpay-Signature", out var signature);
+            if (!(response.Headers.TryGetValues("Request-ID", out var requestId)
+                  && response.Headers.TryGetValues("Wechatpay-Nonce", out var nonce) 
+                  && response.Headers.TryGetValues("Wechatpay-Signature", out var signature) 
+                  && response.Headers.TryGetValues("Wechatpay-Timestamp", out var timestamp)
+                  && response.Headers.TryGetValues("Wechatpay-Serial", out var serial)))
+            {
+                throw new NotSupportedException("当前微信返回头部信息缺失!");
+            }
 
-            response.Headers.TryGetValues("Wechatpay-Timestamp", out var timestamp);
-            response.Headers.TryGetValues("Wechatpay_Serial", out var serial);
-
+            var body      = string.Empty;
+            var isSuccess = response.IsSuccessStatusCode;
             using (response)
             {
-                if (statusCode!=HttpStatusCode.NoContent)
+                if (response.StatusCode!=HttpStatusCode.NoContent)
                 {
-                    using (var content=response.Content)
-                    {
-                        body =await content.ReadAsStringAsync();
-                    }
+                    using var content =response.Content;
+                    body = await content.ReadAsStringAsync();
                 }
             }
             return new HttpResponseDetail(requestId.FirstOrDefault(),
-                statusCode, serial.FirstOrDefault(), body,
-                signature.FirstOrDefault(), 
-                nonce.FirstOrDefault(), timestamp.FirstOrDefault().ToInt64());
+                response.StatusCode,isSuccess, serial.FirstOrDefault(), body,
+                signature.FirstOrDefault(), nonce.FirstOrDefault(), timestamp.FirstOrDefault().ToInt64());
         }
 
         #endregion
@@ -153,25 +151,23 @@ namespace OSS.Clients.Pay.Wechat
         #region 请求加工
 
 
-        private static void CheckAndSetPayConfig<TReq, TResp>(BaseReq<TReq, TResp> req)
-            where TReq : BaseReq<TReq, TResp>
+        private static void CheckAndSetPayConfig<TReq, TResp>(InternalBaseReq<TReq, TResp> req)
+            where TReq : InternalBaseReq<TReq, TResp>
             where TResp : BaseResp
         {
             if (req.pay_config==null)
             {
                 req.pay_config = WechatPayHelper.pay_config;
             }
+
             if (req.pay_config == null)
             {
                 throw new NotImplementedException("未发现商户支付配置信息！");
             }
         }
-
         
-        //  获取http请求对象
-        private static OssHttpRequest GetHttpRequest<TReq, TResp>(BaseReq<TReq, TResp> req, string reqBody)
-            where TReq : BaseReq<TReq, TResp>
-            where TResp : BaseResp
+        private static string GetHeaderWithSign<TReq, TResp>(InternalBaseReq<TReq, TResp> req, string signDataBody)
+            where TReq : InternalBaseReq<TReq, TResp> where TResp : BaseResp
         {
             var privateCert = CertificateHelper.GetMchPrivateCertificate(req.pay_config);
 
@@ -179,89 +175,96 @@ namespace OSS.Clients.Pay.Wechat
             var timestamp = DateTime.Now.ToUtcSeconds().ToString();
             var serialNo  = privateCert.serial_number;
 
-            var signData  = GenerateSignData(req.api_url, req.method.ToString(), reqBody, timestamp, nonce);
+            var signData  = GenerateSignData(req.GetApiPath(), req.method.ToString(), signDataBody, timestamp, nonce);
             var signature = CertificateHelper.Sign(privateCert.private_key, signData);
 
             var headerValue = GenerateAuthHeaderValue(req.pay_config.mch_id, serialNo, signature, timestamp, nonce);
-
-            var osHttpReq = new OssHttpRequest();
-
-            osHttpReq.AddressUrl = string.Concat(WechatPayHelper.api_domain, req.api_url);
-            osHttpReq.HttpMethod = req.method;
-            osHttpReq.CustomBody = reqBody;
-            osHttpReq.RequestSet = hReqMsg => hReqMsg.Headers.Add("Authorization", headerValue);
-
-            return osHttpReq;
+            return headerValue;
         }
-        
+
         private static string GenerateAuthHeaderValue(string mchId, string serialNo, string signature, string timestamp, string nonce)
         {
             var auth = $"mchid=\"{mchId}\",nonce_str=\"{nonce}\",timestamp=\"{timestamp}\",serial_no=\"{serialNo}\",signature=\"{signature}\"";
             return $"WECHATPAY2-SHA256-RSA2048 {auth}";
         }
 
-        private static string GenerateSignData(string uri, string method, string body,  string timestamp, string nonce)
+        private static string GenerateSignData(string uri, string method, string body, string timestamp, string nonce)
         {
             return $"{method}\n{uri}\n{timestamp}\n{nonce}\n{body}\n";
         }
 
+        //  获取http请求对象
+        private static OssHttpRequest GetHttpRequest<TReq, TResp>(InternalBaseReq<TReq, TResp> req, string reqBody)
+            where TReq : InternalBaseReq<TReq, TResp>
+            where TResp : BaseResp
+        {
+            var headerValue = GetHeaderWithSign(req, reqBody);
 
-        private static async Task<SendBodyResp> GetReqContent<TReq, TResp>(BaseReq<TReq, TResp> req)
-            where TReq : BaseReq<TReq, TResp>
+            var osHttpReq = new OssHttpRequest();
+
+            osHttpReq.AddressUrl = string.Concat(WechatPayHelper.api_domain, req.GetApiPath());
+            osHttpReq.HttpMethod = req.method;
+            osHttpReq.CustomBody = reqBody;
+            osHttpReq.RequestSet = hReqMsg =>
+            {
+                hReqMsg.Headers.UserAgent.TryParseAdd("Mozilla/5.0");
+                hReqMsg.Headers.Accept.ParseAdd("application/json");
+                hReqMsg.Headers.Add("Authorization", headerValue);
+                
+                if (hReqMsg.Content!=null)
+                    hReqMsg.Content.Headers.ContentType =
+                        new MediaTypeHeaderValue("application/json") { CharSet = "UTF-8" };
+            };
+            return osHttpReq;
+        }
+
+        private static async Task<SendBodyResp> GetReqBody<TReq, TResp>(InternalBaseReq<TReq, TResp> req)
+            where TReq : InternalBaseReq<TReq, TResp>
             where TResp : BaseResp
         {
             var paraDics = req.GetSendParaDics();
-
             if (paraDics == null)
             {
                 throw new ArgumentException("未能获取到当前请求需要的必要参数");
             }
-
-            var segBody = GetReqContent_JsonSegment(paraDics);
 
             var encryptParas = req.GetSendEncryptParaDics();
             if (encryptParas!=null&& encryptParas.Count>0)
             {
                 var encryptBodyRes = await GetReqContent_JsonEncryptSegment(req.pay_config, encryptParas);
                 if (!encryptBodyRes.IsSuccess())
-                    return encryptBodyRes;
+                    return encryptBodyRes.ToResp<SendBodyResp>();
 
-                segBody = string.Concat(segBody, ",", encryptBodyRes.body);
+                foreach (var keyValuePair in encryptBodyRes.body)
+                {
+                    paraDics[keyValuePair.Key] = keyValuePair.Value;
+                }
             }
 
-            var reqBody = string.Concat("{", segBody, "}");
+            var reqBody = JsonSerializer.Serialize(paraDics,_jsonOption);
             return new SendBodyResp(){body = reqBody};
         }
 
-
-        //private static void PrepareCommonPara(WechatPayConfig payConfig, Dictionary<string, string> paras)
-        //{
-        //    paras["appid"] = payConfig.app_id;
-        //    paras["mchid"] = payConfig.mch_id;
-
-
-        //    paras["sp_appid"] = payConfig.sub_app_id;
-        //    paras["mchid"] = payConfig.mch_id;
-        //    paras["mchid"] = payConfig.mch_id;
-
-        //    paras["mchid"] = payConfig.mch_id;
-        //}
-
-        private static string GetReqContent_JsonSegment(Dictionary<string, string> dics)
+        private static readonly JsonSerializerOptions _jsonOption = new JsonSerializerOptions()
         {
-            return string.Join(',', dics.Select(d => $"\"{d.Key}\":\"{d.Value}\""));
-        }
+            IgnoreNullValues = true
+        };
 
-        private static async Task<SendBodyResp> GetReqContent_JsonEncryptSegment(WechatPayConfig payConfig,Dictionary<string, string> dics)
+        private static async Task<SendEncryptBodyResp> GetReqContent_JsonEncryptSegment(WechatPayConfig payConfig,Dictionary<string, string> dics)
         {
             var certRes = await CertificateHelper.GetLatestCertsByConfig(payConfig);
             if (!certRes.IsSuccess())
-                return certRes.ToResp<SendBodyResp>();
+                return certRes.ToResp<SendEncryptBodyResp>();
 
             var cert = certRes.item;
-
-            var body= string.Join(',', dics.Select(d => $"\"{d.Key}\":\"{ CertificateHelper.OAEPEncrypt(cert.cert_public_key, d.Value) }\""));
-            return new SendBodyResp(){body = body};
+            
+            return new SendEncryptBodyResp()
+            {
+                body =dics.ToDictionary(
+                    d=>d.Key,
+                    d=>CertificateHelper.OAEPEncrypt(cert.cert_public_key, d.Value)
+                    )
+            };
         }
 
         #endregion
@@ -272,5 +275,11 @@ namespace OSS.Clients.Pay.Wechat
     internal class SendBodyResp:BaseResp
     {
         public string body { get; set; }
+    }
+    
+    
+    internal class SendEncryptBodyResp:BaseResp
+    {
+        public Dictionary<string,string> body { get; set; }
     }
 }

@@ -1,15 +1,36 @@
-﻿using System;
+﻿#region Copyright (C) 2021 Kevin (OSS开源实验室) 公众号：osscore
+
+/***************************************************************************
+*　　	文件功能描述：微信支付模快 —— 获取证书请求
+*
+*　　	创建人： Kevin
+*       创建人Email：1985088337@qq.com
+*    	创建日期：2021-7-23
+*       
+*****************************************************************************/
+
+#endregion
+
 using System.Collections.Generic;
 using System.Net.Http;
 
 namespace OSS.Clients.Pay.Wechat.Basic
 {
-
-    public class WechatCertificateGetReq : BaseReq<WechatCertificateGetReq,WechatCertificateGetResp>
+    /// <summary>
+    /// 获取平台证书请求
+    /// </summary>
+    public class WechatCertificateGetReq : BaseGetReq<WechatCertificateGetReq,WechatCertificateGetResp>
     {
-        public WechatCertificateGetReq() : base("/v3/certificates", HttpMethod.Get)
+        public WechatCertificateGetReq() 
         {
         }
+
+        public override string GetApiPath()
+        {
+            return "/v3/certificates";
+        }
+
+
     }
 
     public class WechatCertificateGetResp : BaseResp

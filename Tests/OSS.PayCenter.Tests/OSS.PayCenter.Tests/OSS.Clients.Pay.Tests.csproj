@@ -156,8 +156,8 @@
       <Project>{ab029aa9-7c3f-4e00-8cd8-2491133c5daa}</Project>
       <Name>OSS.Clients.Pay.Ali</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Pay\OSS.Clients.Pay.WX\OSS.Clients.Pay.WX.csproj">
-      <Project>{d4e43a54-5adc-41b6-86e9-45e12bb14963}</Project>
+    <ProjectReference Include="..\..\..\Pay\Wechat\V2\OSS.Clients.Pay.WX\OSS.Clients.Pay.WX.csproj">
+      <Project>{629fb90d-f08f-499f-9cd0-a522078913a9}</Project>
       <Name>OSS.Clients.Pay.WX</Name>
     </ProjectReference>
   </ItemGroup>
