@@ -4,12 +4,19 @@
     <TargetFramework>net5.0</TargetFramework>
 	  <Description>微信支付V3版接口</Description>
     <PackageIconUrl>http://img1.osscore.cn/static/oss_net.png</PackageIconUrl>
-    <PackageReleaseNotes>添加支付通知相关实体和解密扩展</PackageReleaseNotes>
-    <Version>0.6</Version>
+    <PackageReleaseNotes>回调验证实体处理</PackageReleaseNotes>
+    <Version>0.6.1</Version>
+    <Nullable>disable</Nullable>
+    <PackageProjectUrl>https://github.com/KevinWG/OSS.Clients.Pay/tree/master/Pay/Wechat/V3/OSS.Clients.Pay.Wechat</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/KevinWG/OSS.Clients.Pay</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>.\bin\OSS.Clients.Pay.Wechat.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OSS.Common" Version="2.3.3.17" />
+    <PackageReference Include="OSS.Common" Version="2.5.0" />
     <PackageReference Include="OSS.Tools.Http" Version="1.3.0" />
   </ItemGroup>
 

@@ -22,13 +22,14 @@ using System.Threading.Tasks;
 using OSS.Clients.Pay.Wechat.Basic;
 using OSS.Common.BasicMos.Resp;
 using OSS.Common.Extension;
+#pragma warning disable 8618
 
 namespace OSS.Clients.Pay.Wechat.Helpers
 {
     /// <summary>
     ///  证书辅助类
     /// </summary>
-    public static class CertificateHelper
+    internal static class CertificateHelper
     {
         #region 商户私钥部分
 
@@ -134,13 +135,17 @@ namespace OSS.Clients.Pay.Wechat.Helpers
         #region 微信公钥验签
 
         /// <summary>
-        ///  根据微信商户配置，验证结果签名
+        /// 根据微信商户配置，验证结果签名
         /// </summary>
-        /// <param name="payConfig"></param>
-        /// <param name="detail"></param>
+        /// <param name="payConfig">支付配置</param>
+        /// <param name="signature">微信返回头信息中的签名</param>
+        /// <param name="serialNo">微信返回头信息中的平台证书编号</param>
+        /// <param name="nonce">微信返回头信息中的随机串</param>
+        /// <param name="timestamp">微信返回头信息中的时间戳</param>
+        /// <param name="respBody">微信返回的内容字符串</param>
         /// <returns></returns>
         public static async Task<BaseResp> Verify(WechatPayConfig payConfig,string signature,
-            string serialNo,string body,string nonce,long timestamp)
+                                                  string serialNo,  string nonce, long timestamp, string respBody)
         {
             var certRes = await GetCertsByConfigAndSNo(payConfig, serialNo);
             if (!certRes.IsSuccess())
@@ -150,7 +155,7 @@ namespace OSS.Clients.Pay.Wechat.Helpers
 
             var cert = certRes.item;
 
-            var verContent = $"{timestamp}\n{nonce}\n{body}\n";
+            var verContent = $"{timestamp}\n{nonce}\n{respBody}\n";
             var isOk = cert.cert_public_key.VerifyData(Encoding.UTF8.GetBytes(verContent),
                 Convert.FromBase64String(signature), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
 
@@ -161,7 +166,7 @@ namespace OSS.Clients.Pay.Wechat.Helpers
             {
                 code          = RespTypes.SignError.ToString(),
                 message       = "验证微信支付结果签名失败!",
-                response_body = body
+                response_body = respBody
             };
             errRes.ret = (int) RespTypes.SignError;
             return errRes;

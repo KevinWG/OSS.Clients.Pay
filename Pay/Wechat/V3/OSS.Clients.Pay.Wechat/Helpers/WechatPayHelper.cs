@@ -12,6 +12,8 @@
 #endregion
 
 using System.Net.Http;
+using System.Threading.Tasks;
+using OSS.Clients.Pay.Wechat.Helpers;
 
 namespace OSS.Clients.Pay.Wechat
 {
@@ -38,5 +40,23 @@ namespace OSS.Clients.Pay.Wechat
         ///    系统默认实现懒加载（需要验签或者加密时加载内存中并缓存,微信解决方案参考：https://pay.weixin.qq.com/wiki/doc/apiv3/wechatpay/wechatpay5_0.shtml
         /// </summary>
         public static IWechatCertificateProvider WechatPublicCertificateProvider { get; set; }
+
+
+        /// <summary>
+        /// 根据微信商户配置，验证结果签名
+        /// </summary>
+        /// <param name="payConfig">支付配置</param>
+        /// <param name="signature">微信返回头信息中的签名</param>
+        /// <param name="serialNo">微信返回头信息中的平台证书编号</param>
+        /// <param name="nonce">微信返回头信息中的随机串</param>
+        /// <param name="timestamp">微信返回头信息中的时间戳</param>
+        /// <param name="respBody">微信返回的内容字符串</param>
+        /// <returns></returns>
+        public static Task<BaseResp> Verify(WechatPayConfig payConfig, string signature,
+                                            string serialNo, string nonce, long timestamp, string respBody)
+        {
+            return CertificateHelper.Verify(payConfig, signature, serialNo, nonce, timestamp, respBody);
+        }
+
     }
 }

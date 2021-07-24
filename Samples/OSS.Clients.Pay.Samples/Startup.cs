@@ -55,7 +55,7 @@ namespace OSS.Clients.Pay.Samples
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-
+            
             WechatPayHelper.pay_config = new WechatPayConfig()
             {
                 app_id        = "xxxxxx",
@@ -66,6 +66,7 @@ namespace OSS.Clients.Pay.Samples
                 cert_password = "xxxxxx"
             };
 
+          
         }
     }
 }

@@ -5,7 +5,17 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Pay\Wechat\V2\OSS.Clients.Pay.WX\OSS.Clients.Pay.WX.csproj" />
       <ProjectReference Include="..\..\Pay\Wechat\V3\OSS.Clients.Pay.Wechat\OSS.Clients.Pay.Wechat.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Pages" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="OSS.Common" Version="2.3.3.17" />
+      <PackageReference Include="OSS.Tools.Log" Version="1.1.2.2" />
     </ItemGroup>
 
 </Project>

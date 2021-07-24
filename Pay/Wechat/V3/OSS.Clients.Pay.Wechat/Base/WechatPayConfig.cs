@@ -11,6 +11,7 @@
 
 #endregion
 
+#pragma warning disable 8618
 namespace OSS.Clients.Pay.Wechat
 {
     public class WechatPayConfig

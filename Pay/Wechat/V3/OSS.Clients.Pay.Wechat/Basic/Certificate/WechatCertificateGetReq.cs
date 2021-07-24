@@ -12,7 +12,9 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Net.Http;
+
+
+#pragma warning disable 8618
 
 namespace OSS.Clients.Pay.Wechat.Basic
 {

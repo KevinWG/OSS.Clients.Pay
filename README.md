@@ -1,5 +1,3 @@
-此SDK微信接口版本为2.0（当前微信支付为3.0接口）
-支付宝接口建议使用官方 ![alipay-easysdk](https://github.com/alipay/alipay-easysdk/tree/master/csharp)
 
 # 快速了解
     OSS支付SDK，主要打造微信支付，支付宝支付，以及其他银行支付接口标准库项目
@@ -9,11 +7,49 @@
 ![osscore](http://7xil4i.com1.z0.glb.clouddn.com/osscore_icon.jpg)
 
 # OSS.PayCenter 使用
+
 ### 一. 安装使用
-      nuget下安装命令：**Install-Package OSS.Clients.Pay.WX**	（微信支付
+      nuget下安装命令：**Install-Package OSS.Clients.Pay.WX**	（微信支付   V2 接口版本
+      nuget下安装命令：**Install-Package OSS.Clients.Pay.Wechat**	（微信支付   V3 接口版本
+
       nuget下安装命令：**Install-Package OSS.Clients.Pay.Ali**	（支付宝支付
 
-### 二. 调用示例
+支付宝接口建议使用官方 [alipay-easysdk](https://github.com/alipay/alipay-easysdk/tree/master/csharp) ,其实现已经简单方便
+
+### 二. 微信支付接口（V3
+
+V3版接口采用fluent方式简化了调用流程，方便扩展，只需要继承基础
+
+1. 扫码支付
+
+首先添加全局配置信息
+```csharp
+    WechatPayHelper.pay_config = new WechatPayConfig()
+    {
+        app_id        = "xxxxxx",
+        mch_id        = "xxxxxx",
+        api_key       = "xxxxxx",
+        api_v3_key    = "xxxxxx",
+        cert_path     = "E:\\xxxxxx\\apiclient_cert.p12",
+        cert_password = "xxxxxx"
+    };
+```
+发起Native扫码下单调用
+
+```csharp
+   var nResp = await new NativePayReq()
+       {
+           total        = 1,
+           description  = "测试商品",
+           out_trade_no = orderId,
+           notify_url   = "http://你的回调接收地址(如 ReceivePayResult)"
+       }
+       // .SetContextConfig(new WechatPayConfig(){})   // 可以设置当前上下文的配置信息，设置后本次请求将使用此配置，方便多应用的用户
+       //.AddOptionalBodyPara("attach","附加数据")  // 添加可选参数
+       .SendAsync();
+```
+
+### 三. 老版本调用示例
 
 1. 微信调用示例：
 

@@ -7,7 +7,6 @@
 
 <div class="container text-center">
     <div class="row text-center">
-
         <span class="col-md-2">
             填写订单编号：
         </span>    
@@ -17,6 +16,7 @@
     </div>
     
     <br/>
+    <div class="row">
     <div class="col-md-6">
         <div class="well">
             公号支付 0.01 元（微信浏览器）
@@ -44,7 +44,7 @@
             </span>
         </div>
     </div>
-    
+    </div>
 </div>
 
 
@@ -60,7 +60,7 @@
                     return;
                 }
                 
-                $.post("/wxpay/GetJsPayInfo?orderId=" + orderId)
+                $.post("/wechat/GetJsPayInfo?orderId=" + orderId)
                     .done(function(addRes) {
                         if (addRes.ret == 0) {
 
@@ -89,10 +89,9 @@
 
                     });
             });
-
-
     </script>
     <!-- PC 扫码支付 -->
+    
     <script src="/js/jquery.qrcode.min.js"></script>
     <script>
         $("#btn-scan-pay").on("click",
@@ -102,7 +101,7 @@
                     alert("请输入订单编号！");
                     return;
                 }
-                $.post("/wxpay/GetScanPayInfo?orderId=" + orderId)
+                $.post("/wechat/GetScanPayInfo?orderId=" + orderId)
                     .done(function(addRes) {
                         if (addRes.ret == 0) {
 
@@ -141,7 +140,7 @@
                     return;
                 }
 
-                $.post("/wxpay/refund?orderId=" + orderId)
+                $.post("/wechat/refund?orderId=" + orderId)
                     .done(function(addRes) {
                         if (addRes.ret === 0) {
 
