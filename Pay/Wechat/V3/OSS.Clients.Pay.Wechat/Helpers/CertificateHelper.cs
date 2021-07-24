@@ -22,7 +22,6 @@ using System.Threading.Tasks;
 using OSS.Clients.Pay.Wechat.Basic;
 using OSS.Common.BasicMos.Resp;
 using OSS.Common.Extension;
-#pragma warning disable 8618
 
 namespace OSS.Clients.Pay.Wechat.Helpers
 {
@@ -68,17 +67,17 @@ namespace OSS.Clients.Pay.Wechat.Helpers
             return pCert;
         }
 
-        private static Dictionary<string, MchPrivateCertificate> _mchCertDics =
-            new Dictionary<string, MchPrivateCertificate>();
+        private static Dictionary<string, MchPrivateCertificate> _mchCertDics = new Dictionary<string, MchPrivateCertificate>();
 
         private static MchPrivateCertificate GetCertificateInfo(string mchId, string certPath, string certPassword)
         {
-            if (!File.Exists(certPath))
+            var path = Path.GetFullPath(certPath);
+            if (!File.Exists(path))
             {
                 throw new ArgumentNullException(nameof(certPath), $"请检查商户({mchId})的证书是否放置在路径({certPath})下");
             }
 
-            var cert = new X509Certificate2(certPath, certPassword,
+            var cert = new X509Certificate2(path, certPassword,
                 X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable);
 
             return new MchPrivateCertificate(cert.GetSerialNumberString(), cert.GetRSAPrivateKey());

@@ -9,6 +9,8 @@
     <Nullable>disable</Nullable>
     <PackageProjectUrl>https://github.com/KevinWG/OSS.Clients.Pay/tree/master/Pay/Wechat/V3/OSS.Clients.Pay.Wechat</PackageProjectUrl>
     <RepositoryUrl>https://github.com/KevinWG/OSS.Clients.Pay</RepositoryUrl>
+    <PackageVersion>0.6.2</PackageVersion>
+    <Copyright>OSSCore</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
