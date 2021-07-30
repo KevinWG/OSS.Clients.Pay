@@ -25,7 +25,7 @@ namespace OSS.Clients.Pay.Samples.Controllers
                     total        = 1,
                     description  = "测试商品",
                     out_trade_no = orderId,
-                    notify_url   = "http://你的回调接收地址(如 ReceivePayResult)"
+                    notify_url   = "http://test.vantmall.com/api/p/paycall/Wechat"
                 }
                 // .SetContextConfig(new WechatPayConfig(){})   // 可以设置当前上下文的配置信息，方便多租户使用
                 //.AddOptionalBodyPara("attach","附加数据")  // 添加可选参数

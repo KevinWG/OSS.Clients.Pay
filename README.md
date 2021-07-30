@@ -9,7 +9,9 @@
 # OSS.PayCenter 使用
 
 ### 一. 安装使用
+
       nuget下安装命令：**Install-Package OSS.Clients.Pay.WX**	（微信支付   V2 接口版本
+
       nuget下安装命令：**Install-Package OSS.Clients.Pay.Wechat**	（微信支付   V3 接口版本
 
       nuget下安装命令：**Install-Package OSS.Clients.Pay.Ali**	（支付宝支付
@@ -18,7 +20,7 @@
 
 ### 二. 微信支付接口（V3
 
-V3版接口采用fluent方式简化了调用流程，方便扩展，只需要继承基础
+V3版接口采用fluent方式简化了调用流程，方便扩展，只需要继承基础类BasePostReq<TReq, TResp>，和 BaseGetReq<TReq, TResp> ，使用时调用SendAsync 扩展方法，内部已经完成了需要的加密验签等处理操作
 
 1. 扫码支付
 
