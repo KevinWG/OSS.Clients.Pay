@@ -79,7 +79,7 @@ namespace OSS.Clients.Pay.Wechat
             if (_paraDics == null)
                 _paraDics = new Dictionary<string, object>();
 
-            if (string.IsNullOrEmpty(paraName) || value==null)
+            if (string.IsNullOrEmpty(paraName) || string.IsNullOrEmpty(value?.ToString()))
                 return;
 
             _paraDics[paraName] = value;

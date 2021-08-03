@@ -11,6 +11,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 
 
@@ -32,7 +33,10 @@ namespace OSS.Clients.Pay.Wechat.Basic
             return "/v3/certificates";
         }
 
-
+        protected override string PrepareQueryString()
+        {
+            return String.Empty;
+        }
     }
 
     public class WechatCertificateGetResp : BaseResp

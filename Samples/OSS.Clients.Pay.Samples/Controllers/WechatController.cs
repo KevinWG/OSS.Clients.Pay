@@ -27,8 +27,9 @@ namespace OSS.Clients.Pay.Samples.Controllers
                     out_trade_no = orderId,
                     notify_url   = "http://你的回调域名/Wechat/ReceivePayResult" // 接收示例在下方
                 }
-                // .SetContextConfig(new WechatPayConfig(){})   // 可以设置当前上下文的配置信息，方便多租户使用
-                //.AddOptionalBodyPara("attach","附加数据")  // 添加可选参数
+                // .UsePantnerWithSubMch(subAppid,subMchid)     // 设置服务商下子商户信息
+                // .SetContextConfig(new WechatPayConfig(){})   // 可以设置当前请求上下文的配置信息，方便多应用的用户使用
+                // .AddOptionalBodyPara("attach","附加数据")     // 添加可选参数
                 .SendAsync();
             return Json(nResp);
         }
@@ -51,8 +52,7 @@ namespace OSS.Clients.Pay.Samples.Controllers
             }
 
             var res = await WechatPayHelper.Verify(WechatPayHelper.pay_config, signature.ToString(), serial.ToString(),
-                nonce.ToString(), timestamp.ToString().ToInt64(),
-                strContent);
+                nonce.ToString(), timestamp.ToString().ToInt64(), strContent);
 
             // 签名正确
             if (res.IsSuccess())

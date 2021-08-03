@@ -57,6 +57,6 @@ namespace OSS.Clients.Pay.Wechat
         {
             return CertificateHelper.Verify(payConfig, signature, serialNo, nonce, timestamp, respBody);
         }
-
+        
     }
 }

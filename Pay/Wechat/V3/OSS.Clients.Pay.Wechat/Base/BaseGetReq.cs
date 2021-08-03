@@ -11,7 +11,7 @@
 
 #endregion
 
-using System;
+
 using System.Collections.Generic;
 using System.Net.Http;
 
@@ -28,10 +28,11 @@ namespace OSS.Clients.Pay.Wechat
         {
         }
 
-        protected virtual string PrepareQueryString()
-        {
-            return string.Empty;
-        }
+        /// <summary>
+        ///  准备对应的query参数
+        /// </summary>
+        /// <returns>如: ?mch_id=xxx</returns>
+        protected abstract string PrepareQueryString();
 
         // query参数串
         internal override string GetQueryString()

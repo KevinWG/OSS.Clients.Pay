@@ -4,7 +4,7 @@ using OSS.Clients.Pay.Wechat.Helpers;
 
 namespace OSS.Clients.Pay.Wechat.Basic
 {
-    public class NotifyPayEncryptResult
+    public class NotifyEncryptResult
     {
         /// <summary>   
         ///   通知ID   string[1,36]
@@ -34,7 +34,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
         ///   +通知数据   object
         ///   通知资源数据
         /// </summary>  
-        public PayResultResource resource { get; set; }
+        public ResultResource resource { get; set; }
 
         /// <summary>   
         ///   回调摘要   string[1,64]
@@ -42,10 +42,8 @@ namespace OSS.Clients.Pay.Wechat.Basic
         /// </summary>  
         public string summary { get; set; }
     }
-
-
-
-    public class PayResultResource
+    
+    public class ResultResource
     {
         /// <summary>   
         ///   加密算法类型   string[1,32]
@@ -82,28 +80,87 @@ namespace OSS.Clients.Pay.Wechat.Basic
         public string summary { get; set; }
     }
 
-    public static class PayResultResourceExtension
+    public static class ResultResourceExtension
     {
-        public static string DecrytPayResource(this PayResultResource resource, string apiV3Key)
+        public static string DecrytResource(this ResultResource resource, string apiV3Key)
         {
             var bytes = AesGcmHelper.DecryptFromBase64(apiV3Key, resource.nonce,
                 resource.ciphertext, resource.associated_data);
 
             return Encoding.UTF8.GetString(bytes);
         }
-
-        public static NotifyPayResult DecrytToPayResult(this PayResultResource resource, string apiV3Key)
+        /// <summary>
+        ///  解密通知的支付结果
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="apiV3Key"></param>
+        /// <returns></returns>
+        public static NotifyPayResult DecrytToPayResult(this ResultResource resource, string apiV3Key)
         {
-            var str = DecrytPayResource(resource, apiV3Key);
+            var str = DecrytResource(resource, apiV3Key);
 
             return JsonSerializer.Deserialize<NotifyPayResult>(str);
         }
-
-        public static NotifySPPayResult DecrytToSPPayResult(this PayResultResource resource, string apiV3Key)
+        /// <summary>
+        ///  解密通知的支付结果（服务商结果实体
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="apiV3Key"></param>
+        /// <returns></returns>
+        public static NotifySPPayResult DecrytToSPPayResult(this ResultResource resource, string apiV3Key)
         {
-            var str = DecrytPayResource(resource, apiV3Key);
+            var str = DecrytResource(resource, apiV3Key);
 
             return JsonSerializer.Deserialize<NotifySPPayResult>(str);
         }
+
+        /// <summary>
+        ///  解密退款结果
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="apiV3Key"></param>
+        /// <returns></returns>
+        public static NotifyRefundResult DecrytToRefundResult(this ResultResource resource, string apiV3Key)
+        {
+            var str = DecrytResource(resource, apiV3Key);
+
+            return JsonSerializer.Deserialize<NotifyRefundResult>(str);
+        }
+
+        /// <summary>
+        ///  解密退款结果（服务商退款结果实体
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="apiV3Key"></param>
+        /// <returns></returns>
+        public static NotifySPRefundResult DecrytToSPRefundResult(this ResultResource resource, string apiV3Key)
+        {
+            var str = DecrytResource(resource, apiV3Key);
+
+            return JsonSerializer.Deserialize<NotifySPRefundResult>(str);
+        }
+    }
+
+    public class NotifyResponse
+    {
+        public readonly static NotifyResponse Success = new NotifyResponse("SUCCESS", null);
+
+        public NotifyResponse(string code, string messsage)
+        {
+            this.code    = code;
+            this.message = messsage;
+        }
+
+        /// <summary>   
+        ///   返回状态码   string[1,32]
+        ///   错误码，SUCCESS为接收成功，其他错误码为失败
+        /// </summary>  
+        public string code { get; set; }
+
+        /// <summary>   
+        ///   返回信息   string[1,256]
+        ///   返回信息，如非空，为错误原因
+        /// </summary>  
+        public string message { get; set; }
     }
 }

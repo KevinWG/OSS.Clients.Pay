@@ -4,7 +4,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
     /// <summary>
     ///  服务商支付回调解密后结果
     /// </summary>
-    public class NotifySPPayResult : BaseNotifyPayResult
+    public class NotifySPPayResult : PayResultResp
     {
         /// <summary>   
         ///   服务商应用ID   string[1,32]

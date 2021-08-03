@@ -209,7 +209,7 @@ namespace OSS.Clients.Pay.Wechat
 
             var osHttpReq = new OssHttpRequest();
 
-            osHttpReq.AddressUrl = string.Concat(WechatPayHelper.api_domain, req.GetApiPath());
+            osHttpReq.AddressUrl = string.Concat(WechatPayHelper.api_domain, req.GetApiPath(),req.GetQueryString());
             osHttpReq.HttpMethod = req.method;
             osHttpReq.CustomBody = reqBody;
             osHttpReq.RequestSet = hReqMsg =>
