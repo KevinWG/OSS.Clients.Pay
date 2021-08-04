@@ -27,19 +27,7 @@ namespace OSS.Clients.Pay.Wechat
         public BaseGetReq() : base(HttpMethod.Get)
         {
         }
-
-        /// <summary>
-        ///  准备对应的query参数
-        /// </summary>
-        /// <returns>如: ?mch_id=xxx</returns>
-        protected abstract string PrepareQueryString();
-
-        // query参数串
-        internal override string GetQueryString()
-        {
-            return PrepareQueryString();
-        }
-
+        
         // body 普通字段字典
         internal override Dictionary<string, object> GetSendParaDics()
         {

@@ -77,7 +77,7 @@ namespace OSS.Clients.Pay.Wechat
             var reqBody = string.Empty;
             if (req.method != HttpMethod.Get)
             {
-                var bodyRes = await GetReqBody(req);
+                var bodyRes = await GetPostReqBody(req);
                 if (!bodyRes.IsSuccess())
                 {
                     return bodyRes.ToResp<TResp>();
@@ -125,17 +125,9 @@ namespace OSS.Clients.Pay.Wechat
 
         private static async Task<HttpResponseDetail> GetResponseDetail(HttpResponseMessage response)
         {
-            if (!(response.Headers.TryGetValues(WechatConstKeys.RequestID, out var requestId)
-                  && response.Headers.TryGetValues(WechatConstKeys.WechatpayNonce, out var nonce)
-                  && response.Headers.TryGetValues(WechatConstKeys.WechatpaySignature, out var signature)
-                  && response.Headers.TryGetValues(WechatConstKeys.WechatpayTimestamp, out var timestamp)
-                  && response.Headers.TryGetValues(WechatConstKeys.WechatpaySerial, out var serial)))
-            {
-                throw new NotSupportedException("当前微信返回头部信息缺失!");
-            }
-
             var body      = string.Empty;
             var isSuccess = response.IsSuccessStatusCode;
+
             using (response)
             {
                 if (response.StatusCode != HttpStatusCode.NoContent)
@@ -145,9 +137,17 @@ namespace OSS.Clients.Pay.Wechat
                 }
             }
 
-            return new HttpResponseDetail(requestId.FirstOrDefault(),
-                response.StatusCode, isSuccess, serial.FirstOrDefault(), body,
-                signature.FirstOrDefault(), nonce.FirstOrDefault(), timestamp.FirstOrDefault().ToInt64());
+            response.Headers.TryGetValues(WechatConstKeys.RequestID, out var requestId);
+            response.Headers.TryGetValues(WechatConstKeys.WechatpayNonce, out var nonce);
+            response.Headers.TryGetValues(WechatConstKeys.WechatpaySignature, out var signature); 
+            response.Headers.TryGetValues(WechatConstKeys.WechatpayTimestamp, out var timestamp);
+            response.Headers.TryGetValues(WechatConstKeys.WechatpaySerial, out var serial);
+         
+            return new HttpResponseDetail(requestId?.FirstOrDefault(),
+                response.StatusCode, isSuccess, 
+                serial?.FirstOrDefault(), body,
+                signature?.FirstOrDefault(), nonce?.FirstOrDefault(), 
+                (timestamp?.FirstOrDefault().ToInt64()??0));
         }
 
         #endregion
@@ -209,7 +209,7 @@ namespace OSS.Clients.Pay.Wechat
 
             var osHttpReq = new OssHttpRequest();
 
-            osHttpReq.AddressUrl = string.Concat(WechatPayHelper.api_domain, req.GetApiPath(),req.GetQueryString());
+            osHttpReq.AddressUrl = string.Concat(WechatPayHelper.api_domain, req.GetApiPath());
             osHttpReq.HttpMethod = req.method;
             osHttpReq.CustomBody = reqBody;
             osHttpReq.RequestSet = hReqMsg =>
@@ -225,7 +225,7 @@ namespace OSS.Clients.Pay.Wechat
             return osHttpReq;
         }
 
-        private static async Task<SendBodyResp> GetReqBody<TReq, TResp>(InternalBaseReq<TReq, TResp> req)
+        private static async Task<SendBodyResp> GetPostReqBody<TReq, TResp>(InternalBaseReq<TReq, TResp> req)
             where TReq : InternalBaseReq<TReq, TResp>
             where TResp : BaseResp
         {

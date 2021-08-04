@@ -13,12 +13,8 @@ namespace OSS.Clients.Pay.Wechat.Basic
 
         public override string GetApiPath()
         {
-            return $"/v3/refund/domestic/refunds/{out_refund_no}";
-        }
-
-        protected override string PrepareQueryString()
-        {
-            return IsSpPartnerReq ? $"?sub_mchid={sub_mch_id}" : string.Empty;
+            var queryPara = IsSpPartnerReq ? $"?sub_mchid={sub_mch_id}" : string.Empty;
+            return string.Concat("/v3/refund/domestic/refunds/", out_refund_no, queryPara);
         }
     }
 }

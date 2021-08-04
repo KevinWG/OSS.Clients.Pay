@@ -32,12 +32,6 @@ namespace OSS.Clients.Pay.Wechat
         {
         }
 
-        internal override string GetQueryString()
-        {
-            return String.Empty;
-        }
-
-
         #region 业务请求Body参数处理
 
         /// <summary>

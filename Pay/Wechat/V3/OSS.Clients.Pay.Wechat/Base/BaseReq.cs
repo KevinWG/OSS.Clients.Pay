@@ -95,9 +95,6 @@ namespace OSS.Clients.Pay.Wechat
         /// <returns></returns>
         public abstract string GetApiPath();
 
-        // query参数串
-        internal abstract string GetQueryString();
-
         // body 普通字段字典
         internal abstract Dictionary<string, object> GetSendParaDics();
 

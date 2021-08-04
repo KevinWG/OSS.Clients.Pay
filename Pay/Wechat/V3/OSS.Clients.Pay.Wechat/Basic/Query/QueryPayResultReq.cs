@@ -20,27 +20,24 @@ namespace OSS.Clients.Pay.Wechat.Basic
         public override string GetApiPath()
         {
             if (string.IsNullOrEmpty(transaction_id)&& string.IsNullOrEmpty(out_trade_no))
-            {
                 throw new ArgumentException($"{nameof(transaction_id)} 和 {nameof(out_trade_no)} 不能同时为空");
-            }
-
+            
             if (IsSpPartnerReq)
             {
-                return string.IsNullOrEmpty(out_trade_no)
+                var path = string.IsNullOrEmpty(out_trade_no)
                     ? $"/v3/pay/partner/transactions/id/{transaction_id}"
                     : $"/v3/pay/partner/transactions/out-trade-no/{out_trade_no}";
+
+                return string.Concat(path, $"?sp_mchid={pay_config.mch_id}&sub_mchid={sub_mch_id}");
             }
             else
             {
-                return string.IsNullOrEmpty(out_trade_no) 
+                var path = string.IsNullOrEmpty(out_trade_no) 
                     ? $"/v3/pay/transactions/id/{transaction_id}" 
                     : $"/v3/pay/transactions/out-trade-no/{out_trade_no}";
-            }
-        }
 
-        protected override string PrepareQueryString()
-        {
-            return IsSpPartnerReq? $"?sp_mchid={pay_config.mch_id}&sub_mchid={sub_mch_id}" : $"?mchid={pay_config.mch_id}";
+                return string.Concat(path, $"?mchid={pay_config.mch_id}");
+            }
         }
     }
 
