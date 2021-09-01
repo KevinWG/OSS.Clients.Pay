@@ -100,7 +100,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
     public class RefundAmount
     {
         /// <summary>   
-        ///   退款金额   int
+        /// 必填  退款金额   int
         ///   退款金额，币种的最小单位，只能为整数，不能超过原订单支付金额。
         /// </summary>  
         public int refund { get; set; }
@@ -119,16 +119,16 @@ namespace OSS.Clients.Pay.Wechat.Basic
         public RefundAmountSource[] from { get; set; }
 
         /// <summary>   
-        ///   原订单金额   int
+        ///  必填 原订单金额   int
         ///   原支付交易的订单总金额，币种的最小单位，只能为整数。
         /// </summary>  
         public int total { get; set; }
 
         /// <summary>   
-        ///   退款币种   string[1,16]
+        ///   必填 退款币种   string[1,16]
         ///   符合ISO   4217标准的三位字母代码，目前只支持人民币：CNY。
         /// </summary>  
-        public string currency { get; set; }
+        public string currency { get; set; } = "CNY";
     }
 
     public class RefundAmountSource
