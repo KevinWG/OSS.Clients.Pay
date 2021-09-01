@@ -103,7 +103,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
         ///   退款金额   int
         ///   退款金额，币种的最小单位，只能为整数，不能超过原订单支付金额。
         /// </summary>  
-        public string refund { get; set; }
+        public int refund { get; set; }
 
         /// <summary>   
         ///  可选

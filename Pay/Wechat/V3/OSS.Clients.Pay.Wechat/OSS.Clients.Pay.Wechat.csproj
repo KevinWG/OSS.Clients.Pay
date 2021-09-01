@@ -5,7 +5,7 @@
 	  <Description>微信支付V3版接口</Description>
     <PackageIconUrl>http://img1.osscore.cn/static/oss_net.png</PackageIconUrl>
     <PackageReleaseNotes></PackageReleaseNotes>
-    <Version>1.0</Version>
+    <Version>1.0.1</Version>
     <Nullable>disable</Nullable>
     <PackageProjectUrl>https://github.com/KevinWG/OSS.Clients.Pay/tree/master/Pay/Wechat/V3/OSS.Clients.Pay.Wechat</PackageProjectUrl>
     <RepositoryUrl>https://github.com/KevinWG/OSS.Clients.Pay</RepositoryUrl>
