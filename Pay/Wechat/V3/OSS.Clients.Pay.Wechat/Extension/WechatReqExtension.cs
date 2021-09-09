@@ -24,12 +24,11 @@ using OSS.Clients.Pay.Wechat.Helpers;
 using OSS.Common.BasicMos.Resp;
 using OSS.Common.Extension;
 using OSS.Common.Helpers;
-using OSS.Tools.Http.Extention;
 using OSS.Tools.Http.Mos;
 
 namespace OSS.Clients.Pay.Wechat
 {
-    public static class ReqExtension
+    public static class WechatReqExtension
     {
         /// <summary>
         /// 发送接口请求
@@ -108,7 +107,7 @@ namespace OSS.Clients.Pay.Wechat
             var respDetail = await GetResponseDetail(resp);
             if (respDetail.IsSuccessStatusCode && checkSign)
             {
-                var verifyRes = await CertificateHelper.Verify(config, respDetail.signature, respDetail.serial_no,
+                var verifyRes = await WechatCertificateHelper.Verify(config, respDetail.signature, respDetail.serial_no,
                     respDetail.nonce, respDetail.timestamp, respDetail.body);
 
                 if (!verifyRes.IsSuccess())
@@ -174,14 +173,14 @@ namespace OSS.Clients.Pay.Wechat
         private static string GetHeaderWithSign<TReq, TResp>(InternalBaseReq<TReq, TResp> req, string signDataBody)
             where TReq : InternalBaseReq<TReq, TResp> where TResp : BaseResp
         {
-            var privateCert = CertificateHelper.GetMchPrivateCertificate(req.pay_config);
+            var privateCert = WechatCertificateHelper.GetMchPrivateCertificate(req.pay_config);
 
             var nonce     = NumHelper.RandomNum(16);
             var timestamp = DateTime.Now.ToUtcSeconds().ToString();
             var serialNo  = privateCert.serial_number;
 
             var signData  = GenerateSignData(req.GetApiPath(), req.method.ToString(), signDataBody, timestamp, nonce);
-            var signature = CertificateHelper.Sign(privateCert.private_key, signData);
+            var signature = WechatCertificateHelper.Sign(privateCert.private_key, signData);
 
             var headerValue = GenerateAuthHeaderValue(req.pay_config.mch_id, serialNo, signature, timestamp, nonce);
             return headerValue;
@@ -260,7 +259,7 @@ namespace OSS.Clients.Pay.Wechat
         private static async Task<SendEncryptBodyResp> GetReqContent_JsonEncryptSegment(
             WechatPayConfig payConfig, Dictionary<string, string> dics)
         {
-            var certRes = await CertificateHelper.GetLatestCertsByConfig(payConfig);
+            var certRes = await WechatCertificateHelper.GetLatestCertsByConfig(payConfig);
             if (!certRes.IsSuccess())
                 return certRes.ToResp<SendEncryptBodyResp>();
 
@@ -270,7 +269,7 @@ namespace OSS.Clients.Pay.Wechat
             {
                 body = dics.ToDictionary(
                         d => d.Key,
-                        d => CertificateHelper.OAEPEncrypt(cert.cert_public_key, d.Value)
+                        d => WechatCertificateHelper.OAEPEncrypt(cert.cert_public_key, d.Value)
                     )
             };
         }

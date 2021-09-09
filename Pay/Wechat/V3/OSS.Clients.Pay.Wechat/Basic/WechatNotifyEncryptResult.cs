@@ -4,7 +4,7 @@ using OSS.Clients.Pay.Wechat.Helpers;
 
 namespace OSS.Clients.Pay.Wechat.Basic
 {
-    public class NotifyEncryptResult
+    public class WechatNotifyEncryptResult
     {
         /// <summary>   
         ///   通知ID   string[1,36]
@@ -34,7 +34,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
         ///   +通知数据   object
         ///   通知资源数据
         /// </summary>  
-        public ResultResource resource { get; set; }
+        public WechatResultResource resource { get; set; }
 
         /// <summary>   
         ///   回调摘要   string[1,64]
@@ -43,7 +43,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
         public string summary { get; set; }
     }
     
-    public class ResultResource
+    public class WechatResultResource
     {
         /// <summary>   
         ///   加密算法类型   string[1,32]
@@ -80,11 +80,11 @@ namespace OSS.Clients.Pay.Wechat.Basic
         public string summary { get; set; }
     }
 
-    public static class ResultResourceExtension
+    public static class WechatResultResourceExtension
     {
-        public static string DecrytResource(this ResultResource resource, string apiV3Key)
+        public static string DecrytResource(this WechatResultResource resource, string apiV3Key)
         {
-            var bytes = AesGcmHelper.DecryptFromBase64(apiV3Key, resource.nonce,
+            var bytes = WechatAesGcmHelper.DecryptFromBase64(apiV3Key, resource.nonce,
                 resource.ciphertext, resource.associated_data);
 
             return Encoding.UTF8.GetString(bytes);
@@ -95,11 +95,11 @@ namespace OSS.Clients.Pay.Wechat.Basic
         /// <param name="resource"></param>
         /// <param name="apiV3Key"></param>
         /// <returns></returns>
-        public static NotifyPayResult DecrytToPayResult(this ResultResource resource, string apiV3Key)
+        public static WechatNotifyPayResult DecrytToPayResult(this WechatResultResource resource, string apiV3Key)
         {
             var str = DecrytResource(resource, apiV3Key);
 
-            return JsonSerializer.Deserialize<NotifyPayResult>(str);
+            return JsonSerializer.Deserialize<WechatNotifyPayResult>(str);
         }
         /// <summary>
         ///  解密通知的支付结果（服务商结果实体
@@ -107,7 +107,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
         /// <param name="resource"></param>
         /// <param name="apiV3Key"></param>
         /// <returns></returns>
-        public static NotifySPPayResult DecrytToSPPayResult(this ResultResource resource, string apiV3Key)
+        public static NotifySPPayResult DecrytToSPPayResult(this WechatResultResource resource, string apiV3Key)
         {
             var str = DecrytResource(resource, apiV3Key);
 
@@ -120,11 +120,11 @@ namespace OSS.Clients.Pay.Wechat.Basic
         /// <param name="resource"></param>
         /// <param name="apiV3Key"></param>
         /// <returns></returns>
-        public static NotifyRefundResult DecrytToRefundResult(this ResultResource resource, string apiV3Key)
+        public static WechatNotifyRefundResult DecrytToRefundResult(this WechatResultResource resource, string apiV3Key)
         {
             var str = DecrytResource(resource, apiV3Key);
 
-            return JsonSerializer.Deserialize<NotifyRefundResult>(str);
+            return JsonSerializer.Deserialize<WechatNotifyRefundResult>(str);
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
         /// <param name="resource"></param>
         /// <param name="apiV3Key"></param>
         /// <returns></returns>
-        public static NotifySPRefundResult DecrytToSPRefundResult(this ResultResource resource, string apiV3Key)
+        public static NotifySPRefundResult DecrytToSPRefundResult(this WechatResultResource resource, string apiV3Key)
         {
             var str = DecrytResource(resource, apiV3Key);
 
@@ -141,11 +141,11 @@ namespace OSS.Clients.Pay.Wechat.Basic
         }
     }
 
-    public class NotifyResponse
+    public class WechatNotifyResponse
     {
-        public readonly static NotifyResponse Success = new NotifyResponse("SUCCESS", null);
+        public readonly static WechatNotifyResponse Success = new WechatNotifyResponse("SUCCESS", null);
 
-        public NotifyResponse(string code, string messsage)
+        public WechatNotifyResponse(string code, string messsage)
         {
             this.code    = code;
             this.message = messsage;

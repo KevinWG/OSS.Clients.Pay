@@ -1,6 +1,6 @@
 ﻿namespace OSS.Clients.Pay.Wechat.Basic
 {
-    public class CloseReq:BasePostReq<CloseReq, CloseResp>
+    public class WechatCloseReq:BasePostReq<WechatCloseReq, CloseResp>
     {
         /// <summary>   
         ///   直连商户号   string[1,32]

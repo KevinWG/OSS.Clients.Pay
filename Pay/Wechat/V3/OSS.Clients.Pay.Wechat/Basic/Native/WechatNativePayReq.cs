@@ -13,12 +13,12 @@
 
 namespace OSS.Clients.Pay.Wechat.Basic
 {
-    public class NativePayReq:BasePostReq<NativePayReq, NativePayResp>
+    public class WechatNativePayReq:BasePostReq<WechatNativePayReq, NativePayResp>
     {
         /// <summary>
         ///  扫码请求
         /// </summary>
-        public NativePayReq() 
+        public WechatNativePayReq() 
         {
         }
         

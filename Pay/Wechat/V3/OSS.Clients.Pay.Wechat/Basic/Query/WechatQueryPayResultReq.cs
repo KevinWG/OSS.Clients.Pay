@@ -2,7 +2,7 @@
 
 namespace OSS.Clients.Pay.Wechat.Basic
 {
-    public class QueryPayResultReq : BaseGetReq<QueryPayResultReq, QueryPayResultResp>
+    public class WechatQueryPayResultReq : BaseGetReq<WechatQueryPayResultReq, QueryPayResultResp>
     {
         /// <summary>   
         ///   微信支付订单号   string[1,32]
@@ -42,7 +42,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
     }
 
 
-    public class QueryPayResultResp: PayResultResp
+    public class QueryPayResultResp: WechatPayResultResp
     {
         /// <summary>   
         ///   应用ID   string[1,32]

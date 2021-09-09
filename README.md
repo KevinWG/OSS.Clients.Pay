@@ -39,7 +39,7 @@ V3版接口采用fluent方式简化了调用流程，方便扩展，只需要继
 发起Native扫码下单调用
 
 ```csharp
-   var nResp = await new NativePayReq()
+   var nResp = await new WechatNativePayReq()
        {
            total        = 1,
            description  = "测试商品",

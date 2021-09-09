@@ -20,7 +20,7 @@ namespace OSS.Clients.Pay.Samples.Controllers
         //  获取扫码支付的二维码信息
         public async Task<IActionResult> GetScanPayInfo(string orderId)
         {
-            var nResp = await new NativePayReq()
+            var nResp = await new WechatNativePayReq()
                 {
                     total        = 1,
                     description  = "测试商品",

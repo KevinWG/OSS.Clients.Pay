@@ -55,7 +55,7 @@ namespace OSS.Clients.Pay.Wechat
         public static Task<BaseResp> Verify(WechatPayConfig payConfig, string signature,
                                             string serialNo, string nonce, long timestamp, string respBody)
         {
-            return CertificateHelper.Verify(payConfig, signature, serialNo, nonce, timestamp, respBody);
+            return WechatCertificateHelper.Verify(payConfig, signature, serialNo, nonce, timestamp, respBody);
         }
         
     }

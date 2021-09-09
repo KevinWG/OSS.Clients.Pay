@@ -2,7 +2,7 @@
 
 namespace OSS.Clients.Pay.Wechat.Basic
 {
-    public class RefundReq:BasePostReq<RefundReq, RefundResp>
+    public class WechatRefundReq:BasePostReq<WechatRefundReq, WechatRefundResp>
     {
         public override string GetApiPath()
         {
@@ -66,7 +66,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
         ///   -金额信息   object
         ///   订单金额信息
         /// </summary>  
-        public RefundAmount amount { get; set; }
+        public WechatRefundAmount amount { get; set; }
 
         /// <summary>   
         ///   退款金额   int
@@ -97,7 +97,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
     }
 
 
-    public class RefundAmount
+    public class WechatRefundAmount
     {
         /// <summary>   
         /// 必填  退款金额   int
@@ -116,7 +116,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
         ///      1、基本账户可用余额出资金额与基本账户不可用余额出资金额之和等于退款金额；
         ///      2、账户类型不能重复。上述任一条件不满足将返回错误
         /// </summary>  
-        public RefundAmountSource[] from { get; set; }
+        public WechatRefundAmountSource[] from { get; set; }
 
         /// <summary>   
         ///  必填 原订单金额   int
@@ -131,7 +131,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
         public string currency { get; set; } = "CNY";
     }
 
-    public class RefundAmountSource
+    public class WechatRefundAmountSource
     {
         /// <summary>   
         ///   出资账户类型
@@ -149,7 +149,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
         public int amount { get; set; }
     }
     
-    public class RefundResp : BaseResp
+    public class WechatRefundResp : BaseResp
     {
 
         /// <summary>   
@@ -234,23 +234,23 @@ namespace OSS.Clients.Pay.Wechat.Basic
         ///   +金额信息   object
         ///   金额详细信息
         /// </summary>  
-        public RefundRespAmount amount { get; set; }
+        public WechatRefundRespAmount amount { get; set; }
 
         /// <summary>   
         ///   +优惠退款信息   array
         ///   优惠退款信息
         /// </summary>  
-        public RefundPromotionDetail[] promotion_detail { get; set; }
+        public WechatRefundPromotionDetail[] promotion_detail { get; set; }
 
         /// <summary>   
         ///   商品列表   array
         ///   优惠商品发生退款时返回商品信息
         /// </summary>  
-        public RefundGoodsDetail[] goods_detail { get; set; }
+        public WechatRefundGoodsDetail[] goods_detail { get; set; }
 
     }
 
-    public class RefundRespAmount: RefundAmount
+    public class WechatRefundRespAmount: WechatRefundAmount
     {
         /// <summary>   
         ///   用户支付金额   int
@@ -284,7 +284,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
     }
 
 
-    public class RefundPromotionDetail
+    public class WechatRefundPromotionDetail
     {
         /// <summary>   
         ///   券ID   string[1,32]
@@ -318,7 +318,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
     }
 
 
-    public class RefundGoodsDetail
+    public class WechatRefundGoodsDetail
     {
 
         /// <summary>   

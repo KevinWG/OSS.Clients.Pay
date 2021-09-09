@@ -28,7 +28,7 @@ namespace OSS.Clients.Pay.Wechat.Helpers
     /// <summary>
     ///  证书辅助类
     /// </summary>
-    internal static class CertificateHelper
+    internal static class WechatCertificateHelper
     {
         #region 商户私钥部分
 
@@ -218,7 +218,7 @@ namespace OSS.Clients.Pay.Wechat.Helpers
                 if (encryptCertificate.algorithm != "AEAD_AES_256_GCM")
                     throw new NotSupportedException($"微信支付返回平台加密证书使用了未提供的加解密算法{encryptCertificate.algorithm}!");
 
-                var certBytes = AesGcmHelper.DecryptFromBase64(payConfig.api_v3_key, encryptCertificate.nonce,
+                var certBytes = WechatAesGcmHelper.DecryptFromBase64(payConfig.api_v3_key, encryptCertificate.nonce,
                     encryptCertificate.ciphertext, encryptCertificate.associated_data);
 
                 var cert = new WechatCertificateItem

@@ -2,7 +2,7 @@
 
 namespace OSS.Clients.Pay.Wechat.Basic
 {
-    public class QueryRefundReq:BaseGetReq<QueryRefundReq, RefundResp>
+    public class WechatQueryRefundReq:BaseGetReq<WechatQueryRefundReq, WechatRefundResp>
     {
         /// <summary>   
         ///   商户退款单号   string[1,

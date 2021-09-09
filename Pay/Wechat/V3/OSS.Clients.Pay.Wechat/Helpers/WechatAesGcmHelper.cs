@@ -21,7 +21,7 @@ namespace OSS.Clients.Pay.Wechat.Helpers
     /// AesGcm 加密算法辅助类（主要用于解密证书接口
     /// 参考来源：https://www.cnblogs.com/jzblive/p/14386757.html
     /// </summary>
-    public static class AesGcmHelper
+    public static class WechatAesGcmHelper
     {
         /// <summary>
         /// 使用 AesGcm 解密

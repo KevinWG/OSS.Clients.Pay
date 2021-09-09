@@ -20,7 +20,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
     /// <summary>
     ///  通知退款结果
     /// </summary>
-    public class NotifyRefundResult: BaseRefundResult
+    public class WechatNotifyRefundResult: BaseRefundResult
     {
         /// <summary>   
         ///   直连商户号   string[1,32]

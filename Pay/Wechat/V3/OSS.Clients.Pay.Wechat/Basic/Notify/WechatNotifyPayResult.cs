@@ -3,7 +3,7 @@
     /// <summary>
     ///  普通商户支付回调解密后结果
     /// </summary>
-    public class NotifyPayResult: PayResultResp
+    public class WechatNotifyPayResult: WechatPayResultResp
     {
         /// <summary>   
         ///   应用ID   string[1,32]
@@ -18,7 +18,7 @@
         public string mchid { get; set; }
     }
 
-    public class PayResultResp:BaseResp
+    public class WechatPayResultResp:BaseResp
     {
         /// <summary>   
         ///   商户订单号   string[6,32]
