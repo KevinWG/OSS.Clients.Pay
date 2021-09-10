@@ -8,19 +8,6 @@ namespace OSS.Clients.Pay.Wechat.Basic
         {
             return "/v3/refund/domestic/refunds";
         }
-
-        protected override void PrepareCommonBodyPara()
-        {
-            if (IsSpPartnerReq)
-            {
-                AddBodyPara("sub_mchid", sub_mch_id);
-            }
-            //else
-            //{
-            //    AddBodyPara("appid", pay_config.app_id);
-            //    AddBodyPara("mchid", pay_config.mch_id);
-            //}
-        }
         
         /// <summary>   
         ///   微信支付订单号  
@@ -67,14 +54,20 @@ namespace OSS.Clients.Pay.Wechat.Basic
         ///   订单金额信息
         /// </summary>  
         public WechatRefundAmount amount { get; set; }
-
-        /// <summary>   
-        ///   退款金额   int
-        ///   退款金额，币种的最小单位，只能为整数，不能超过原订单支付金额。
-        /// </summary>  
-        public int refund { get; set; }
-
-
+        
+        /// <inheritdoc />
+        protected override void PrepareCommonBodyPara()
+        {
+            if (IsSpPartnerReq)
+            {
+                AddBodyPara("sub_mchid", sub_mch_id);
+            }
+            //else
+            //{
+            //    AddBodyPara("appid", pay_config.app_id);
+            //    AddBodyPara("mchid", pay_config.mch_id);
+            //}
+        }
 
         protected override void PrepareBodyPara()
         {
@@ -92,7 +85,6 @@ namespace OSS.Clients.Pay.Wechat.Basic
             AddBodyPara("funds_account", funds_account);
 
             AddBodyPara("amount", amount);
-            AddBodyPara("refund", refund);
         }
     }
 
