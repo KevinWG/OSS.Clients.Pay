@@ -143,7 +143,7 @@ namespace OSS.Clients.Pay.Wechat.Helpers
         /// <param name="timestamp">微信返回头信息中的时间戳</param>
         /// <param name="respBody">微信返回的内容字符串</param>
         /// <returns></returns>
-        public static async Task<BaseResp> Verify(WechatPayConfig payConfig,string signature,
+        public static async Task<WechatBaseResp> Verify(WechatPayConfig payConfig,string signature,
                                                   string serialNo,  string nonce, long timestamp, string respBody)
         {
             var certRes = await GetCertsByConfigAndSNo(payConfig, serialNo);
@@ -159,9 +159,9 @@ namespace OSS.Clients.Pay.Wechat.Helpers
                 Convert.FromBase64String(signature), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
 
             if (isOk)
-                return new BaseResp();
+                return new WechatBaseResp();
 
-            var errRes = new BaseResp()
+            var errRes = new WechatBaseResp()
             {
                 code          = RespTypes.SignError.ToString(),
                 message       = "验证微信支付结果签名失败!",
@@ -265,12 +265,12 @@ namespace OSS.Clients.Pay.Wechat.Helpers
     }
 
 
-    internal class GetCertItemResp : BaseResp
+    internal class GetCertItemResp : WechatBaseResp
     {
         public WechatCertificateItem item { get; set; }
     }
 
-    internal class RefreshCertDicResp:BaseResp
+    internal class RefreshCertDicResp:WechatBaseResp
     {
         public Dictionary<string, WechatCertificateItem> dics { get; set; }
     }

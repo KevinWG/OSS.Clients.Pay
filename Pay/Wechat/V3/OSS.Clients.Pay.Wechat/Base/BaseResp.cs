@@ -5,7 +5,7 @@ namespace OSS.Clients.Pay.Wechat
     /// <summary>
     ///  响应基类
     /// </summary>
-    public class BaseResp : Resp
+    public class WechatBaseResp : Resp
     {
         private string _code;
 
@@ -57,8 +57,8 @@ namespace OSS.Clients.Pay.Wechat
 
     internal static class RespMap
     {
-        public static TResp ToResp<TResp>(this BaseResp res)
-            where TResp : BaseResp, new()
+        public static TResp ToResp<TResp>(this WechatBaseResp res)
+            where TResp : WechatBaseResp, new()
         {
             var newRes = new TResp() { code = res.code, message = res.message,
                 request_id =  res.request_id,

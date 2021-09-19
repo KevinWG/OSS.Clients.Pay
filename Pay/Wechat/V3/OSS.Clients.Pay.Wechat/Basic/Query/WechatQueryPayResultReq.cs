@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Net.Http;
 
 namespace OSS.Clients.Pay.Wechat.Basic
 {
-    public class WechatQueryPayResultReq : BaseGetReq<WechatQueryPayResultReq, QueryPayResultResp>
+    public class WechatQueryPayResultReq : WechatBaseReq< QueryPayResultResp>
     {
+        public WechatQueryPayResultReq() : base(HttpMethod.Get)
+        {
+        }
+
         /// <summary>   
         ///   微信支付订单号   string[1,32]
         ///     微信支付系统生成的订单号
@@ -39,6 +44,8 @@ namespace OSS.Clients.Pay.Wechat.Basic
                 return string.Concat(path, $"?mchid={pay_config.mch_id}");
             }
         }
+
+   
     }
 
 

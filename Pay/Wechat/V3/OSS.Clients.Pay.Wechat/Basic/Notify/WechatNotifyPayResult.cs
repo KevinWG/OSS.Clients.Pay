@@ -18,7 +18,7 @@
         public string mchid { get; set; }
     }
 
-    public class WechatPayResultResp:BaseResp
+    public class WechatPayResultResp:WechatBaseResp
     {
         /// <summary>   
         ///   商户订单号   string[6,32]

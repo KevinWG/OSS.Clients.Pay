@@ -11,8 +11,9 @@
 
 #endregion
 
-using System;
+
 using System.Collections.Generic;
+using System.Net.Http;
 
 
 #pragma warning disable 8618
@@ -22,12 +23,13 @@ namespace OSS.Clients.Pay.Wechat.Basic
     /// <summary>
     /// 获取平台证书请求
     /// </summary>
-    public class WechatCertificateGetReq : BaseGetReq<WechatCertificateGetReq,WechatCertificateGetResp>
+    public class WechatCertificateGetReq : WechatBaseReq<WechatCertificateGetResp>
     {
-        public WechatCertificateGetReq() 
+        public WechatCertificateGetReq() :base(HttpMethod.Get)
         {
         }
 
+        /// <inheritdoc />
         public override string GetApiPath()
         {
             return "/v3/certificates";
@@ -35,7 +37,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
         
     }
 
-    public class WechatCertificateGetResp : BaseResp
+    public class WechatCertificateGetResp : WechatBaseResp
     {
         public List<WechatCertificateEncrypt> data { get; set; }
     }

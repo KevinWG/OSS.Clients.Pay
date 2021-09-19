@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Net.Http;
 
 namespace OSS.Clients.Pay.Wechat.Basic
 {
-    public class WechatRefundReq:BasePostReq<WechatRefundReq, WechatRefundResp>
+    public class WechatRefundReq : WechatBaseReq<WechatRefundResp>
     {
-        public override string GetApiPath()
+        public WechatRefundReq() : base(HttpMethod.Post)
         {
-            return "/v3/refund/domestic/refunds";
         }
+
         
         /// <summary>   
         ///   微信支付订单号  
@@ -54,21 +55,14 @@ namespace OSS.Clients.Pay.Wechat.Basic
         ///   订单金额信息
         /// </summary>  
         public WechatRefundAmount amount { get; set; }
-        
-        /// <inheritdoc />
-        protected override void PrepareCommonBodyPara()
-        {
-            if (IsSpPartnerReq)
-            {
-                AddBodyPara("sub_mchid", sub_mch_id);
-            }
-            //else
-            //{
-            //    AddBodyPara("appid", pay_config.app_id);
-            //    AddBodyPara("mchid", pay_config.mch_id);
-            //}
-        }
 
+
+
+        public override string GetApiPath()
+        {
+            return "/v3/refund/domestic/refunds";
+        }
+        
         protected override void PrepareBodyPara()
         {
             if (string.IsNullOrEmpty(transaction_id) && string.IsNullOrEmpty(out_trade_no))
@@ -76,16 +70,23 @@ namespace OSS.Clients.Pay.Wechat.Basic
                 throw new ArgumentException($"{nameof(transaction_id)} 和 {nameof(out_trade_no)} 不能同时为空");
             }
 
-            AddBodyPara("out_trade_no", out_trade_no);
-            AddBodyPara("transaction_id", transaction_id);
+            if (IsSpPartnerReq)
+            {
+                this.AddBodyPara("sub_mchid", sub_mch_id);
+            }
 
-            AddBodyPara("out_refund_no", out_refund_no);
-            AddBodyPara("reason", reason);
-            AddBodyPara("notify_url", notify_url);
-            AddBodyPara("funds_account", funds_account);
+            this.AddBodyPara("out_trade_no", out_trade_no);
+            this.AddBodyPara("transaction_id", transaction_id);
 
-            AddBodyPara("amount", amount);
+            this.AddBodyPara("out_refund_no", out_refund_no);
+            this.AddBodyPara("reason", reason);
+            this.AddBodyPara("notify_url", notify_url);
+            this.AddBodyPara("funds_account", funds_account);
+
+            this.AddBodyPara("amount", amount);
         }
+
+
     }
 
 
@@ -141,7 +142,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
         public int amount { get; set; }
     }
     
-    public class WechatRefundResp : BaseResp
+    public class WechatRefundResp : WechatBaseResp
     {
 
         /// <summary>   

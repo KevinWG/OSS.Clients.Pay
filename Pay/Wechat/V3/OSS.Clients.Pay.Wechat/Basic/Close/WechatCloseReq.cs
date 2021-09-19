@@ -1,6 +1,8 @@
-﻿namespace OSS.Clients.Pay.Wechat.Basic
+﻿using System.Net.Http;
+
+namespace OSS.Clients.Pay.Wechat.Basic
 {
-    public class WechatCloseReq:BasePostReq<WechatCloseReq, CloseResp>
+    public class WechatCloseReq:WechatBaseReq< CloseResp>
     {
         /// <summary>   
         ///   直连商户号   string[1,32]
@@ -23,29 +25,26 @@
 
         protected override void PrepareBodyPara()
         {
-            // 无其他参数
-        }
-
-        protected override void PrepareCommonBodyPara()
-        {
+       
             if (IsSpPartnerReq)
             {
-                AddBodyPara("sp_mchid", pay_config.mch_id);
-                AddBodyPara("sub_mchid", sub_mch_id);
+               this.AddBodyPara("sp_mchid", pay_config.mch_id);
+               this.AddBodyPara("sub_mchid", sub_mch_id);
             }
             else
             {
-                AddBodyPara("mchid", pay_config.mch_id);
+                this.AddBodyPara("mchid", pay_config.mch_id);
             }
         }
 
 
-
+        public WechatCloseReq() : base(HttpMethod.Post)
+        {
+        }
     }
 
 
-    public class CloseResp:BaseResp
+    public class CloseResp:WechatBaseResp
     {
-
     }
 }

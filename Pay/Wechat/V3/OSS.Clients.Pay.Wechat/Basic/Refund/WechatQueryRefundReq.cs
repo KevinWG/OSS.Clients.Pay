@@ -1,8 +1,10 @@
 ﻿
 
+using System.Net.Http;
+
 namespace OSS.Clients.Pay.Wechat.Basic
 {
-    public class WechatQueryRefundReq:BaseGetReq<WechatQueryRefundReq, WechatRefundResp>
+    public class WechatQueryRefundReq:WechatBaseReq< WechatRefundResp>
     {
         /// <summary>   
         ///   商户退款单号   string[1,
@@ -15,6 +17,10 @@ namespace OSS.Clients.Pay.Wechat.Basic
         {
             var queryPara = IsSpPartnerReq ? $"?sub_mchid={sub_mch_id}" : string.Empty;
             return string.Concat("/v3/refund/domestic/refunds/", out_refund_no, queryPara);
+        }
+
+        public WechatQueryRefundReq() : base(HttpMethod.Get)
+        {
         }
     }
 }

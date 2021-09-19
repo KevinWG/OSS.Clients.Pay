@@ -52,7 +52,7 @@ namespace OSS.Clients.Pay.Wechat
         /// <param name="timestamp">微信返回头信息中的时间戳</param>
         /// <param name="respBody">微信返回的内容字符串</param>
         /// <returns></returns>
-        public static Task<BaseResp> Verify(WechatPayConfig payConfig, string signature,
+        public static Task<WechatBaseResp> Verify(WechatPayConfig payConfig, string signature,
                                             string serialNo, string nonce, long timestamp, string respBody)
         {
             return WechatCertificateHelper.Verify(payConfig, signature, serialNo, nonce, timestamp, respBody);
