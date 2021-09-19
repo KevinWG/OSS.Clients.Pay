@@ -19,6 +19,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
     /// </summary>
     public class WechatNativePayReq : WechatPayBasicReq<WechatNativePayResp>
     {
+
         public override string GetApiPath()
         {
             return IsSpPartnerReq

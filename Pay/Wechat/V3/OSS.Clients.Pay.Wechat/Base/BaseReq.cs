@@ -47,15 +47,9 @@ namespace OSS.Clients.Pay.Wechat
         /// <param name="method"></param>
         protected WechatBaseReq(HttpMethod method)
         {
-            this.method = method;
+            this.http_method = method;
         }
-
-        /// <summary>
-        ///  请求方法
-        /// </summary>
-        public HttpMethod method { get; }
-
-
+        
         #region 服务商子商户
 
         /// <summary>
@@ -128,7 +122,7 @@ namespace OSS.Clients.Pay.Wechat
             var timestamp = DateTime.Now.ToUtcSeconds().ToString();
             var serialNo  = privateCert.serial_number;
 
-            var signData = GenerateSignData(req.GetApiPath(), req.method.ToString(), req.custom_body, timestamp, nonce);
+            var signData = GenerateSignData(req.GetApiPath(), req.http_method.ToString(), req.custom_body, timestamp, nonce);
             var signature = WechatCertificateHelper.Sign(privateCert.private_key, signData);
 
             var headerValue = GenerateAuthHeaderValue(req.pay_config.mch_id, serialNo, signature, timestamp, nonce);

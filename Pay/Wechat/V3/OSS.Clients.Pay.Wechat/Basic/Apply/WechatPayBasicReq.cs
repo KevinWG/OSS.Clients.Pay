@@ -83,7 +83,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
         ///   总金额 int
         ///   订单总金额，单位为分。
         /// </summary>  
-        public int amount { get; set; }
+        public int total { get; set; }
 
         /// <summary>   
         ///   货币类型 string[1,16]

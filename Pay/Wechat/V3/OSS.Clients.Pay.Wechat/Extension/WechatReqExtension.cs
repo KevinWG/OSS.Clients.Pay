@@ -68,7 +68,7 @@ namespace OSS.Clients.Pay.Wechat
 
             PrepareBody(req);
 
-            if (req.method != HttpMethod.Get)
+            if (req.http_method != HttpMethod.Get)
             {
                 var bodyRes = await GetPostReqBody(req);
                 if (!bodyRes.IsSuccess())
@@ -87,11 +87,14 @@ namespace OSS.Clients.Pay.Wechat
         #region 响应处理
 
         // Json 格式化处理
-        private static async Task<T> JsonFormat<T>(WechatPayConfig config, HttpResponseMessage resp, bool checkSign)
+        private static async Task<T> JsonFormat<T>(WechatPayConfig config, HttpResponseMessage resp, bool needCheckSign)
             where T : WechatBaseResp, new()
         {
+            if (!resp.IsSuccessStatusCode)
+                return new T().WithResp(SysRespTypes.NetworkError, $"微信支付接口请求异常({resp.ReasonPhrase})");
+            
             var respDetail = await GetResponseDetail(resp);
-            if (respDetail.IsSuccessStatusCode && checkSign)
+            if (needCheckSign)
             {
                 var verifyRes = await WechatCertificateHelper.Verify(config, respDetail.signature, respDetail.serial_no,
                     respDetail.nonce, respDetail.timestamp, respDetail.body);
@@ -102,10 +105,10 @@ namespace OSS.Clients.Pay.Wechat
                     return verifyRes.ToResp<T>();
                 }
             }
-
             return string.IsNullOrEmpty(respDetail.body)
                 ? new T()
                 : JsonSerializer.Deserialize<T>(respDetail.body);
+
         }
 
         private static async Task<HttpResponseDetail> GetResponseDetail(HttpResponseMessage response)
