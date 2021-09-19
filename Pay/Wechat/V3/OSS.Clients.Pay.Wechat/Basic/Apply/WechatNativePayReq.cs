@@ -13,6 +13,9 @@
 
 namespace OSS.Clients.Pay.Wechat.Basic
 {
+    /// <summary>
+    ///  获取支付二维码
+    /// </summary>
     public class WechatNativePayReq:BasePostReq<WechatNativePayReq, NativePayResp>
     {
         /// <summary>

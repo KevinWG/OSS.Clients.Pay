@@ -1,9 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OSS.Clients.Pay.WX;
-using OSS.Clients.Pay.WX.Pay;
-using OSS.Clients.Pay.WX.Pay.Mos;
 using OSS.Common.BasicMos.Resp;
 
 namespace OSS.PaySdk.Tests.WX
@@ -11,40 +8,40 @@ namespace OSS.PaySdk.Tests.WX
     [TestClass]
     public class WXPayTradeTests
     {
-        // 声明配置
-        private static WXPayCenterConfig config= new WXPayCenterConfig()
-        {
-            AppId = "wx2428e34e0e7dc6ef",
-            MchId = "1233410002",
-            Key = "e10adc3849ba56abbe56e056f20f883e",
-            //AppSecret = "51c56b886b5be869567dd389b3e5d1d6",
+        //// 声明配置
+        //private static WXPayCenterConfig config= new WXPayCenterConfig()
+        //{
+        //    AppId = "wx2428e34e0e7dc6ef",
+        //    MchId = "1233410002",
+        //    Key = "e10adc3849ba56abbe56e056f20f883e",
+        //    //AppSecret = "51c56b886b5be869567dd389b3e5d1d6",
 
-            CertPassword = "1233410002",
-            CertPath = "cert/apiclient_cert.p12"
-        };
-        //  调用示例
-        private static WXPayTradeApi m_Api=new WXPayTradeApi(config);
+        //    CertPassword = "1233410002",
+        //    CertPath = "cert/apiclient_cert.p12"
+        //};
+        ////  调用示例
+        //private static WXPayTradeApi m_Api=new WXPayTradeApi(config);
         
 
-        [TestMethod]
-        public async Task AddUniOrderAsyncTest()
-        {
-            var order = new WXAddPayUniOrderReq();
+        //[TestMethod]
+        //public async Task AddUniOrderAsyncTest()
+        //{
+        //    var order = new WXAddPayUniOrderReq();
 
-            order.device_info = "WEB";
-            order.body = "测试商品支付";
-            order.openid = "sdfvsfdbf345678888fhngfbsdfbsdfb";
+        //    order.device_info = "WEB";
+        //    order.body = "测试商品支付";
+        //    order.openid = "sdfvsfdbf345678888fhngfbsdfbsdfb";
 
-            order.out_trade_no = "2017022423560123";
-            order.trade_type = "JSAPI";
-            order.total_fee = 100;
+        //    order.out_trade_no = "2017022423560123";
+        //    order.trade_type = "JSAPI";
+        //    order.total_fee = 100;
 
-            order.spbill_create_ip = "127.0.0.1";
+        //    order.spbill_create_ip = "127.0.0.1";
            
 
-            var res =await m_Api.AddUniOrderAsync(order);
-            Assert.IsTrue(res.IsSuccess());
-        }
+        //    var res =await m_Api.AddUniOrderAsync(order);
+        //    Assert.IsTrue(res.IsSuccess());
+        //}
 
 
 

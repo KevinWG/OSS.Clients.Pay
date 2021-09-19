@@ -159,6 +159,10 @@
       <Project>{629fb90d-f08f-499f-9cd0-a522078913a9}</Project>
       <Name>OSS.Clients.Pay.WX</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Pay\Wechat\V3\OSS.Clients.Pay.Wechat\OSS.Clients.Pay.Wechat.csproj">
+      <Project>{172c8a3f-66d0-43a0-9f85-53eaf620fede}</Project>
+      <Name>OSS.Clients.Pay.Wechat</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
