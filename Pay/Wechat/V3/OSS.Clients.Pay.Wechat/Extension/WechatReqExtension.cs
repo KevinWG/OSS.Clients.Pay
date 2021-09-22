@@ -147,7 +147,7 @@ namespace OSS.Clients.Pay.Wechat
         private static void PrepareBody(WechatBaseReq req)
         {
             if (req.pay_config == null)
-                req. pay_config = WechatPayHelper.pay_config;
+                req.SetContextConfig(WechatPayHelper.pay_config);
 
             if (req.pay_config == null)
                 throw new NotImplementedException("未发现商户支付配置信息！");

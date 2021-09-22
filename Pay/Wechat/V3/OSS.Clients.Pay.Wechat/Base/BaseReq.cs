@@ -75,7 +75,7 @@ namespace OSS.Clients.Pay.Wechat
         /// <summary>
         ///  支付信息
         /// </summary>
-        protected internal WechatPayConfig pay_config { get; set; }
+        public WechatPayConfig pay_config { get;internal set; }
 
         #endregion
 
