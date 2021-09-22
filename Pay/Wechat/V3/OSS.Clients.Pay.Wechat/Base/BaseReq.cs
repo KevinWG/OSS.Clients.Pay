@@ -116,16 +116,17 @@ namespace OSS.Clients.Pay.Wechat
 
         private static string GetHeaderWithSign(WechatBaseReq req)
         {
-            var privateCert = WechatCertificateHelper.GetMchPrivateCertificate(req.pay_config);
-
             var nonce     = NumHelper.RandomNum(16);
             var timestamp = DateTime.Now.ToUtcSeconds().ToString();
-            var serialNo  = privateCert.serial_number;
-
+            
             var signData = GenerateSignData(req.GetApiPath(), req.http_method.ToString(), req.custom_body, timestamp, nonce);
-            var signature = WechatCertificateHelper.Sign(privateCert.private_key, signData);
 
+            var privateCert = WechatCertificateHelper.GetMchPrivateCertificate(req.pay_config);
+            var signature   = WechatCertificateHelper.Sign(privateCert.private_key, signData);
+
+            var serialNo    = privateCert.serial_number;
             var headerValue = GenerateAuthHeaderValue(req.pay_config.mch_id, serialNo, signature, timestamp, nonce);
+
             return headerValue;
         }
 

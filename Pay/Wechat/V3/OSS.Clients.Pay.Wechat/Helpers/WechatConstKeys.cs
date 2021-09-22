@@ -37,8 +37,7 @@ namespace OSS.Clients.Pay.Wechat.Helpers
         /// 时间戳
         /// </summary>
         public const string WechatpayTimestamp = "Wechatpay-Timestamp";
-
-
+        
         /// <summary>
         ///  序列号
         /// </summary>
