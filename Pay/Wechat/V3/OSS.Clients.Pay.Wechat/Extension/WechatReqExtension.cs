@@ -76,11 +76,9 @@ namespace OSS.Clients.Pay.Wechat
 
                 req.custom_body = bodyRes.body;
             }
-            
-            var resp = await (WechatPayHelper.httpclient_factory == null
-                    ? ((OssHttpRequest) req).SendAsync()
-                    : WechatPayHelper.httpclient_factory.CreateClient().SendAsync(req)
-                );
+
+            var client = WechatPayHelper.HttpClientProvider?.Invoke();
+            var resp = await (client == null ? ((OssHttpRequest) req).SendAsync() : client.SendAsync(req));
             return await funcFormat(req.pay_config, resp);
         }
         

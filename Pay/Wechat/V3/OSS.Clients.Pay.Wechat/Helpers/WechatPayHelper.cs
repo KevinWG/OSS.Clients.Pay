@@ -11,6 +11,7 @@
 
 #endregion
 
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using OSS.Clients.Pay.Wechat.Helpers;
@@ -30,10 +31,12 @@ namespace OSS.Clients.Pay.Wechat
         /// </summary>
         public static string api_domain { get; set; } = "https://api.mch.weixin.qq.com";
 
+
+
         /// <summary>
-        ///  【可选】 自定义底层HttpClient的实现，不设置则使用默认实现
+        ///   http请求的HttpClient实例创建
         /// </summary>
-        public static IHttpClientFactory httpclient_factory { get; set; }
+        public static Func<HttpClient> HttpClientProvider { get; set; }
 
         /// <summary>
         ///  【可选】微信平台放公钥证书提供者
