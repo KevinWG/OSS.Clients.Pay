@@ -88,7 +88,7 @@ namespace OSS.Clients.Pay.WX
             catch (Exception ex)
             {
                 LogHelper.Error(string.Concat("基类请求出错，错误信息：", ex.Message), "RestCommon", WXPayConfigProvider.ModuleName);
-                t = new T {ret = (int) RespTypes.InnerError, msg = "微信支付请求失败"};
+                t = new T().WithResp(SysRespTypes.AppError, "微信支付请求失败");
             }
 
             return t;
@@ -113,7 +113,7 @@ namespace OSS.Clients.Pay.WX
             if (t.return_code.ToUpper() != "SUCCESS"
                 || t.result_code.ToUpper() != "SUCCESS")
             {
-                t.ret = (int) RespTypes.ObjectStateError;
+                t.ret = (int) RespTypes.OperateFailed;
                 t.msg = string.Concat(t.return_msg, t.err_code_des);
                 return t;
             }

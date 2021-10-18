@@ -301,7 +301,7 @@ namespace OSS.Clients.Pay.WX.Pay
 
             var content = await response.Content.ReadAsStringAsync();
             return content.StartsWith("<xml>") ? new Resp<string>(content) 
-                : new Resp<string>().WithResp(RespTypes.ObjectStateError, content);
+                : new Resp<string>().WithResp(RespTypes.OperateFailed, content);
         }
 
         #endregion

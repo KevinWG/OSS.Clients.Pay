@@ -111,7 +111,7 @@ namespace OSS.Clients.Pay.Ali
                         if (resJsonObj == null)
                             return new T()
                             {
-                                ret = (int) RespTypes.ObjectStateError,
+                                ret = (int) RespTypes.OperateFailed,
                                 msg = "基础请求响应不正确，请检查地址或者网络是否正常！"
                             };
 
@@ -132,11 +132,7 @@ namespace OSS.Clients.Pay.Ali
             {
                 var logCode = LogHelper.Error(string.Concat("基类请求出错，错误信息：", ex.Message), "Z_RestCommon",
                     ZPayConfigProvider.ModuleName);
-                t = new T()
-                {
-                    ret = (int) RespTypes.InnerError,
-                    msg = string.Concat("基类请求出错，请检查网络是否正常，错误码：", logCode)
-                };
+                t = new T().WithResp(SysRespTypes.AppError, string.Concat("基类请求出错，请检查网络是否正常，错误码：", logCode));
             }
             return t;
         }
@@ -201,7 +197,7 @@ namespace OSS.Clients.Pay.Ali
             }
             catch (Exception e)
             {
-                t.ret = (int) RespTypes.InnerError;
+                t.sys_ret = (int) SysRespTypes.AppError;
                 t.msg = "解密签名过程中出错，详情请查看日志";
                 LogHelper.Info(
                     $"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign}, 错误信息：{e.Message}",
@@ -269,7 +265,7 @@ namespace OSS.Clients.Pay.Ali
             catch (Exception e)
             {
                 LogHelper.Error(string.Concat("处理签名字典出错，详细信息：", e.Message), "Z_GetReqBodyDics", ZPayConfigProvider.ModuleName);
-                return new Resp<IDictionary<string, string>>().WithResp(RespTypes.InnerError, "处理签名字典出错，详细信息请查看日志");
+                return new Resp<IDictionary<string, string>>().WithResp(SysRespTypes.AppError, "处理签名字典出错，详细信息请查看日志");
             }
             return new Resp<IDictionary<string, string>>(dirs);
         }
