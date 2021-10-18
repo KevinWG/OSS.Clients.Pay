@@ -91,7 +91,7 @@ namespace OSS.Clients.Pay.Wechat
             if (!resp.IsSuccessStatusCode)
             {
                 var content = await resp.Content.ReadAsStringAsync();
-                return new T().WithResp(SysRespTypes.NetworkError, $"微信支付接口请求异常({resp.ReasonPhrase}:{content})");
+                return new T().WithResp(SysRespTypes.NetError, $"微信支付接口请求异常({resp.ReasonPhrase}:{content})");
             } 
             var respDetail = await GetResponseDetail(resp);
             if (needCheckSign)
