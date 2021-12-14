@@ -17,9 +17,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using OSS.Clients.Pay.WX.Helpers;
 using OSS.Clients.Pay.WX.Pay.Mos;
-using OSS.Common.BasicMos.Resp;
-using OSS.Common.Extention;
-using OSS.Tools.Http.Extention;
+using OSS.Common.Extension;
+using OSS.Common.Resp;
 using OSS.Tools.Http.Mos;
 
 namespace OSS.Clients.Pay.WX.Pay

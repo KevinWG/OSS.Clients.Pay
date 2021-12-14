@@ -1,4 +1,4 @@
-﻿using OSS.Common.BasicMos.Resp;
+﻿using OSS.Common.Resp;
 
 namespace OSS.Clients.Pay.Wechat
 {

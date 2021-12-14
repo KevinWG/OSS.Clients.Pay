@@ -21,12 +21,11 @@ using System.Threading.Tasks;
 using System.Xml;
 using OSS.Clients.Pay.WX.Helpers;
 using OSS.Common.BasicImpls;
-using OSS.Common.BasicMos.Resp;
+using OSS.Common.Resp;
 using OSS.Common.Encrypt;
-using OSS.Common.Extention;
-using OSS.Tools.Http.Extention;
 using OSS.Tools.Http.Mos;
 using OSS.Tools.Log;
+using OSS.Common.Extension;
 
 namespace OSS.Clients.Pay.WX
 {

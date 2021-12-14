@@ -20,7 +20,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using OSS.Clients.Pay.Wechat.Basic;
-using OSS.Common.BasicMos.Resp;
+using OSS.Common.Resp;
 using OSS.Common.Extension;
 
 namespace OSS.Clients.Pay.Wechat.Helpers

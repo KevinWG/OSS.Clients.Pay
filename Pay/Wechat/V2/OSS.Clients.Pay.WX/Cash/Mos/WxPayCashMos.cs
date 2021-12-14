@@ -11,7 +11,9 @@
 
 #endregion
 
-using OSS.Common.Extention;
+
+
+using OSS.Common.Extension;
 
 namespace OSS.Clients.Pay.WX.Cash.Mos
 {

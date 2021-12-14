@@ -11,8 +11,8 @@
 
 #endregion
 
+using OSS.Common.Extension;
 using System.Collections.Generic;
-using OSS.Common.Extention;
 
 namespace OSS.Clients.Pay.WX.Pay.Mos
 {

@@ -22,8 +22,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OSS.Clients.Pay.Ali.Helpers;
 using OSS.Common.BasicImpls;
-using OSS.Common.BasicMos.Resp;
-using OSS.Common.Extention;
+using OSS.Common.Extension;
+using OSS.Common.Resp;
 using OSS.Tools.Http.Extention;
 using OSS.Tools.Http.Mos;
 using OSS.Tools.Log;
@@ -283,7 +283,7 @@ namespace OSS.Clients.Pay.Ali
         /// <returns></returns>
         protected static string ConvertDicToEncodeReqBody(IDictionary<string, string> dics)
         {
-            return string.Join("&", dics.Select(d => string.Concat(d.Key, "=", d.Value.UrlEncode())));
+            return string.Join("&", dics.Select(d => string.Concat(d.Key, "=", d.Value.SafeEscapeUriDataString())));
         }
 
         #endregion

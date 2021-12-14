@@ -15,7 +15,7 @@
 using System.Collections.Generic;
 using System.Xml;
 using OSS.Clients.Pay.WX.Helpers;
-using OSS.Common.BasicMos.Resp;
+using OSS.Common.Resp;
 
 namespace OSS.Clients.Pay.WX
 {

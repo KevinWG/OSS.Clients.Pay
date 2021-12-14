@@ -17,8 +17,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OSS.Clients.Pay.Ali.Pay.Mos;
-using OSS.Common.BasicMos.Resp;
-using OSS.Common.Extention;
+using OSS.Common.Extension;
+using OSS.Common.Resp;
 
 namespace OSS.Clients.Pay.Ali.Pay
 {

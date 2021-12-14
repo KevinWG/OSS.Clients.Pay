@@ -11,9 +11,9 @@
 
 #endregion
 
+using OSS.Common.Extension;
 using System.Collections.Generic;
 using System.Xml;
-using OSS.Common.Extention;
 
 namespace OSS.Clients.Pay.WX.Cash.Mos
 {
