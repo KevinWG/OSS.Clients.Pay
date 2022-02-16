@@ -38,7 +38,7 @@ namespace OSS.Clients.Pay.Wechat
         /// <returns></returns>
         public static Task<WechatCertificateGetResp> SendAsync(this WechatCertificateGetReq req)
         {
-            return SendAsync(req,(config, resp) => JsonFormat<WechatCertificateGetResp>(config, resp, false));
+            return SendAsync(req, (config, resp) => JsonFormat<WechatCertificateGetResp>(config, resp, false));
         }
 
         /// <summary>
@@ -78,10 +78,10 @@ namespace OSS.Clients.Pay.Wechat
             }
 
             var client = WechatPayHelper.HttpClientProvider?.Invoke();
-            var resp = await (client == null ? ((OssHttpRequest) req).SendAsync() : client.SendAsync(req));
+            var resp   = await (client == null ? ((OssHttpRequest)req).SendAsync() : client.SendAsync(req));
             return await funcFormat(req.pay_config, resp);
         }
-        
+
         #region 响应处理
 
         // Json 格式化处理
@@ -91,8 +91,11 @@ namespace OSS.Clients.Pay.Wechat
             if (!resp.IsSuccessStatusCode)
             {
                 var content = await resp.Content.ReadAsStringAsync();
-                return new T().WithResp(SysRespTypes.NetError, $"微信支付接口请求异常({resp.ReasonPhrase}:{content})");
-            } 
+                return string.IsNullOrEmpty(content)
+                    ? new T().WithResp(SysRespTypes.NetError, $"微信支付接口请求异常({resp.ReasonPhrase})")
+                    : JsonSerializer.Deserialize<T>(content);
+            }
+
             var respDetail = await GetResponseDetail(resp);
             if (needCheckSign)
             {
@@ -105,6 +108,7 @@ namespace OSS.Clients.Pay.Wechat
                     return verifyRes.ToResp<T>();
                 }
             }
+
             return string.IsNullOrEmpty(respDetail.body)
                 ? new T()
                 : JsonSerializer.Deserialize<T>(respDetail.body);
@@ -127,22 +131,22 @@ namespace OSS.Clients.Pay.Wechat
 
             response.Headers.TryGetValues(WechatConstKeys.RequestID, out var requestId);
             response.Headers.TryGetValues(WechatConstKeys.WechatpayNonce, out var nonce);
-            response.Headers.TryGetValues(WechatConstKeys.WechatpaySignature, out var signature); 
+            response.Headers.TryGetValues(WechatConstKeys.WechatpaySignature, out var signature);
             response.Headers.TryGetValues(WechatConstKeys.WechatpayTimestamp, out var timestamp);
             response.Headers.TryGetValues(WechatConstKeys.WechatpaySerial, out var serial);
-         
+
             return new HttpResponseDetail(requestId?.FirstOrDefault(),
-                response.StatusCode, isSuccess, 
+                response.StatusCode, isSuccess,
                 serial?.FirstOrDefault(), body,
-                signature?.FirstOrDefault(), nonce?.FirstOrDefault(), 
-                (timestamp?.FirstOrDefault().ToInt64()??0));
+                signature?.FirstOrDefault(), nonce?.FirstOrDefault(),
+                (timestamp?.FirstOrDefault().ToInt64() ?? 0));
         }
 
         #endregion
 
 
         #region 请求加工
-        
+
         /// <inheritdoc />
         private static void PrepareBody(WechatBaseReq req)
         {
@@ -181,7 +185,8 @@ namespace OSS.Clients.Pay.Wechat
             return new SendBodyResp() { body = reqBody };
         }
 
-        private static async Task<SendEncryptBodyResp> GetReqContent_JsonEncryptSegment(WechatPayConfig payConfig, Dictionary<string, string> dics)
+        private static async Task<SendEncryptBodyResp> GetReqContent_JsonEncryptSegment(WechatPayConfig payConfig,
+            Dictionary<string, string> dics)
         {
             var certRes = await WechatCertificateHelper.GetLatestCertsByConfig(payConfig);
             if (!certRes.IsSuccess())
