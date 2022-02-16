@@ -38,12 +38,9 @@ namespace OSS.Clients.Pay.Wechat.Basic
         protected override void PrepareBodyPara()
         {
             base.PrepareBodyPara();
-
             this.AddBodyPara("scene_info", scene_info);
         }
     }
-
-
 
     /// <summary>
     ///  微信H5支付响应结果
@@ -56,8 +53,6 @@ namespace OSS.Clients.Pay.Wechat.Basic
         /// </summary>  
         public string h5_url { get; set; }
     }
-
-
 
     public class SceneInfo
     {
