@@ -1,4 +1,6 @@
 ﻿
+using OSS.Common.Resp;
+
 namespace OSS.Clients.Pay.Wechat.Basic
 {
     public class NotifySPRefundResult:BaseRefundResult
@@ -30,7 +32,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
     }
 
 
-    public class BaseRefundResult
+    public class BaseRefundResult:Resp
     {
         /// <summary>   
         ///   商户订单号   string[1,32]

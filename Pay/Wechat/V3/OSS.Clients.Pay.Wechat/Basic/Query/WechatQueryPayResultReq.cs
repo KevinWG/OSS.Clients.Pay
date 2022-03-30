@@ -3,7 +3,10 @@ using System.Net.Http;
 
 namespace OSS.Clients.Pay.Wechat.Basic
 {
-    public class WechatQueryPayResultReq : WechatBaseReq< QueryPayResultResp>
+    /// <summary>
+    /// 查询支付结果请求
+    /// </summary>
+    public class WechatQueryPayResultReq : WechatBaseReq<QueryPayResultResp>
     {
         public WechatQueryPayResultReq() : base(HttpMethod.Get)
         {
@@ -44,10 +47,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
                 return string.Concat(path, $"?mchid={pay_config.mch_id}");
             }
         }
-
-   
     }
-
 
     public class QueryPayResultResp: WechatPayResultResp
     {
@@ -62,7 +62,6 @@ namespace OSS.Clients.Pay.Wechat.Basic
         ///   商户的商户号，由微信支付生成并下发。
         /// </summary>  
         public string mchid { get; set; }
-
 
         /// <summary>   
         ///   服务商应用ID   string[1,32]
