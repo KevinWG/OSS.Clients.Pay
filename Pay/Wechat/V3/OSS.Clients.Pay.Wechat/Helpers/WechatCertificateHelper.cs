@@ -163,11 +163,11 @@ namespace OSS.Clients.Pay.Wechat.Helpers
 
             var errRes = new WechatBaseResp()
             {
-                code          = RespTypes.ParaSignError.ToString(),
+                code          = RespCodes.ParaSignError.ToString(),
                 message       = "验证微信支付签名失败!",
                 response_body = respBody
             };
-            errRes.ret = (int) RespTypes.ParaSignError;
+            errRes.ret = (int) RespCodes.ParaSignError;
             return errRes;
         }
 

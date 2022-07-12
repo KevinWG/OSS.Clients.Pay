@@ -20,7 +20,7 @@ namespace OSS.Clients.Pay.Wechat
                 _code = value;
                 if (!string.IsNullOrEmpty(_code))
                 {
-                    ret = (int) RespTypes.OperateFailed;
+                    ret = (int) RespCodes.OperateFailed;
                 }
             }
         }

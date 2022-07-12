@@ -201,7 +201,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
                 || !receiver.header_dics.TryGetValue("Wechatpay-Timestamp", out var timestamp)
                 || !receiver.header_dics.TryGetValue("Wechatpay-Serial", out var serial))
             {
-                return new WechatNotifyEncryptResult().WithResp(RespTypes.ParaError, "微信支付通知头部参数异常!");
+                return new WechatNotifyEncryptResult().WithResp(RespCodes.ParaError, "微信支付通知头部参数异常!");
             }
 
             var checkRes = await WechatPayHelper.Verify(config, signature, serial, nonce, timestamp.ToInt64(), receiver.body);
@@ -209,7 +209,7 @@ namespace OSS.Clients.Pay.Wechat.Basic
             if (checkRes.IsSuccess())
             {
                 var wRes = JsonSerializer.Deserialize<WechatNotifyEncryptResult>(receiver.body);
-                return wRes ?? new WechatNotifyEncryptResult().WithResp(RespTypes.OperateFailed, "微信支付通知内容异常!");
+                return wRes ?? new WechatNotifyEncryptResult().WithResp(RespCodes.OperateFailed, "微信支付通知内容异常!");
             }
             return new WechatNotifyEncryptResult().WithResp(checkRes);
         }

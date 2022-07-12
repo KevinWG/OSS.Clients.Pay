@@ -92,7 +92,7 @@ namespace OSS.Clients.Pay.Wechat
             {
                 var content = await resp.Content.ReadAsStringAsync();
                 return string.IsNullOrEmpty(content)
-                    ? new T().WithResp(SysRespTypes.NetError, $"微信支付接口请求异常({resp.ReasonPhrase})")
+                    ? new T().WithResp(SysRespCodes.NetError, $"微信支付接口请求异常({resp.ReasonPhrase})")
                     : JsonSerializer.Deserialize<T>(content);
             }
 

@@ -17,8 +17,8 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using OSS.Clients.Pay.Wechat.Helpers;
+using OSS.Common;
 using OSS.Common.Extension;
-using OSS.Common.Helpers;
 using OSS.Tools.Http;
 
 namespace OSS.Clients.Pay.Wechat

@@ -15,8 +15,8 @@
 using System;
 using System.Collections.Generic;
 using OSS.Clients.Pay.Wechat.Helpers;
+using OSS.Common;
 using OSS.Common.Extension;
-using OSS.Common.Helpers;
 
 namespace OSS.Clients.Pay.Wechat.Basic
 {
