@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="OSS.Common" Version="4.0.0" />
     <PackageReference Include="OSS.Tools.Http" Version="2.3.5" />
     <PackageReference Include="OSS.Tools.Log" Version="1.2.1" />
