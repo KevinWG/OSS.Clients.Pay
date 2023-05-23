@@ -167,7 +167,6 @@ namespace OSS.Clients.Pay.Wechat.Helpers
                 message       = "验证微信支付签名失败!",
                 response_body = respBody
             };
-            errRes.ret = (int) RespCodes.ParaSignError;
             return errRes;
         }
 

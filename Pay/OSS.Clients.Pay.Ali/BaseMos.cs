@@ -46,13 +46,12 @@ namespace OSS.Clients.Pay.Ali
     /// </summary>
     public class ZPayBaseResp:Resp
     {
-
         private string _code = string.Empty;
 
         /// <summary>   
         ///    String 必填 长度(-)  网关返回码,详见文档
         /// </summary>  
-        public string code
+        public new string code
         {
             get => _code;
             set
@@ -60,7 +59,7 @@ namespace OSS.Clients.Pay.Ali
                 _code = value;
                 if (_code!= "10000")
                 {
-                    ret = -1;
+                    base.code = -1;
                 }
             }
         }

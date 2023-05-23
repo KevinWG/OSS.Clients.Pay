@@ -7,52 +7,43 @@ namespace OSS.Clients.Pay.Wechat
     /// </summary>
     public class WechatBaseResp : Resp
     {
-        private string _code;
+        private string? _code;
 
         /// <summary>
         ///  返回错误码
         /// </summary>
-        public string code
+        public new string code
         {
-            get { return _code; }
+            get => _code;
             set
             {
                 _code = value;
                 if (!string.IsNullOrEmpty(_code))
                 {
-                    ret = (int) RespCodes.OperateFailed;
+                    base.code = (int) RespCodes.OperateFailed;
                 }
             }
         }
 
 
-        private string _message;
-
         /// <summary>
         ///  返回错误码
         /// </summary>
-        public string message
+        public string? message
         {
-            get { return _message; }
-            set
-            {
-                _message = value;
-                if (!string.IsNullOrEmpty(_message))
-                {
-                    msg = _message;
-                }
-            }
+            get => msg;
+            set => msg = value;
         }
 
         /// <summary>
         ///  请求id
         /// </summary>
-        public string request_id { get; set; }
+        public string request_id { get; set; } = string.Empty;
 
         /// <summary>
         /// 响应内容
         /// </summary>
-        public string response_body { get; set; }
+        public string response_body { get; set; } = string.Empty;
     }
 
     internal static class RespMap
@@ -60,10 +51,13 @@ namespace OSS.Clients.Pay.Wechat
         public static TResp ToResp<TResp>(this WechatBaseResp res)
             where TResp : WechatBaseResp, new()
         {
-            var newRes = new TResp() { code = res.code, message = res.message,
-                request_id =  res.request_id,
-                response_body = res.response_body };
-            newRes.ret = res.ret; // 因为code赋值时会覆写，放在后边
+            var newRes = new TResp()
+            {
+                code          = res.code, message = res.message,
+                request_id    = res.request_id,
+                response_body = res.response_body
+            };
+
             return newRes;
         }
     }

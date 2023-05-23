@@ -1,25 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+	  <TargetFramework>net6.0</TargetFramework>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <Nullable>enable</Nullable>
+	  <PackageIconUrl>http://img1.osscore.cn/static/oss_net.png</PackageIconUrl>
 	  <Description>微信支付V3版接口</Description>
     <PackageIconUrl>http://img1.osscore.cn/static/oss_net.png</PackageIconUrl>
     <PackageReleaseNotes>升级基础类库</PackageReleaseNotes>
-    <Version>2.3.1</Version>
-    <Nullable>disable</Nullable>
+    <Version>2.4</Version>
     <PackageProjectUrl>https://github.com/KevinWG/OSS.Clients.Pay/tree/master/Pay/Wechat/V3/OSS.Clients.Pay.Wechat</PackageProjectUrl>
     <RepositoryUrl>https://github.com/KevinWG/OSS.Clients.Pay</RepositoryUrl>
     <Copyright>OSSCore</Copyright>
     <AssemblyVersion>2.3.1</AssemblyVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>.\bin\OSS.Clients.Pay.Wechat.xml</DocumentationFile>
-  </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OSS.Common" Version="6.0.0" />
-    <PackageReference Include="OSS.Tools.Http" Version="2.6.0" />
+    <PackageReference Include="OSS.Common" Version="7.0.1" />
+    <PackageReference Include="OSS.Tools.Http" Version="3.0.0" />
   </ItemGroup>
 
 </Project>

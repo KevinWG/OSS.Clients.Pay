@@ -11,7 +11,6 @@
 
 #endregion
 
-using System.Threading.Tasks;
 using OSS.Clients.Pay.Ali.Pay.Mos;
 
 namespace OSS.Clients.Pay.Ali.Pay
@@ -19,13 +18,12 @@ namespace OSS.Clients.Pay.Ali.Pay
     /// <summary>
     ///  退款接口
     /// </summary>
-    public class ZPayRefundApi:ZPayBaseApi
+    public class ZPayRefundApi :ZPayBaseApi
     {
         /// <summary>
         ///  构造函数
         /// </summary>
-        /// <param name="config"></param>
-        public ZPayRefundApi(ZPayConfig config=null) : base(config)
+        public ZPayRefundApi() //: base(config)
         {
         }
 

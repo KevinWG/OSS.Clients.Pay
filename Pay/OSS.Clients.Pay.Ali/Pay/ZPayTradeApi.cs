@@ -28,7 +28,7 @@ namespace OSS.Clients.Pay.Ali.Pay
     public class ZPayTradeApi : ZPayBaseApi
     {
         /// <inheritdoc />
-        public ZPayTradeApi(ZPayConfig config = null) : base(config)
+        public ZPayTradeApi()
         {
         }
         
@@ -205,7 +205,7 @@ namespace OSS.Clients.Pay.Ali.Pay
         {
             if (!formDics.ContainsKey("sign"))
             {
-                return new Resp().WithResp( RespTypes.ParaError, "未发现sign参数");
+                return new Resp().WithResp( RespCodes.ParaError, "未发现sign参数");
             }
             var sign = formDics["sign"];
             //var signType = formDics["sign_type"];
@@ -215,7 +215,7 @@ namespace OSS.Clients.Pay.Ali.Pay
 
             var sortDics = new SortedDictionary<string, string>(formDics);
 
-            var checkContent = string.Join("&", sortDics.Select(d => string.Concat(d.Key, "=", d.Value.UrlDecode())));
+            var checkContent = string.Join("&", sortDics.Select(d => string.Concat(d.Key, "=", d.Value.SafeUnescapeDataString())));
 
             var result = new Resp();
             CheckSign(checkContent, sign, result);

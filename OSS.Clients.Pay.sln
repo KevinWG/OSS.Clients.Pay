@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29509.3
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FF8DFEFC-D496-4AE0-9642-E25EC7928351}"
 	ProjectSection(SolutionItems) = preProject
@@ -14,13 +14,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OSS.Clients.Pay.Ali", "Pay\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Wechat", "Wechat", "{8A8E3816-166D-4659-A79C-B708DDA1F2D4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "V2", "V2", "{665F10DE-0703-4F25-BE1B-82B64A58546D}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "V3", "V3", "{BA3E3B52-FDE6-442C-B8F7-339F686F68CE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OSS.Clients.Pay.Wechat", "Pay\Wechat\V3\OSS.Clients.Pay.Wechat\OSS.Clients.Pay.Wechat.csproj", "{172C8A3F-66D0-43A0-9F85-53EAF620FEDE}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OSS.Clients.Pay.WX", "Pay\Wechat\V2\OSS.Clients.Pay.WX\OSS.Clients.Pay.WX.csproj", "{629FB90D-F08F-499F-9CD0-A522078913A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,18 +52,6 @@ Global
 		{172C8A3F-66D0-43A0-9F85-53EAF620FEDE}.Release|x64.Build.0 = Release|Any CPU
 		{172C8A3F-66D0-43A0-9F85-53EAF620FEDE}.Release|x86.ActiveCfg = Release|Any CPU
 		{172C8A3F-66D0-43A0-9F85-53EAF620FEDE}.Release|x86.Build.0 = Release|Any CPU
-		{629FB90D-F08F-499F-9CD0-A522078913A9}.Debug|Any CPU.ActiveCfg = Release|Any CPU
-		{629FB90D-F08F-499F-9CD0-A522078913A9}.Debug|Any CPU.Build.0 = Release|Any CPU
-		{629FB90D-F08F-499F-9CD0-A522078913A9}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{629FB90D-F08F-499F-9CD0-A522078913A9}.Debug|x64.Build.0 = Debug|Any CPU
-		{629FB90D-F08F-499F-9CD0-A522078913A9}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{629FB90D-F08F-499F-9CD0-A522078913A9}.Debug|x86.Build.0 = Debug|Any CPU
-		{629FB90D-F08F-499F-9CD0-A522078913A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{629FB90D-F08F-499F-9CD0-A522078913A9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{629FB90D-F08F-499F-9CD0-A522078913A9}.Release|x64.ActiveCfg = Release|Any CPU
-		{629FB90D-F08F-499F-9CD0-A522078913A9}.Release|x64.Build.0 = Release|Any CPU
-		{629FB90D-F08F-499F-9CD0-A522078913A9}.Release|x86.ActiveCfg = Release|Any CPU
-		{629FB90D-F08F-499F-9CD0-A522078913A9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -75,10 +59,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{AB029AA9-7C3F-4E00-8CD8-2491133C5DAA} = {C34D8035-2C18-4221-9FE3-12A8797F0F2E}
 		{8A8E3816-166D-4659-A79C-B708DDA1F2D4} = {C34D8035-2C18-4221-9FE3-12A8797F0F2E}
-		{665F10DE-0703-4F25-BE1B-82B64A58546D} = {8A8E3816-166D-4659-A79C-B708DDA1F2D4}
 		{BA3E3B52-FDE6-442C-B8F7-339F686F68CE} = {8A8E3816-166D-4659-A79C-B708DDA1F2D4}
 		{172C8A3F-66D0-43A0-9F85-53EAF620FEDE} = {BA3E3B52-FDE6-442C-B8F7-339F686F68CE}
-		{629FB90D-F08F-499F-9CD0-A522078913A9} = {665F10DE-0703-4F25-BE1B-82B64A58546D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {602BD5DD-1AEC-44C9-AAFB-47021D371D96}

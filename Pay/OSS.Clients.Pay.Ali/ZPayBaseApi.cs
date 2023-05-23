@@ -12,40 +12,35 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OSS.Clients.Pay.Ali.Helpers;
-using OSS.Common.BasicImpls;
 using OSS.Common.Extension;
 using OSS.Common.Resp;
-using OSS.Tools.Http.Extention;
-using OSS.Tools.Http.Mos;
+using OSS.Tools.Http;
 using OSS.Tools.Log;
+using System.Net.Http.Headers;
 
 namespace OSS.Clients.Pay.Ali
 {
     /// <summary>
     ///支付宝接口SDK基类
     /// </summary>
-    public abstract class ZPayBaseApi: BaseApiConfigProvider<ZPayConfig>
+    public abstract class ZPayBaseApi
     {
         #region  配置信息部分
         
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="config"></param>
-        protected ZPayBaseApi(ZPayConfig config):base(config)
+        protected ZPayBaseApi() //:base(config)
         {
         }
         
         private ZPayRsaHelper _rsaAssist;
+
+
+        public ZPayConfig ApiConfig => ZPayConfigHelper.DefaultConfig;
 
         /// <summary>
         ///  加密对象提供者
@@ -55,9 +50,6 @@ namespace OSS.Clients.Pay.Ali
         /// <returns></returns>
         private ZPayRsaHelper GenerateRsaAssist(ZPayConfig config)
         {
-            if (ConfigMode==ConfigProviderMode.Context)
-                return new ZPayRsaHelper(config.AppPrivateKey, config.AppPublicKey, config.Charset);
-           
             if (_rsaAssist==null)
                 return _rsaAssist= new ZPayRsaHelper(config.AppPrivateKey, config.AppPublicKey, config.Charset);
             
@@ -80,26 +72,17 @@ namespace OSS.Clients.Pay.Ali
         /// <param name="respColumnName">响应实体中的内容列表</param>
         /// <param name="funcFormat">获取实体格式化方法</param>
         /// <returns>实体类型</returns>
-        public async Task<T> RestCommonAsync<T>(OssHttpRequest request, string respColumnName,
-            Func<HttpResponseMessage, Task<T>> funcFormat = null)
+        public async Task<T> RestCommonAsync<T>(ZPayRequest request, string respColumnName,
+            Func<HttpResponseMessage, Task<T>>? funcFormat = null)
             where T : ZPayBaseResp, new()
         {
             var t = default(T);
             try
             {
-                request.AddressUrl = string.Concat(m_ApiUrl, "?charset=", ApiConfig.Charset);
-                
-                request.RequestSet = r =>
-                {
-                    if (r.Content == null) return;
-                    var contentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded")
-                    {
-                        CharSet = ApiConfig.Charset
-                    };
-                    r.Content.Headers.ContentType = contentType;
-                };
+                request.address_url = string.Concat(m_ApiUrl, "?charset=", ApiConfig.Charset);
+        
+                var resp = await request.SendAsync();
 
-                var resp = await request.RestSend();
                 if (resp.IsSuccessStatusCode)
                 {
                     if (funcFormat != null)
@@ -109,17 +92,13 @@ namespace OSS.Clients.Pay.Ali
                         var contentStr = await resp.Content.ReadAsStringAsync();
                         var resJsonObj = JObject.Parse(contentStr);
                         if (resJsonObj == null)
-                            return new T()
-                            {
-                                ret = (int) RespTypes.OperateFailed,
-                                msg = "基础请求响应不正确，请检查地址或者网络是否正常！"
-                            };
+                            return new T().WithResp(RespCodes.OperateFailed, "基础请求响应不正确，请检查地址或者网络是否正常！");
 
-                        t = resJsonObj[respColumnName].ToObject<T>();
-                        if (t.IsSuccess())
+                        t = resJsonObj[respColumnName]?.ToObject<T>();
+                        if (t != null && t.IsSuccess())
                         {
-                            var sign = resJsonObj["sign"].ToString();
-                            var signContent = GetCehckSignContent(respColumnName, contentStr);
+                            var sign        = resJsonObj["sign"]?.ToString();
+                            var signContent = GetCheckSignContent(respColumnName, contentStr);
 
                             CheckSign(signContent, sign, t);
                         }
@@ -131,8 +110,8 @@ namespace OSS.Clients.Pay.Ali
             catch (Exception ex)
             {
                 var logCode = LogHelper.Error(string.Concat("基类请求出错，错误信息：", ex.Message), "Z_RestCommon",
-                    ZPayConfigProvider.ModuleName);
-                t = new T().WithResp(SysRespTypes.AppError, string.Concat("基类请求出错，请检查网络是否正常，错误码：", logCode));
+                    ZPayConfigHelper.ModuleName);
+                t = new T().WithResp(SysRespCodes.AppError, string.Concat("基类请求出错，请检查网络是否正常，错误码：", logCode));
             }
             return t;
         }
@@ -154,10 +133,10 @@ namespace OSS.Clients.Pay.Ali
             if (!contentDirs.IsSuccess())
                 return new TResp().WithResp(contentDirs);
 
-            var reqHttp = new OssHttpRequest
+            var reqHttp = new ZPayRequest
             {
-                HttpMethod = HttpMethod.Post,
-                CustomBody = ConvertDicToEncodeReqBody(contentDirs.data)
+                http_method = HttpMethod.Post,
+                custom_body = ConvertDicToEncodeReqBody(contentDirs.data)
             };
             
             return await RestCommonAsync<TResp>(reqHttp, respColumnName);
@@ -173,11 +152,17 @@ namespace OSS.Clients.Pay.Ali
         /// <param name="signContent"></param>
         /// <param name="sign"></param>
         /// <param name="t"></param>
-        protected void CheckSign<T>(string signContent, string sign, T t)
+        protected void CheckSign<T>(string signContent, string? sign, T t)
             where T : Resp, new()
         {
             try
             {
+                if (string.IsNullOrEmpty(sign))
+                {
+                    t.WithResp(RespCodes.OperateFailed, "签名错误!");
+                    return;
+                }
+
                 var rsaAssist = GenerateRsaAssist(ApiConfig);
                 var checkSignRes = rsaAssist.CheckSign(signContent, sign);
                 if (checkSignRes) return;
@@ -192,16 +177,14 @@ namespace OSS.Clients.Pay.Ali
 
                 if (checkSignRes) return;
 
-                t.ret = (int) RespTypes.OperateFailed;
-                t.msg = "当前签名非法！";
+                t.WithResp(RespCodes.OperateFailed, "签名错误!");
             }
             catch (Exception e)
             {
-                t.sys_ret = (int) SysRespTypes.AppError;
-                t.msg = "解密签名过程中出错，详情请查看日志";
+                t.WithResp(SysRespCodes.AppError, "解密签名过程中出错，详情请查看日志");
                 LogHelper.Info(
                     $"解密签名过程中出错，解密内容：{signContent}, 待验证签名：{sign}, 错误信息：{e.Message}",
-                    "CheckSign", ZPayConfigProvider.ModuleName);
+                    "CheckSign", ZPayConfigHelper.ModuleName);
             }
         }
 
@@ -211,7 +194,7 @@ namespace OSS.Clients.Pay.Ali
         /// <param name="respColumnName"></param>
         /// <param name="contentStr"></param>
         /// <returns></returns>
-        private static string GetCehckSignContent(string respColumnName, string contentStr)
+        private static string GetCheckSignContent(string respColumnName, string contentStr)
         {
             var startIndex = contentStr.IndexOf(respColumnName, StringComparison.Ordinal) + respColumnName.Length + 2;
             var endIndex = contentStr.LastIndexOf(',');
@@ -264,8 +247,8 @@ namespace OSS.Clients.Pay.Ali
             }
             catch (Exception e)
             {
-                LogHelper.Error(string.Concat("处理签名字典出错，详细信息：", e.Message), "Z_GetReqBodyDics", ZPayConfigProvider.ModuleName);
-                return new Resp<IDictionary<string, string>>().WithResp(SysRespTypes.AppError, "处理签名字典出错，详细信息请查看日志");
+                LogHelper.Error(string.Concat("处理签名字典出错，详细信息：", e.Message), "Z_GetReqBodyDics", ZPayConfigHelper.ModuleName);
+                return new Resp<IDictionary<string, string>>().WithResp(SysRespCodes.AppError, "处理签名字典出错，详细信息请查看日志");
             }
             return new Resp<IDictionary<string, string>>(dirs);
         }
@@ -289,11 +272,28 @@ namespace OSS.Clients.Pay.Ali
         #endregion
 
 
-        /// <inheritdoc />
-        protected override ZPayConfig GetDefaultConfig()
-        {
-            return ZPayConfigProvider.DefaultConfig;
-        }
+
+
     }
 
+
+
+
+    public class ZPayRequest:OssHttpRequest
+    {
+        public ZPayConfig ApiConfig => ZPayConfigHelper.DefaultConfig;
+
+        protected override Task OnSendingAsync(HttpRequestMessage r)
+        {
+            if (r.Content == null) return Task.CompletedTask;
+
+            var contentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded")
+            {
+                CharSet = ApiConfig.Charset
+            };
+
+            r.Content.Headers.ContentType = contentType;
+            return Task.CompletedTask;
+        }
+    }
 }
