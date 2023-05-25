@@ -4,7 +4,6 @@
 	  <TargetFramework>net6.0</TargetFramework>
 	  <ImplicitUsings>enable</ImplicitUsings>
 	  <Nullable>enable</Nullable>
-	  <PackageIconUrl>http://img1.osscore.cn/static/oss_net.png</PackageIconUrl>
 	  <Description>微信支付V3版接口</Description>
     <PackageIconUrl>http://img1.osscore.cn/static/oss_net.png</PackageIconUrl>
     <PackageReleaseNotes>升级基础类库</PackageReleaseNotes>
